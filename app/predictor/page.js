@@ -57,7 +57,9 @@ export default function PredictorPage() {
         <div className="card">
           <h2>Make Your Predictions</h2>
           <p>View the upcoming fixtures and submit your predictions.</p>
-          <button>Predictions</button>
+<a href="/predictions">
+  <button>Predictions</button>
+</a>
         </div>
 
         <div className="card">
