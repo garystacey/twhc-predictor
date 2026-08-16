@@ -10,6 +10,7 @@ export default function AdminDashboardPage() {
   const [loading, setLoading] = useState(true);
   const [authorised, setAuthorised] = useState(false);
   const [message, setMessage] = useState("");
+  const [signingOut, setSigningOut] = useState(false);
 
   useEffect(() => {
     async function checkAdmin() {
@@ -40,6 +41,15 @@ export default function AdminDashboardPage() {
 
     checkAdmin();
   }, [router]);
+
+  async function handleSignOut() {
+    setSigningOut(true);
+
+    await supabase.auth.signOut();
+
+    router.push("/login");
+    router.refresh();
+  }
 
   if (loading) {
     return (
@@ -94,33 +104,44 @@ export default function AdminDashboardPage() {
           </a>
         </div>
 
-<div className="card">
-  <h2>Manage Match Weeks</h2>
-  <p>Review match dates, opening times and prediction deadlines.</p>
-  <a href="/admin/weeks">
-    <button>Manage Match Weeks</button>
-  </a>
-</div>
+        <div className="card">
+          <h2>Manage Match Weeks</h2>
+          <p>Review match dates, opening times and prediction deadlines.</p>
+          <a href="/admin/weeks">
+            <button>Manage Match Weeks</button>
+          </a>
+        </div>
 
-<div className="card">
-  <h2>Manage Fixtures</h2>
-  <p>Review and manage the fixtures included in each match week.</p>
-  <a href="/admin/fixtures">
-    <button>Manage Fixtures</button>
-  </a>
-</div>
+        <div className="card">
+          <h2>Manage Fixtures</h2>
+          <p>Review and manage the fixtures included in each match week.</p>
+          <a href="/admin/fixtures">
+            <button>Manage Fixtures</button>
+          </a>
+        </div>
 
-<div className="card">
-  <h2>Members</h2>
-  <p>View Predictor members and account details.</p>
-  <a href="/admin/members">
-    <button>Members</button>
-  </a>
-</div>
+        <div className="card">
+          <h2>Members</h2>
+          <p>View Predictor members and account details.</p>
+          <a href="/admin/members">
+            <button>Members</button>
+          </a>
+        </div>
 
         <a href="/predictor">
           <button>Back to Predictor</button>
         </a>
+
+        <button
+          onClick={handleSignOut}
+          disabled={signingOut}
+          style={{
+            marginTop: "10px",
+            opacity: signingOut ? 0.5 : 1,
+          }}
+        >
+          {signingOut ? "Signing Out..." : "Sign Out"}
+        </button>
 
         <p className="footer">
           Telford & Wrekin Hockey Club
