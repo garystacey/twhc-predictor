@@ -80,8 +80,13 @@ export default function LeaderboardPage() {
         }
       });
 
-      const leaderboard = (profiles || [])
-        .map((profile) => ({
+const usersWhoHavePredicted = new Set(
+  (predictions || []).map((prediction) => prediction.user_id)
+);
+
+const leaderboard = (profiles || [])
+  .filter((profile) => usersWhoHavePredicted.has(profile.id))
+  .map((profile) => ({
           id: profile.id,
           firstName: profile.first_name || "",
           surname: profile.surname || "",
