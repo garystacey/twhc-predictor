@@ -156,8 +156,13 @@ export default function WeeklyLeaderboardsPage() {
         }
       });
 
-            const leaderboard = (profiles || [])
-        .map((profile) => ({
+const usersWhoPredictedThisWeek = new Set(
+  predictionData.map((prediction) => prediction.user_id)
+);
+
+const leaderboard = (profiles || [])
+  .filter((profile) => usersWhoPredictedThisWeek.has(profile.id))
+  .map((profile) => ({
           id: profile.id,
           firstName: profile.first_name || "",
           surname: profile.surname || "",
