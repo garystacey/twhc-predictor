@@ -156,7 +156,7 @@ export default function WeeklyLeaderboardsPage() {
         }
       });
 
-      const leaderboard = (profiles || [])
+            const leaderboard = (profiles || [])
         .map((profile) => ({
           id: profile.id,
           firstName: profile.first_name || "",
@@ -174,9 +174,30 @@ export default function WeeklyLeaderboardsPage() {
           );
         });
 
+      let previousPoints = null;
+      let previousPosition = 0;
+
+      const rankedLeaderboard = leaderboard.map((row, index) => {
+        let position;
+
+        if (row.points === previousPoints) {
+          position = previousPosition;
+        } else {
+          position = index + 1;
+        }
+
+        previousPoints = row.points;
+        previousPosition = position;
+
+        return {
+          ...row,
+          position,
+        };
+      });
+
       setFixtures(fixtureData || []);
       setPredictions(predictionData);
-      setRows(leaderboard);
+      setRows(rankedLeaderboard);
       setLoading(false);
     }
 
@@ -358,7 +379,7 @@ export default function WeeklyLeaderboardsPage() {
                           cursor: "pointer",
                         }}
                       >
-                        <strong>{index + 1}</strong>
+                        <strong>{row.position}</strong>>
 
                         <div>
                           <strong>
