@@ -30,7 +30,9 @@ export default function AdminDashboardPage() {
         .single();
 
       if (error || !profile || profile.role !== "admin") {
-        setMessage("You do not have permission to access the Admin area.");
+        setMessage(
+          "You do not have permission to access the Admin area."
+        );
         setLoading(false);
         return;
       }
@@ -56,10 +58,11 @@ export default function AdminDashboardPage() {
       <main>
         <div className="container">
           <img
-  src="/TWHC-badge-white.png"
-  alt="Telford & Wrekin Hockey Club"
-  className="club-logo"
-/>
+            src="/TWHC-badge-white.png"
+            alt="Telford & Wrekin Hockey Club"
+            className="club-logo"
+          />
+
           <h1>THE PREDICTOR</h1>
           <p className="subtitle">Administrator</p>
 
@@ -76,10 +79,11 @@ export default function AdminDashboardPage() {
       <main>
         <div className="container">
           <img
-  src="/TWHC-badge-white.png"
-  alt="Telford & Wrekin Hockey Club"
-  className="club-logo"
-/>
+            src="/TWHC-badge-white.png"
+            alt="Telford & Wrekin Hockey Club"
+            className="club-logo"
+          />
+
           <h1>THE PREDICTOR</h1>
           <p className="subtitle">Administrator</p>
 
@@ -100,17 +104,20 @@ export default function AdminDashboardPage() {
     <main>
       <div className="container">
         <img
-  src="/TWHC-badge-white.png"
-  alt="Telford & Wrekin Hockey Club"
-  className="club-logo"
-/>
+          src="/TWHC-badge-white.png"
+          alt="Telford & Wrekin Hockey Club"
+          className="club-logo"
+        />
 
         <h1>THE PREDICTOR</h1>
         <p className="subtitle">Administrator Dashboard</p>
 
         <div className="card">
           <h2>Enter Results</h2>
-          <p>Record the actual H / D / A result for each fixture.</p>
+
+          <p>
+            Record the actual H / D / A result for each fixture.
+          </p>
 
           <a href="/admin/results">
             <button>Enter Results</button>
@@ -119,6 +126,7 @@ export default function AdminDashboardPage() {
 
         <div className="card">
           <h2>Manage Match Weeks</h2>
+
           <p>
             Review match dates, opening times and prediction deadlines.
           </p>
@@ -130,6 +138,7 @@ export default function AdminDashboardPage() {
 
         <div className="card">
           <h2>Manage Fixtures</h2>
+
           <p>
             Review and manage the fixtures included in each match week.
           </p>
@@ -141,7 +150,10 @@ export default function AdminDashboardPage() {
 
         <div className="card">
           <h2>Members</h2>
-          <p>View Predictor members and account details.</p>
+
+          <p>
+            View Predictor members and account details.
+          </p>
 
           <a href="/admin/members">
             <button>Members</button>
@@ -150,6 +162,7 @@ export default function AdminDashboardPage() {
 
         <div className="card">
           <h2>Competition Settings</h2>
+
           <p>
             Manage the entry fee and prize money for The Predictor.
           </p>
