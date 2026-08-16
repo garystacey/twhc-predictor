@@ -80,13 +80,17 @@ export default function LeaderboardPage() {
         }
       });
 
-const usersWhoHavePredicted = new Set(
-  (predictions || []).map((prediction) => prediction.user_id)
-);
+      const usersWhoHavePredicted = new Set(
+        (predictions || []).map(
+          (prediction) => prediction.user_id
+        )
+      );
 
-const leaderboard = (profiles || [])
-  .filter((profile) => usersWhoHavePredicted.has(profile.id))
-  .map((profile) => ({
+      const leaderboard = (profiles || [])
+        .filter((profile) =>
+          usersWhoHavePredicted.has(profile.id)
+        )
+        .map((profile) => ({
           id: profile.id,
           firstName: profile.first_name || "",
           surname: profile.surname || "",
@@ -106,23 +110,25 @@ const leaderboard = (profiles || [])
       let previousPoints = null;
       let previousPosition = 0;
 
-      const rankedLeaderboard = leaderboard.map((row, index) => {
-        let position;
+      const rankedLeaderboard = leaderboard.map(
+        (row, index) => {
+          let position;
 
-        if (row.points === previousPoints) {
-          position = previousPosition;
-        } else {
-          position = index + 1;
+          if (row.points === previousPoints) {
+            position = previousPosition;
+          } else {
+            position = index + 1;
+          }
+
+          previousPoints = row.points;
+          previousPosition = position;
+
+          return {
+            ...row,
+            position,
+          };
         }
-
-        previousPoints = row.points;
-        previousPosition = position;
-
-        return {
-          ...row,
-          position,
-        };
-      });
+      );
 
       setRows(rankedLeaderboard);
       setLoading(false);
@@ -135,14 +141,16 @@ const leaderboard = (profiles || [])
     return (
       <main>
         <div className="container">
-<img
-  src="/TWHC-badge-white.png"
-  alt="Telford & Wrekin Hockey Club"
-  className="club-logo"
-/>
+          <img
+            src="/TWHC-badge-white.png"
+            alt="Telford & Wrekin Hockey Club"
+            className="club-logo"
+          />
 
           <h1>THE PREDICTOR</h1>
-          <p className="subtitle">Overall Leaderboard</p>
+          <p className="subtitle">
+            Overall Leaderboard
+          </p>
 
           <div className="card">
             <p>Loading leaderboard...</p>
@@ -155,10 +163,16 @@ const leaderboard = (profiles || [])
   return (
     <main>
       <div className="container">
-        <div className="badge">TELFORD & WREKIN HC</div>
+        <img
+          src="/TWHC-badge-white.png"
+          alt="Telford & Wrekin Hockey Club"
+          className="club-logo"
+        />
 
         <h1>THE PREDICTOR</h1>
-        <p className="subtitle">Overall Leaderboard</p>
+        <p className="subtitle">
+          Overall Leaderboard
+        </p>
 
         {message && (
           <div className="card">
@@ -220,7 +234,9 @@ const leaderboard = (profiles || [])
             ))}
           </div>
 
-          {rows.length === 0 && <p>No players found.</p>}
+          {rows.length === 0 && (
+            <p>No players found.</p>
+          )}
         </div>
 
         <a href="/predictor">
