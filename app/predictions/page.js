@@ -58,27 +58,91 @@ export default function PredictionsPage() {
         .order("fixture_order", { ascending: true });
 
       if (fixtureError) {
-        setMessage(fixtureError.message);
-        setLoading(false);
-        return;
-      }
+  setMessage(fixtureError.message);
+  setLoading(false);
+  return;
+}
+      
+      const fixtureIds = (fixtureData || []).map((fixture) => fixture.id);
 
-      setWeeks(weekData || []);
-      setFixtures(fixtureData || []);
-      setLoading(false);
+let savedChoices = {};
+
+if (fixtureIds.length > 0) {
+  const { data: predictionData, error: predictionError } = await supabase
+    .from("predictions")
+    .select("fixture_id, prediction")
+    .eq("user_id", user.id)
+    .in("fixture_id", fixtureIds);
+
+  if (predictionError) {
+    setMessage(predictionError.message);
+  } else {
+    const reverseMap = {
+      home: "H",
+      draw: "D",
+      away: "A",
+    };
+
+    savedChoices = (predictionData || []).reduce((choices, prediction) => {
+      choices[prediction.fixture_id] = reverseMap[prediction.prediction];
+      return choices;
+    }, {});
+  }
+}
+
+setWeeks(weekData || []);
+setFixtures(fixtureData || []);
+setChoices(savedChoices);
+setLoading(false);
     }
 
     loadPredictionsPage();
   }, [router]);
 
-  function chooseResult(fixtureId, result, isOpen) {
-    if (!isOpen) return;
+async function chooseResult(fixtureId, result, isOpen) {
+  if (!isOpen) return;
 
-    setChoices((current) => ({
-      ...current,
-      [fixtureId]: result,
-    }));
+  const resultMap = {
+    H: "home",
+    D: "draw",
+    A: "away",
+  };
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    router.push("/login");
+    return;
   }
+
+  const { error } = await supabase
+    .from("predictions")
+    .upsert(
+      {
+        user_id: user.id,
+        fixture_id: fixtureId,
+        prediction: resultMap[result],
+        updated_at: new Date().toISOString(),
+      },
+      {
+        onConflict: "user_id,fixture_id",
+      }
+    );
+
+  if (error) {
+    setMessage(error.message);
+    return;
+  }
+
+  setChoices((current) => ({
+    ...current,
+    [fixtureId]: result,
+  }));
+
+  setMessage("Prediction saved");
+}
 
   function formatDate(dateString) {
     return new Date(`${dateString}T12:00:00`).toLocaleDateString("en-GB", {
