@@ -6,6 +6,7 @@ import { supabase } from "../../lib/supabase";
 
 export default function LoginPage() {
   const router = useRouter();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -13,6 +14,7 @@ export default function LoginPage() {
 
   async function handleLogin(e) {
     e.preventDefault();
+
     setLoading(true);
     setMessage("");
 
@@ -34,11 +36,11 @@ export default function LoginPage() {
   return (
     <main>
       <div className="container">
-<img
-  src="/TWHC-badge-white.png"
-  alt="Telford & Wrekin Hockey Club"
-  className="club-logo"
-/>
+        <img
+          src="/TWHC-badge-white.png"
+          alt="Telford & Wrekin Hockey Club"
+          className="club-logo"
+        />
 
         <h1>THE PREDICTOR</h1>
 
@@ -73,22 +75,26 @@ export default function LoginPage() {
             </button>
           </form>
 
-<p style={{ marginTop: "16px" }}>
-  <a href="/forgot-password">Forgot Password?</a>
-</p>
-              
-<p style={{ marginTop: "20px" }}>
-  New to The Predictor?
-</p>
+          <p style={{ marginTop: "16px" }}>
+            <a href="/forgot-password">
+              Forgot Password?
+            </a>
+          </p>
 
-<a href="/register">
-  <button>Create Account</button>
-</a>
+          <p style={{ marginTop: "20px" }}>
+            New to The Predictor?
+          </p>
+
+          <a href="/register">
+            <button>Create Account</button>
+          </a>
 
           {message && <p>{message}</p>}
         </div>
 
-        <p className="footer">Telford & Wrekin Hockey Club</p>
+        <p className="footer">
+          Telford & Wrekin Hockey Club
+        </p>
       </div>
     </main>
   );
