@@ -69,6 +69,14 @@ export default function LoginPage() {
             </button>
           </form>
 
+<p style={{ marginTop: "20px" }}>
+  New to The Predictor?
+</p>
+
+<a href="/register">
+  <button>Create Account</button>
+</a>
+
           {message && <p>{message}</p>}
         </div>
 
