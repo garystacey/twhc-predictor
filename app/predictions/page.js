@@ -285,9 +285,13 @@ async function chooseResult(fixtureId, result, isOpen) {
                             padding: 0,
                             borderRadius: "50%",
                             fontSize: "13px",
-                            opacity: !isOpen ? 0.4 : 1,
-                            background:
-                              selected === result ? "#061b33" : "#0877c9",
+                            opacity: !isOpen ? 0.28 : 1,
+cursor: !isOpen ? "not-allowed" : "pointer",
+background: !isOpen
+  ? "#9ca3af"
+  : selected === result
+  ? "#061b33"
+  : "#0877c9",
                           }}
                         >
                           {result}
