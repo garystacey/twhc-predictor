@@ -220,7 +220,11 @@ export default function PredictionsPage() {
         className="container"
         style={{ maxWidth: "760px" }}
       >
-        <div className="badge">
+<img
+  src="/TWHC-badge-white.png"
+  alt="Telford & Wrekin Hockey Club"
+  className="club-logo"
+/>
           TELFORD & WREKIN HC
         </div>
 
