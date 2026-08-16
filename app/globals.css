@@ -59,6 +59,14 @@ main {
     0 0 0 2px rgba(30, 91, 255, 0.12);
 }
 
+.club-logo {
+  display: block;
+  width: 90px;
+  height: auto;
+  margin: 0 auto 16px;
+  object-fit: contain;
+}
+
 h1 {
   margin: 0;
   font-size: 44px;
@@ -245,6 +253,11 @@ textarea:focus {
     max-width: 100%;
   }
 
+.club-logo {
+  width: 72px;
+  margin-bottom: 14px;
+}
+  
   .badge {
     padding: 6px 13px;
     font-size: 10px;
