@@ -348,24 +348,41 @@ export default function WeeklyLeaderboardsPage() {
                               userPrediction &&
                               userPrediction === fixture.result;
 
+                            const predictionLetter =
+                              shortResult(userPrediction);
+
+                            const resultLetter =
+                              shortResult(fixture.result);
+
+                            const circleStyle = {
+                              width: "34px",
+                              minWidth: "34px",
+                              height: "34px",
+                              borderRadius: "50%",
+                              background: "#061b33",
+                              color: "#ffffff",
+                              display: "inline-flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              fontWeight: "bold",
+                              fontSize: "13px",
+                            };
+
                             return (
                               <div
                                 key={fixture.id}
                                 style={{
-                                  display: "grid",
-                                  gridTemplateColumns:
-                                    "1fr 52px 52px 32px",
-                                  gap: "8px",
-                                  alignItems: "center",
-                                  padding: "7px 0",
+                                  padding: "11px 0",
                                   borderTop:
                                     "1px solid #d7dee7",
-                                  fontSize: "13px",
                                 }}
                               >
                                 <div
                                   style={{
-                                    fontWeight: "600",
+                                    fontWeight: "700",
+                                    fontSize: "13px",
+                                    marginBottom: "9px",
+                                    textAlign: "left",
                                   }}
                                 >
                                   {fixture.home_team} v{" "}
@@ -374,38 +391,61 @@ export default function WeeklyLeaderboardsPage() {
 
                                 <div
                                   style={{
-                                    textAlign: "center",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent:
+                                      "space-between",
+                                    gap: "8px",
+                                    fontSize: "12px",
                                   }}
                                 >
-                                  Pick:{" "}
-                                  <strong>
-                                    {shortResult(
-                                      userPrediction
-                                    )}
-                                  </strong>
-                                </div>
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                      gap: "6px",
+                                    }}
+                                  >
+                                    <span>Prediction</span>
 
-                                <div
-                                  style={{
-                                    textAlign: "center",
-                                  }}
-                                >
-                                  Result:{" "}
-                                  <strong>
-                                    {shortResult(
-                                      fixture.result
-                                    )}
-                                  </strong>
-                                </div>
+                                    <span
+                                      style={{
+                                        ...circleStyle,
+                                        background:
+                                          predictionLetter === "-"
+                                            ? "#9ca3af"
+                                            : "#061b33",
+                                      }}
+                                    >
+                                      {predictionLetter}
+                                    </span>
+                                  </div>
 
-                                <div
-                                  style={{
-                                    textAlign: "center",
-                                    fontWeight: "bold",
-                                    fontSize: "18px",
-                                  }}
-                                >
-                                  {correct ? "✓" : "✗"}
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                      gap: "6px",
+                                    }}
+                                  >
+                                    <span>Result</span>
+
+                                    <span style={circleStyle}>
+                                      {resultLetter}
+                                    </span>
+                                  </div>
+
+                                  <div
+                                    style={{
+                                      width: "28px",
+                                      textAlign: "center",
+                                      fontWeight: "bold",
+                                      fontSize: "23px",
+                                      lineHeight: 1,
+                                    }}
+                                  >
+                                    {correct ? "✓" : "✗"}
+                                  </div>
                                 </div>
                               </div>
                             );
