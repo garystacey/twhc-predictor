@@ -194,7 +194,18 @@ async function chooseResult(fixtureId, result, isOpen) {
           </div>
         )}
 
-        {weeks.map((week) => {
+        {weeks
+  .filter((week, index) => {
+    const now = new Date();
+
+    // First week that has not yet passed its deadline
+    const currentWeekIndex = weeks.findIndex(
+      (w) => now < new Date(w.deadline)
+    );
+
+    return index === currentWeekIndex;
+  })
+  .map((week) => {
           const now = new Date();
           const opensAt = new Date(week.opens_at);
           const deadline = new Date(week.deadline);
