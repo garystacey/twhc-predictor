@@ -34,7 +34,9 @@ export default function ManageFixturesPage() {
         .single();
 
       if (profileError || !profile || profile.role !== "admin") {
-        setMessage("You do not have permission to access this page.");
+        setMessage(
+          "You do not have permission to access this page."
+        );
         setLoading(false);
         return;
       }
@@ -110,7 +112,9 @@ export default function ManageFixturesPage() {
       !fixture.scheduled_date ||
       !fixture.status
     ) {
-      setMessage("Please complete all fixture fields before saving.");
+      setMessage(
+        "Please complete all fixture fields before saving."
+      );
       return;
     }
 
@@ -142,11 +146,11 @@ export default function ManageFixturesPage() {
     return (
       <main>
         <div className="container">
-<img
-  src="/TWHC-badge-white.png"
-  alt="Telford & Wrekin Hockey Club"
-  className="club-logo"
-/>
+          <img
+            src="/TWHC-badge-white.png"
+            alt="Telford & Wrekin Hockey Club"
+            className="club-logo"
+          />
 
           <h1>THE PREDICTOR</h1>
           <p className="subtitle">Manage Fixtures</p>
@@ -163,11 +167,11 @@ export default function ManageFixturesPage() {
     return (
       <main>
         <div className="container">
-<img
-  src="/TWHC-badge-white.png"
-  alt="Telford & Wrekin Hockey Club"
-  className="club-logo"
-/>
+          <img
+            src="/TWHC-badge-white.png"
+            alt="Telford & Wrekin Hockey Club"
+            className="club-logo"
+          />
 
           <h1>THE PREDICTOR</h1>
           <p className="subtitle">Manage Fixtures</p>
@@ -188,11 +192,11 @@ export default function ManageFixturesPage() {
   return (
     <main>
       <div className="container">
-<img
-  src="/TWHC-badge-white.png"
-  alt="Telford & Wrekin Hockey Club"
-  className="club-logo"
-/>
+        <img
+          src="/TWHC-badge-white.png"
+          alt="Telford & Wrekin Hockey Club"
+          className="club-logo"
+        />
 
         <h1>THE PREDICTOR</h1>
         <p className="subtitle">Manage Fixtures</p>
@@ -208,7 +212,9 @@ export default function ManageFixturesPage() {
 
           <select
             value={selectedWeekId}
-            onChange={(e) => setSelectedWeekId(e.target.value)}
+            onChange={(e) =>
+              setSelectedWeekId(e.target.value)
+            }
             style={{
               width: "100%",
               padding: "12px",
@@ -221,7 +227,9 @@ export default function ManageFixturesPage() {
             {weeks.map((week) => (
               <option key={week.id} value={week.id}>
                 Match Week {week.week_no}
-                {week.match_date ? ` — ${week.match_date}` : ""}
+                {week.match_date
+                  ? ` — ${week.match_date}`
+                  : ""}
               </option>
             ))}
           </select>
@@ -265,7 +273,7 @@ export default function ManageFixturesPage() {
 
                       <input
                         type="text"
-                        value={fixture.home_team}
+                        value={fixture.home_team || ""}
                         onChange={(e) =>
                           updateFixtureField(
                             fixture.id,
@@ -290,7 +298,7 @@ export default function ManageFixturesPage() {
 
                       <input
                         type="text"
-                        value={fixture.away_team}
+                        value={fixture.away_team || ""}
                         onChange={(e) =>
                           updateFixtureField(
                             fixture.id,
@@ -316,7 +324,7 @@ export default function ManageFixturesPage() {
                       <input
                         type="number"
                         min="1"
-                        value={fixture.fixture_order}
+                        value={fixture.fixture_order || ""}
                         onChange={(e) =>
                           updateFixtureField(
                             fixture.id,
@@ -341,7 +349,7 @@ export default function ManageFixturesPage() {
 
                       <input
                         type="date"
-                        value={fixture.scheduled_date}
+                        value={fixture.scheduled_date || ""}
                         onChange={(e) =>
                           updateFixtureField(
                             fixture.id,
@@ -365,7 +373,7 @@ export default function ManageFixturesPage() {
                       <strong>Status</strong>
 
                       <select
-                        value={fixture.status}
+                        value={fixture.status || "scheduled"}
                         onChange={(e) =>
                           updateFixtureField(
                             fixture.id,
@@ -383,19 +391,34 @@ export default function ManageFixturesPage() {
                           fontSize: "16px",
                         }}
                       >
-                        <option value="scheduled">Scheduled</option>
-                        <option value="postponed">Postponed</option>
-                        <option value="completed">Completed</option>
-                        <option value="cancelled">Cancelled</option>
+                        <option value="scheduled">
+                          Scheduled
+                        </option>
+
+                        <option value="postponed">
+                          Postponed
+                        </option>
+
+                        <option value="completed">
+                          Completed
+                        </option>
+
+                        <option value="cancelled">
+                          Cancelled
+                        </option>
                       </select>
                     </label>
 
                     <button
-                      onClick={() => saveFixture(fixture)}
+                      onClick={() =>
+                        saveFixture(fixture)
+                      }
                       disabled={savingId === fixture.id}
                       style={{
                         opacity:
-                          savingId === fixture.id ? 0.5 : 1,
+                          savingId === fixture.id
+                            ? 0.5
+                            : 1,
                       }}
                     >
                       {savingId === fixture.id
