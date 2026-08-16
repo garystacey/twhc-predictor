@@ -45,11 +45,11 @@ export default function PredictorPage() {
         const week = weekData[0];
         setCurrentWeek(week);
 
-const { data: fixtureData } = await supabase
-  .from("fixtures")
-  .select("id, status")
-  .eq("match_week_id", week.id)
-  .neq("status", "cancelled");
+        const { data: fixtureData } = await supabase
+          .from("fixtures")
+          .select("id, status")
+          .eq("match_week_id", week.id)
+          .neq("status", "cancelled");
 
         const fixtureIds = (fixtureData || []).map(
           (fixture) => fixture.id
@@ -102,10 +102,10 @@ const { data: fixtureData } = await supabase
     <main>
       <div className="container">
         <img
-  src="/TWHC-badge-white.png"
-  alt="Telford & Wrekin Hockey Club"
-  className="club-logo"
-/>
+          src="/TWHC-badge-white.png"
+          alt="Telford & Wrekin Hockey Club"
+          className="club-logo"
+        />
 
         <h1>THE PREDICTOR</h1>
 
@@ -166,6 +166,7 @@ const { data: fixtureData } = await supabase
           <p>
             View the upcoming fixtures and submit your predictions.
           </p>
+
           <a href="/predictions">
             <button>Predictions</button>
           </a>
@@ -176,6 +177,7 @@ const { data: fixtureData } = await supabase
           <p>
             See who's leading The Predictor this season.
           </p>
+
           <a href="/leaderboard">
             <button>Overall Leaderboard</button>
           </a>
@@ -186,6 +188,7 @@ const { data: fixtureData } = await supabase
           <p>
             View the leaderboard for any completed match week.
           </p>
+
           <a href="/last-week">
             <button>Weekly Leaderboards</button>
           </a>
@@ -196,6 +199,7 @@ const { data: fixtureData } = await supabase
           <p>
             View the competition rules and scoring system.
           </p>
+
           <a href="/rules">
             <button>Competition Rules</button>
           </a>
@@ -207,6 +211,7 @@ const { data: fixtureData } = await supabase
             <p>
               Manage fixtures, results and The Predictor.
             </p>
+
             <a href="/admin">
               <button>Admin Area</button>
             </a>
