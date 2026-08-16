@@ -70,13 +70,13 @@ export default function PredictorPage() {
 </a>
         </div>
 
-        <div className="card">
-          <h2>Last Week</h2>
-          <p>See the best performers from the previous game week.</p>
-          <a href="/last-week">
-  <button>Last Week Leaderboard</button>
-</a>
-        </div>
+       <div className="card">
+  <h2>Weekly Leaderboards</h2>
+  <p>View the leaderboard for any completed match week.</p>
+  <a href="/last-week">
+    <button>Weekly Leaderboards</button>
+  </a>
+</div>
 
         <div className="card">
           <h2>Rules</h2>
