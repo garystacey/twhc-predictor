@@ -69,6 +69,10 @@ export default function LoginPage() {
             </button>
           </form>
 
+<p style={{ marginTop: "16px" }}>
+  <a href="/forgot-password">Forgot Password?</a>
+</p>
+              
 <p style={{ marginTop: "20px" }}>
   New to The Predictor?
 </p>
