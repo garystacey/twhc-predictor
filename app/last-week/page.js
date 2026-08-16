@@ -271,19 +271,26 @@ export default function WeeklyLeaderboardsPage() {
 
             <h2>Match Week {weekNo}</h2>
 
-            {pendingResults > 0 && !loading && (
-              <p
-                style={{
-                  fontSize: "13px",
-                  fontWeight: "700",
-                  marginTop: "6px",
-                }}
-              >
-                {pendingResults}{" "}
-                {pendingResults === 1
-                  ? "result pending"
-                  : "results pending"}
-              </p>
+{pendingResults > 0 && !loading && (
+  <div
+    style={{
+      marginTop: "8px",
+      marginBottom: "6px",
+      padding: "8px 10px",
+      borderRadius: "8px",
+      background: "#fff3cd",
+      color: "#664d03",
+      fontSize: "13px",
+      fontWeight: "700",
+      textAlign: "center",
+    }}
+  >
+    ⚠ Provisional standings — {pendingResults}{" "}
+    {pendingResults === 1
+      ? "result pending"
+      : "results pending"}
+  </div>
+)}
             )}
 
             {loading ? (
