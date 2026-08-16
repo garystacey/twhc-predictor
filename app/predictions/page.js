@@ -199,7 +199,7 @@ async function chooseResult(fixtureId, result, isOpen) {
           const opensAt = new Date(week.opens_at);
           const deadline = new Date(week.deadline);
 
-          const isOpen = now >= opensAt && now < deadline;
+         const isOpen = true; // TEMPORARY TEST MODE
           const notOpenYet = now < opensAt;
 
           const weekFixtures = fixtures.filter(
