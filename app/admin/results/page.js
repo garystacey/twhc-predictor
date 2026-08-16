@@ -33,7 +33,9 @@ export default function AdminPage() {
         .single();
 
       if (profileError || !profile || profile.role !== "admin") {
-        setMessage("You do not have permission to access the Admin area.");
+        setMessage(
+          "You do not have permission to access the Admin area."
+        );
         setLoading(false);
         return;
       }
@@ -248,11 +250,11 @@ export default function AdminPage() {
     return (
       <main>
         <div className="container">
-<img
-  src="/TWHC-badge-white.png"
-  alt="Telford & Wrekin Hockey Club"
-  className="club-logo"
-/>
+          <img
+            src="/TWHC-badge-white.png"
+            alt="Telford & Wrekin Hockey Club"
+            className="club-logo"
+          />
 
           <h1>THE PREDICTOR</h1>
           <p className="subtitle">Administrator</p>
@@ -269,11 +271,11 @@ export default function AdminPage() {
     return (
       <main>
         <div className="container">
-<img
-  src="/TWHC-badge-white.png"
-  alt="Telford & Wrekin Hockey Club"
-  className="club-logo"
-/>
+          <img
+            src="/TWHC-badge-white.png"
+            alt="Telford & Wrekin Hockey Club"
+            className="club-logo"
+          />
 
           <h1>THE PREDICTOR</h1>
           <p className="subtitle">Administrator</p>
@@ -294,14 +296,16 @@ export default function AdminPage() {
   return (
     <main>
       <div className="container">
-<img
-  src="/TWHC-badge-white.png"
-  alt="Telford & Wrekin Hockey Club"
-  className="club-logo"
-/>
+        <img
+          src="/TWHC-badge-white.png"
+          alt="Telford & Wrekin Hockey Club"
+          className="club-logo"
+        />
 
         <h1>THE PREDICTOR</h1>
-        <p className="subtitle">Administrator — Enter Results</p>
+        <p className="subtitle">
+          Administrator — Enter Results
+        </p>
 
         {message && (
           <div className="card">
@@ -347,7 +351,8 @@ export default function AdminPage() {
               {fixtures.map((fixture) => {
                 const selected = displayResult(fixture.result);
                 const saving = savingId === fixture.id;
-                const cancelled = fixture.status === "cancelled";
+                const cancelled =
+                  fixture.status === "cancelled";
 
                 return (
                   <div
@@ -391,7 +396,10 @@ export default function AdminPage() {
                             key={result}
                             disabled={saving}
                             onClick={() =>
-                              saveResult(fixture.id, result)
+                              saveResult(
+                                fixture.id,
+                                result
+                              )
                             }
                             style={{
                               width: "44px",
@@ -413,7 +421,9 @@ export default function AdminPage() {
                       {!cancelled && (
                         <button
                           disabled={saving}
-                          onClick={() => cancelFixture(fixture.id)}
+                          onClick={() =>
+                            cancelFixture(fixture.id)
+                          }
                           style={{
                             width: "auto",
                             minWidth: "95px",
@@ -428,7 +438,9 @@ export default function AdminPage() {
                       {fixture.result && !cancelled && (
                         <button
                           disabled={saving}
-                          onClick={() => clearResult(fixture.id)}
+                          onClick={() =>
+                            clearResult(fixture.id)
+                          }
                           style={{
                             width: "auto",
                             minWidth: "70px",
@@ -443,7 +455,9 @@ export default function AdminPage() {
                       {cancelled && (
                         <button
                           disabled={saving}
-                          onClick={() => restoreFixture(fixture.id)}
+                          onClick={() =>
+                            restoreFixture(fixture.id)
+                          }
                           style={{
                             width: "auto",
                             minWidth: "90px",
