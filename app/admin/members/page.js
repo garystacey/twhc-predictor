@@ -31,7 +31,9 @@ export default function MembersPage() {
         .single();
 
       if (profileError || !profile || profile.role !== "admin") {
-        setMessage("You do not have permission to access this page.");
+        setMessage(
+          "You do not have permission to access this page."
+        );
         setLoading(false);
         return;
       }
@@ -40,7 +42,9 @@ export default function MembersPage() {
 
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, team_name, first_name, surname, role, created_at")
+        .select(
+          "id, team_name, first_name, surname, role, created_at"
+        )
         .order("created_at", { ascending: true });
 
       if (error) {
@@ -73,7 +77,9 @@ export default function MembersPage() {
       !member.team_name ||
       !member.role
     ) {
-      setMessage("Please complete all member fields before saving.");
+      setMessage(
+        "Please complete all member fields before saving."
+      );
       return;
     }
 
@@ -104,11 +110,11 @@ export default function MembersPage() {
     return (
       <main>
         <div className="container">
-<img
-  src="/TWHC-badge-white.png"
-  alt="Telford & Wrekin Hockey Club"
-  className="club-logo"
-/>
+          <img
+            src="/TWHC-badge-white.png"
+            alt="Telford & Wrekin Hockey Club"
+            className="club-logo"
+          />
 
           <h1>THE PREDICTOR</h1>
           <p className="subtitle">Members</p>
@@ -125,11 +131,11 @@ export default function MembersPage() {
     return (
       <main>
         <div className="container">
-<img
-  src="/TWHC-badge-white.png"
-  alt="Telford & Wrekin Hockey Club"
-  className="club-logo"
-/>
+          <img
+            src="/TWHC-badge-white.png"
+            alt="Telford & Wrekin Hockey Club"
+            className="club-logo"
+          />
 
           <h1>THE PREDICTOR</h1>
           <p className="subtitle">Members</p>
@@ -150,11 +156,11 @@ export default function MembersPage() {
   return (
     <main>
       <div className="container">
-<img
-  src="/TWHC-badge-white.png"
-  alt="Telford & Wrekin Hockey Club"
-  className="club-logo"
-/>
+        <img
+          src="/TWHC-badge-white.png"
+          alt="Telford & Wrekin Hockey Club"
+          className="club-logo"
+        />
 
         <h1>THE PREDICTOR</h1>
         <p className="subtitle">Members</p>
@@ -192,7 +198,7 @@ export default function MembersPage() {
 
                       <input
                         type="text"
-                        value={member.first_name}
+                        value={member.first_name || ""}
                         onChange={(e) =>
                           updateMemberField(
                             member.id,
@@ -217,7 +223,7 @@ export default function MembersPage() {
 
                       <input
                         type="text"
-                        value={member.surname}
+                        value={member.surname || ""}
                         onChange={(e) =>
                           updateMemberField(
                             member.id,
@@ -242,7 +248,7 @@ export default function MembersPage() {
 
                       <input
                         type="text"
-                        value={member.team_name}
+                        value={member.team_name || ""}
                         onChange={(e) =>
                           updateMemberField(
                             member.id,
@@ -266,7 +272,7 @@ export default function MembersPage() {
                       <strong>Role</strong>
 
                       <select
-                        value={member.role}
+                        value={member.role || "entrant"}
                         onChange={(e) =>
                           updateMemberField(
                             member.id,
