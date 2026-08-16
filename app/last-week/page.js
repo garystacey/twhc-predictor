@@ -31,11 +31,12 @@ export default function WeeklyLeaderboardsPage() {
 
       const now = new Date().toISOString();
 
-      const { data: completedWeekData, error: weekError } = await supabase
-        .from("match_weeks")
-        .select("id, week_no, deadline")
-        .lt("deadline", now)
-        .order("week_no", { ascending: true });
+      const { data: completedWeekData, error: weekError } =
+        await supabase
+          .from("match_weeks")
+          .select("id, week_no, deadline")
+          .lt("deadline", now)
+          .order("week_no", { ascending: true });
 
       if (weekError) {
         setMessage(weekError.message);
@@ -156,13 +157,15 @@ export default function WeeklyLeaderboardsPage() {
         }
       });
 
-const usersWhoPredictedThisWeek = new Set(
-  predictionData.map((prediction) => prediction.user_id)
-);
+      const usersWhoPredictedThisWeek = new Set(
+        predictionData.map((prediction) => prediction.user_id)
+      );
 
-const leaderboard = (profiles || [])
-  .filter((profile) => usersWhoPredictedThisWeek.has(profile.id))
-  .map((profile) => ({
+      const leaderboard = (profiles || [])
+        .filter((profile) =>
+          usersWhoPredictedThisWeek.has(profile.id)
+        )
+        .map((profile) => ({
           id: profile.id,
           firstName: profile.first_name || "",
           surname: profile.surname || "",
@@ -182,23 +185,25 @@ const leaderboard = (profiles || [])
       let previousPoints = null;
       let previousPosition = 0;
 
-      const rankedLeaderboard = leaderboard.map((row, index) => {
-        let position;
+      const rankedLeaderboard = leaderboard.map(
+        (row, index) => {
+          let position;
 
-        if (row.points === previousPoints) {
-          position = previousPosition;
-        } else {
-          position = index + 1;
+          if (row.points === previousPoints) {
+            position = previousPosition;
+          } else {
+            position = index + 1;
+          }
+
+          previousPoints = row.points;
+          previousPosition = position;
+
+          return {
+            ...row,
+            position,
+          };
         }
-
-        previousPoints = row.points;
-        previousPosition = position;
-
-        return {
-          ...row,
-          position,
-        };
-      });
+      );
 
       setFixtures(fixtureData || []);
       setPredictions(predictionData);
@@ -230,11 +235,11 @@ const leaderboard = (profiles || [])
     return (
       <main>
         <div className="container">
-<img
-  src="/TWHC-badge-white.png"
-  alt="Telford & Wrekin Hockey Club"
-  className="club-logo"
-/>
+          <img
+            src="/TWHC-badge-white.png"
+            alt="Telford & Wrekin Hockey Club"
+            className="club-logo"
+          />
 
           <h1>THE PREDICTOR</h1>
           <p className="subtitle">Weekly Leaderboards</p>
@@ -266,11 +271,11 @@ const leaderboard = (profiles || [])
   return (
     <main>
       <div className="container">
-<img
-  src="/TWHC-badge-white.png"
-  alt="Telford & Wrekin Hockey Club"
-  className="club-logo"
-/>
+        <img
+          src="/TWHC-badge-white.png"
+          alt="Telford & Wrekin Hockey Club"
+          className="club-logo"
+        />
 
         <h1>THE PREDICTOR</h1>
         <p className="subtitle">Weekly Leaderboards</p>
@@ -370,26 +375,33 @@ const leaderboard = (profiles || [])
                   marginTop: "20px",
                 }}
               >
-                {rows.map((row, index) => {
+                {rows.map((row) => {
                   const expanded =
                     expandedUserId === row.id;
 
                   return (
                     <div key={row.id}>
                       <div
-  style={{
-    display: "grid",
-    gridTemplateColumns: "50px 1fr 90px",
-    alignItems: "center",
-    padding: "12px 8px",
-    borderBottom: "1px solid #d7dee7",
-    textAlign: "left",
-    cursor: "pointer",
-  }}
->
-  <strong>{row.position}</strong>
+                        onClick={() =>
+                          setExpandedUserId(
+                            expanded ? null : row.id
+                          )
+                        }
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns:
+                            "50px 1fr 90px",
+                          alignItems: "center",
+                          padding: "12px 8px",
+                          borderBottom:
+                            "1px solid #d7dee7",
+                          textAlign: "left",
+                          cursor: "pointer",
+                        }}
+                      >
+                        <strong>{row.position}</strong>
 
-  <div>
+                        <div>
                           <strong>
                             {row.firstName} {row.surname}
                           </strong>
