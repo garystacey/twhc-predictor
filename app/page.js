@@ -40,11 +40,11 @@ export default function Home() {
   return (
     <main>
       <div className="container">
-<img
-  src="/TWHC-badge-white.png"
-  alt="Telford & Wrekin Hockey Club"
-  className="club-logo"
-/>
+        <img
+          src="/TWHC-badge-white.png"
+          alt="Telford & Wrekin Hockey Club"
+          className="club-logo"
+        />
 
         <h1>THE PREDICTOR</h1>
 
@@ -58,11 +58,15 @@ export default function Home() {
           ) : user ? (
             <>
               <h2>
-                Welcome{profile?.first_name ? `, ${profile.first_name}` : ""}
+                Welcome
+                {profile?.first_name
+                  ? `, ${profile.first_name}`
+                  : ""}
               </h2>
 
               <p>
-                You are signed in as <strong>{user.email}</strong>
+                You are signed in as{" "}
+                <strong>{user.email}</strong>
               </p>
 
               {profile?.role === "admin" && (
@@ -71,21 +75,24 @@ export default function Home() {
                 </p>
               )}
 
-<a href="/predictor">
-  <button>Enter The Predictor</button>
-</a>
+              <a href="/predictor">
+                <button>Enter The Predictor</button>
+              </a>
 
               <br />
               <br />
 
-              <button onClick={handleSignOut}>Sign Out</button>
+              <button onClick={handleSignOut}>
+                Sign Out
+              </button>
             </>
           ) : (
             <>
               <h2>Welcome to The Predictor</h2>
 
               <p>
-                Sign in to make your predictions for the upcoming fixtures.
+                Sign in to make your predictions for the upcoming
+                fixtures.
               </p>
 
               <a href="/login">
@@ -95,7 +102,9 @@ export default function Home() {
           )}
         </div>
 
-        <p className="footer">Telford & Wrekin Hockey Club</p>
+        <p className="footer">
+          Telford & Wrekin Hockey Club
+        </p>
       </div>
     </main>
   );
