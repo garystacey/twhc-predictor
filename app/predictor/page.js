@@ -8,7 +8,9 @@ export default function PredictorPage() {
   const router = useRouter();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-
+const [currentWeek, setCurrentWeek] = useState(null);
+const [predictionStatus, setPredictionStatus] = useState(null);
+  
   useEffect(() => {
     async function loadUser() {
       const {
@@ -27,6 +29,43 @@ export default function PredictorPage() {
         .single();
 
       setProfile(data);
+      const now = new Date().toISOString();
+
+const { data: weekData } = await supabase
+  .from("match_weeks")
+  .select("id, week_no, deadline")
+  .gt("deadline", now)
+  .order("week_no", { ascending: true })
+  .limit(1);
+
+if (weekData && weekData.length > 0) {
+  const week = weekData[0];
+  setCurrentWeek(week);
+
+  const { data: fixtureData } = await supabase
+    .from("fixtures")
+    .select("id")
+    .eq("match_week_id", week.id);
+
+  const fixtureIds = (fixtureData || []).map((fixture) => fixture.id);
+
+  let completed = 0;
+
+  if (fixtureIds.length > 0) {
+    const { data: predictionData } = await supabase
+      .from("predictions")
+      .select("fixture_id")
+      .eq("user_id", user.id)
+      .in("fixture_id", fixtureIds);
+
+    completed = (predictionData || []).length;
+  }
+
+  setPredictionStatus({
+    completed,
+    total: fixtureIds.length,
+  });
+}
       setLoading(false);
     }
 
