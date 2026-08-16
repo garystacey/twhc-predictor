@@ -17,7 +17,7 @@ export default function RulesPage() {
             }}
           >
             <p>
-              Each match week you predict the result of the listed
+              Each Match Week you predict the result of the listed
               Telford & Wrekin Hockey Club fixtures.
             </p>
 
@@ -53,8 +53,13 @@ export default function RulesPage() {
             </p>
 
             <p>
-              Your points are calculated automatically once the
-              actual fixture results have been entered.
+              Points are calculated automatically once the actual
+              fixture results have been entered.
+            </p>
+
+            <p>
+              Cancelled fixtures do not count and no points can be
+              won or lost on them.
             </p>
           </div>
         </div>
@@ -69,22 +74,23 @@ export default function RulesPage() {
             }}
           >
             <p>
-              Each match week has its own opening time and deadline.
+              Each Match Week has its own opening time and prediction
+              deadline.
             </p>
 
             <p>
-              The Predictions page will show when the next match
-              week opens.
+              You can make or change your selections at any time while
+              that Match Week is open.
             </p>
 
             <p>
-              You can make or change your selections at any time
-              while that match week is open.
-            </p>
-
-            <p>
-              Once the deadline has passed, predictions are locked
+              Once the deadline has passed, all predictions are locked
               and can no longer be changed.
+            </p>
+
+            <p>
+              Locked predictions remain available to view afterwards,
+              so you can check what you selected.
             </p>
           </div>
         </div>
@@ -99,14 +105,81 @@ export default function RulesPage() {
             }}
           >
             <p>
-              If you do not submit a prediction for a fixture before
-              the deadline, no point can be scored for that fixture.
+              You do not have to predict every fixture.
             </p>
 
             <p>
-              You do not have to predict every fixture, but completing
-              all available predictions gives you the best opportunity
-              to score points.
+              However, if you do not submit a prediction for a fixture
+              before the deadline, that fixture will score
+              <strong> 0 points</strong>.
+            </p>
+
+            <p>
+              No prediction will be entered automatically and missing
+              predictions cannot be added after the deadline.
+            </p>
+          </div>
+        </div>
+
+        <div className="card">
+          <h2>Postponed Fixtures</h2>
+
+          <div
+            style={{
+              textAlign: "left",
+              lineHeight: "1.6",
+            }}
+          >
+            <p>
+              If a fixture is postponed, your original prediction will
+              remain valid.
+            </p>
+
+            <p>
+              The prediction will carry forward until the rearranged
+              fixture is played.
+            </p>
+
+            <p>
+              You will not be able to change your original prediction
+              because of the postponement.
+            </p>
+
+            <p>
+              Points will be awarded once the rearranged fixture has
+              been completed and the result has been entered.
+            </p>
+          </div>
+        </div>
+
+        <div className="card">
+          <h2>Cancelled Fixtures</h2>
+
+          <div
+            style={{
+              textAlign: "left",
+              lineHeight: "1.6",
+            }}
+          >
+            <p>
+              If a fixture is cancelled and will not be played, it will
+              be removed from the active prediction list.
+            </p>
+
+            <p>
+              Any prediction already made for that fixture will not
+              count.
+            </p>
+
+            <p>
+              No points will be awarded and the fixture will be excluded
+              from the total number of available points for that Match
+              Week.
+            </p>
+
+            <p>
+              Cancelled fixtures will still be visible in the historical
+              Match Week record for reference.
             </p>
           </div>
         </div>
@@ -123,19 +196,108 @@ export default function RulesPage() {
             <p>
               <strong>Overall Leaderboard</strong>
               <br />
-              Shows each player's total points across the competition.
+              Shows each entrant&apos;s total points across the
+              competition.
             </p>
 
             <p>
               <strong>Weekly Leaderboards</strong>
               <br />
-              Shows the points scored in each individual completed
-              match week.
+              Shows the points scored in each completed Match Week.
             </p>
 
             <p>
-              Previous weekly leaderboards remain available, so you
-              can look back at any completed match week.
+              Previous Weekly Leaderboards remain available, so you can
+              look back at any completed Match Week.
+            </p>
+
+            <p>
+              Once a Match Week has closed, entrants can view other
+              players&apos; predictions, actual results and which
+              selections were correct or incorrect.
+            </p>
+
+            <p>
+              Players only appear on a leaderboard once they have made
+              at least one relevant prediction.
+            </p>
+          </div>
+        </div>
+
+        <div className="card">
+          <h2>Tied Positions</h2>
+
+          <div
+            style={{
+              textAlign: "left",
+              lineHeight: "1.6",
+            }}
+          >
+            <p>
+              Entrants with the same number of points share the same
+              leaderboard position.
+            </p>
+
+            <p>
+              Standard competition ranking is used.
+            </p>
+
+            <p>
+              For example:
+              <br />
+              <strong>1st, 1st, 3rd</strong>
+            </p>
+          </div>
+        </div>
+
+        <div className="card">
+          <h2>Provisional Standings</h2>
+
+          <div
+            style={{
+              textAlign: "left",
+              lineHeight: "1.6",
+            }}
+          >
+            <p>
+              Weekly standings may be shown as provisional while some
+              fixture results are still outstanding.
+            </p>
+
+            <p>
+              Only fixtures with confirmed results contribute to the
+              points total at that time.
+            </p>
+
+            <p>
+              Outstanding postponed fixtures will remain pending until
+              the result is eventually entered.
+            </p>
+          </div>
+        </div>
+
+        <div className="card">
+          <h2>Accounts & Team Names</h2>
+
+          <div
+            style={{
+              textAlign: "left",
+              lineHeight: "1.6",
+            }}
+          >
+            <p>
+              Predictions are linked to your individual Predictor
+              account.
+            </p>
+
+            <p>
+              Predictor team-name changes are controlled by the
+              Administrator.
+            </p>
+
+            <p>
+              Only predictions successfully saved before the relevant
+              deadline will count.
             </p>
           </div>
         </div>
@@ -150,13 +312,13 @@ export default function RulesPage() {
             }}
           >
             <p>
-              Predictions are linked to your individual Predictor
-              account.
+              The Predictor is intended as a fun club competition.
             </p>
 
             <p>
-              Only predictions successfully saved before the relevant
-              deadline will count.
+              The Administrator&apos;s decision will be final in the
+              event of any unusual fixture, scoring or account issue not
+              specifically covered above.
             </p>
           </div>
         </div>
