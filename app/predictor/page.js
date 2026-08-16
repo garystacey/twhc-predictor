@@ -78,11 +78,13 @@ export default function PredictorPage() {
   </a>
 </div>
 
-        <div className="card">
-          <h2>Rules</h2>
-          <p>View the competition rules and scoring system.</p>
-          <button>Competition Rules</button>
-        </div>
+<div className="card">
+  <h2>Rules</h2>
+  <p>View the competition rules and scoring system.</p>
+  <a href="/rules">
+    <button>Competition Rules</button>
+  </a>
+</div>
 
         {profile?.role === "admin" && (
           <div className="card">
