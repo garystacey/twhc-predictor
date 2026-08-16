@@ -14,7 +14,10 @@ export default function WeeklyLeaderboardsPage() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
 
-  // First load: check login and find all completed match weeks
+  const [fixtures, setFixtures] = useState([]);
+  const [predictions, setPredictions] = useState([]);
+  const [expandedUserId, setExpandedUserId] = useState(null);
+
   useEffect(() => {
     async function loadCompletedWeeks() {
       const {
@@ -50,7 +53,6 @@ export default function WeeklyLeaderboardsPage() {
 
       setCompletedWeeks(completedWeekData);
 
-      // Automatically show the most recently completed week
       const latestWeek =
         completedWeekData[completedWeekData.length - 1];
 
@@ -60,15 +62,13 @@ export default function WeeklyLeaderboardsPage() {
     loadCompletedWeeks();
   }, [router]);
 
-  // Whenever a different week is selected, rebuild that week's leaderboard
   useEffect(() => {
-    if (!selectedWeekId) {
-      return;
-    }
+    if (!selectedWeekId) return;
 
     async function loadSelectedWeekLeaderboard() {
       setLoading(true);
       setMessage("");
+      setExpandedUserId(null);
 
       const selectedWeek = completedWeeks.find(
         (week) => week.id === selectedWeekId
@@ -91,11 +91,14 @@ export default function WeeklyLeaderboardsPage() {
         return;
       }
 
-      const { data: fixtures, error: fixtureError } = await supabase
+      const { data: fixtureData, error: fixtureError } = await supabase
         .from("fixtures")
-        .select("id, result")
+        .select(
+          "id, fixture_order, home_team, away_team, result"
+        )
         .eq("match_week_id", selectedWeekId)
-        .not("result", "is", null);
+        .not("result", "is", null)
+        .order("fixture_order", { ascending: true });
 
       if (fixtureError) {
         setMessage(fixtureError.message);
@@ -103,15 +106,15 @@ export default function WeeklyLeaderboardsPage() {
         return;
       }
 
-      const fixtureIds = (fixtures || []).map(
+      const fixtureIds = (fixtureData || []).map(
         (fixture) => fixture.id
       );
 
-      let predictions = [];
+      let predictionData = [];
 
       if (fixtureIds.length > 0) {
         const {
-          data: predictionData,
+          data,
           error: predictionError,
         } = await supabase
           .from("predictions")
@@ -124,18 +127,18 @@ export default function WeeklyLeaderboardsPage() {
           return;
         }
 
-        predictions = predictionData || [];
+        predictionData = data || [];
       }
 
       const resultByFixture = {};
 
-      (fixtures || []).forEach((fixture) => {
+      (fixtureData || []).forEach((fixture) => {
         resultByFixture[fixture.id] = fixture.result;
       });
 
       const pointsByUser = {};
 
-      predictions.forEach((prediction) => {
+      predictionData.forEach((prediction) => {
         if (
           resultByFixture[prediction.fixture_id] &&
           prediction.prediction ===
@@ -164,12 +167,31 @@ export default function WeeklyLeaderboardsPage() {
           );
         });
 
+      setFixtures(fixtureData || []);
+      setPredictions(predictionData);
       setRows(leaderboard);
       setLoading(false);
     }
 
     loadSelectedWeekLeaderboard();
   }, [selectedWeekId, completedWeeks]);
+
+  function shortResult(value) {
+    if (value === "home") return "H";
+    if (value === "draw") return "D";
+    if (value === "away") return "A";
+    return "-";
+  }
+
+  function getUserPrediction(userId, fixtureId) {
+    const prediction = predictions.find(
+      (item) =>
+        item.user_id === userId &&
+        item.fixture_id === fixtureId
+    );
+
+    return prediction?.prediction || null;
+  }
 
   if (loading && completedWeeks.length === 0) {
     return (
@@ -246,49 +268,153 @@ export default function WeeklyLeaderboardsPage() {
                   marginTop: "20px",
                 }}
               >
-                {rows.map((row, index) => (
-                  <div
-                    key={row.id}
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "50px 1fr 90px",
-                      alignItems: "center",
-                      padding: "12px 8px",
-                      borderBottom: "1px solid #d7dee7",
-                      textAlign: "left",
-                    }}
-                  >
-                    <strong>{index + 1}</strong>
+                {rows.map((row, index) => {
+                  const expanded =
+                    expandedUserId === row.id;
 
-                    <div>
-                      <strong>
-                        {row.firstName} {row.surname}
-                      </strong>
+                  return (
+                    <div key={row.id}>
+                      <div
+                        onClick={() =>
+                          setExpandedUserId(
+                            expanded ? null : row.id
+                          )
+                        }
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns: "50px 1fr 90px",
+                          alignItems: "center",
+                          padding: "12px 8px",
+                          borderBottom: "1px solid #d7dee7",
+                          textAlign: "left",
+                          cursor: "pointer",
+                        }}
+                      >
+                        <strong>{index + 1}</strong>
 
-                      {row.teamName && (
+                        <div>
+                          <strong>
+                            {row.firstName} {row.surname}
+                          </strong>
+
+                          {row.teamName && (
+                            <div
+                              style={{
+                                fontSize: "13px",
+                                marginTop: "3px",
+                                opacity: 0.7,
+                              }}
+                            >
+                              {row.teamName}
+                            </div>
+                          )}
+                        </div>
+
                         <div
                           style={{
-                            fontSize: "13px",
-                            marginTop: "3px",
-                            opacity: 0.7,
+                            textAlign: "right",
+                            fontWeight: "bold",
                           }}
                         >
-                          {row.teamName}
+                          {row.points}{" "}
+                          {row.points === 1 ? "pt" : "pts"}
+                        </div>
+                      </div>
+
+                      {expanded && (
+                        <div
+                          style={{
+                            padding: "10px 8px 16px",
+                            background: "#f7f9fb",
+                          }}
+                        >
+                          <div
+                            style={{
+                              fontWeight: "bold",
+                              marginBottom: "10px",
+                            }}
+                          >
+                            {row.points}/{fixtures.length} correct
+                          </div>
+
+                          {fixtures.map((fixture) => {
+                            const userPrediction =
+                              getUserPrediction(
+                                row.id,
+                                fixture.id
+                              );
+
+                            const correct =
+                              userPrediction &&
+                              userPrediction === fixture.result;
+
+                            return (
+                              <div
+                                key={fixture.id}
+                                style={{
+                                  display: "grid",
+                                  gridTemplateColumns:
+                                    "1fr 52px 52px 32px",
+                                  gap: "8px",
+                                  alignItems: "center",
+                                  padding: "7px 0",
+                                  borderTop:
+                                    "1px solid #d7dee7",
+                                  fontSize: "13px",
+                                }}
+                              >
+                                <div
+                                  style={{
+                                    fontWeight: "600",
+                                  }}
+                                >
+                                  {fixture.home_team} v{" "}
+                                  {fixture.away_team}
+                                </div>
+
+                                <div
+                                  style={{
+                                    textAlign: "center",
+                                  }}
+                                >
+                                  Pick:{" "}
+                                  <strong>
+                                    {shortResult(
+                                      userPrediction
+                                    )}
+                                  </strong>
+                                </div>
+
+                                <div
+                                  style={{
+                                    textAlign: "center",
+                                  }}
+                                >
+                                  Result:{" "}
+                                  <strong>
+                                    {shortResult(
+                                      fixture.result
+                                    )}
+                                  </strong>
+                                </div>
+
+                                <div
+                                  style={{
+                                    textAlign: "center",
+                                    fontWeight: "bold",
+                                    fontSize: "18px",
+                                  }}
+                                >
+                                  {correct ? "✓" : "✗"}
+                                </div>
+                              </div>
+                            );
+                          })}
                         </div>
                       )}
                     </div>
-
-                    <div
-                      style={{
-                        textAlign: "right",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      {row.points}{" "}
-                      {row.points === 1 ? "pt" : "pts"}
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
