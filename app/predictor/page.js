@@ -93,6 +93,42 @@ if (weekData && weekData.length > 0) {
           Welcome, {profile?.first_name}
         </p>
 
+{currentWeek && predictionStatus && (
+  <div className="card">
+    <h2>Match Week {currentWeek.week_no}</h2>
+
+    <p>
+      <strong>
+        {predictionStatus.completed} of {predictionStatus.total}
+      </strong>{" "}
+      predictions completed
+    </p>
+
+    {predictionStatus.completed === predictionStatus.total ? (
+      <p>
+        ✅ All predictions completed
+      </p>
+    ) : (
+      <p>
+        ⚠️{" "}
+        {predictionStatus.total - predictionStatus.completed} prediction
+        {predictionStatus.total - predictionStatus.completed === 1
+          ? ""
+          : "s"}{" "}
+        still required
+      </p>
+    )}
+
+    <a href="/predictions">
+      <button>
+        {predictionStatus.completed === predictionStatus.total
+          ? "Review Predictions"
+          : "Complete Predictions"}
+      </button>
+    </a>
+  </div>
+)}
+          
         <div className="card">
           <h2>Make Your Predictions</h2>
           <p>View the upcoming fixtures and submit your predictions.</p>
