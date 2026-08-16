@@ -91,13 +91,14 @@ export default function WeeklyLeaderboardsPage() {
         return;
       }
 
+      // Load ALL fixtures for the week, including fixtures
+      // where a result has not yet been entered.
       const { data: fixtureData, error: fixtureError } = await supabase
         .from("fixtures")
         .select(
           "id, fixture_order, home_team, away_team, result"
         )
         .eq("match_week_id", selectedWeekId)
-        .not("result", "is", null)
         .order("fixture_order", { ascending: true });
 
       if (fixtureError) {
@@ -139,10 +140,14 @@ export default function WeeklyLeaderboardsPage() {
       const pointsByUser = {};
 
       predictionData.forEach((prediction) => {
+        const actualResult =
+          resultByFixture[prediction.fixture_id];
+
+        // Only award a point if an actual result exists
+        // and the prediction matches it.
         if (
-          resultByFixture[prediction.fixture_id] &&
-          prediction.prediction ===
-            resultByFixture[prediction.fixture_id]
+          actualResult &&
+          prediction.prediction === actualResult
         ) {
           pointsByUser[prediction.user_id] =
             (pointsByUser[prediction.user_id] || 0) + 1;
@@ -210,6 +215,13 @@ export default function WeeklyLeaderboardsPage() {
     );
   }
 
+  const completedResults = fixtures.filter(
+    (fixture) => fixture.result
+  ).length;
+
+  const pendingResults =
+    fixtures.length - completedResults;
+
   return (
     <main>
       <div className="container">
@@ -258,6 +270,21 @@ export default function WeeklyLeaderboardsPage() {
             </select>
 
             <h2>Match Week {weekNo}</h2>
+
+            {pendingResults > 0 && !loading && (
+              <p
+                style={{
+                  fontSize: "13px",
+                  fontWeight: "700",
+                  marginTop: "6px",
+                }}
+              >
+                {pendingResults}{" "}
+                {pendingResults === 1
+                  ? "result pending"
+                  : "results pending"}
+              </p>
+            )}
 
             {loading ? (
               <p>Loading leaderboard...</p>
@@ -334,7 +361,16 @@ export default function WeeklyLeaderboardsPage() {
                               marginBottom: "10px",
                             }}
                           >
-                            {row.points}/{fixtures.length} correct
+                            {row.points}/{completedResults} correct
+                            {pendingResults > 0 && (
+                              <>
+                                {" • "}
+                                {pendingResults}{" "}
+                                {pendingResults === 1
+                                  ? "result pending"
+                                  : "results pending"}
+                              </>
+                            )}
                           </div>
 
                           {fixtures.map((fixture) => {
@@ -344,7 +380,11 @@ export default function WeeklyLeaderboardsPage() {
                                 fixture.id
                               );
 
+                            const hasResult =
+                              Boolean(fixture.result);
+
                             const correct =
+                              hasResult &&
                               userPrediction &&
                               userPrediction === fixture.result;
 
@@ -430,7 +470,14 @@ export default function WeeklyLeaderboardsPage() {
                                   >
                                     <span>Result</span>
 
-                                    <span style={circleStyle}>
+                                    <span
+                                      style={{
+                                        ...circleStyle,
+                                        background: hasResult
+                                          ? "#061b33"
+                                          : "#9ca3af",
+                                      }}
+                                    >
                                       {resultLetter}
                                     </span>
                                   </div>
@@ -444,7 +491,11 @@ export default function WeeklyLeaderboardsPage() {
                                       lineHeight: 1,
                                     }}
                                   >
-                                    {correct ? "✓" : "✗"}
+                                    {!hasResult
+                                      ? "…"
+                                      : correct
+                                      ? "✓"
+                                      : "✗"}
                                   </div>
                                 </div>
                               </div>
