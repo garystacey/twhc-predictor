@@ -75,7 +75,11 @@ export default function RegisterPage() {
   return (
     <main>
       <div className="container">
-        <div className="badge">TELFORD & WREKIN HC</div>
+<img
+  src="/TWHC-badge-white.png"
+  alt="Telford & Wrekin Hockey Club"
+  className="club-logo"
+/>
 
         <h1>THE PREDICTOR</h1>
         <p className="subtitle">Create Your Account</p>
