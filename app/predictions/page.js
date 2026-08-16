@@ -220,13 +220,11 @@ export default function PredictionsPage() {
         className="container"
         style={{ maxWidth: "760px" }}
       >
-<img
-  src="/TWHC-badge-white.png"
-  alt="Telford & Wrekin Hockey Club"
-  className="club-logo"
-/>
-          TELFORD & WREKIN HC
-        </div>
+        <img
+          src="/TWHC-badge-white.png"
+          alt="Telford & Wrekin Hockey Club"
+          className="club-logo"
+        />
 
         <h1>THE PREDICTOR</h1>
 
@@ -281,8 +279,7 @@ export default function PredictionsPage() {
                     key={week.id}
                     value={week.id}
                   >
-                    Match Week {week.week_no} —
-                    Locked
+                    Match Week {week.week_no} — Locked
                   </option>
                 ))}
               </optgroup>
@@ -307,13 +304,6 @@ export default function PredictionsPage() {
 
             const isLocked = now >= deadline;
 
-            /*
-              Current/upcoming:
-              hide cancelled fixtures completely.
-
-              Previous locked weeks:
-              retain cancelled fixtures for history.
-            */
             const weekFixtures = fixtures.filter(
               (fixture) =>
                 fixture.match_week_id ===
@@ -375,9 +365,9 @@ export default function PredictionsPage() {
                       marginBottom: "18px",
                     }}
                   >
-                    Your selections are shown
-                    below for reference only and
-                    can no longer be changed.
+                    Your selections are shown below for
+                    reference only and can no longer be
+                    changed.
                   </p>
                 )}
 
@@ -387,8 +377,7 @@ export default function PredictionsPage() {
                       choices[fixture.id];
 
                     const cancelled =
-                      fixture.status ===
-                      "cancelled";
+                      fixture.status === "cancelled";
 
                     if (
                       cancelled &&
@@ -408,8 +397,7 @@ export default function PredictionsPage() {
                               fontWeight: "700",
                               fontSize: "14px",
                               textAlign: "left",
-                              marginBottom:
-                                "8px",
+                              marginBottom: "8px",
                             }}
                           >
                             {fixture.home_team} v{" "}
@@ -419,8 +407,7 @@ export default function PredictionsPage() {
                           <div
                             style={{
                               display: "flex",
-                              alignItems:
-                                "center",
+                              alignItems: "center",
                               gap: "8px",
                               fontSize: "13px",
                               fontWeight: "700",
@@ -435,30 +422,22 @@ export default function PredictionsPage() {
                                 width: "34px",
                                 minWidth: "34px",
                                 height: "34px",
-                                borderRadius:
-                                  "50%",
-                                background:
-                                  selected
-                                    ? "#061b33"
-                                    : "#9ca3af",
-                                color:
-                                  "#ffffff",
-                                display:
-                                  "inline-flex",
-                                alignItems:
-                                  "center",
-                                justifyContent:
-                                  "center",
-                                fontWeight:
-                                  "bold",
+                                borderRadius: "50%",
+                                background: selected
+                                  ? "#061b33"
+                                  : "#9ca3af",
+                                color: "#ffffff",
+                                display: "inline-flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                fontWeight: "bold",
                               }}
                             >
                               {selected || "-"}
                             </span>
 
                             <span>
-                              CANCELLED — no
-                              points awarded
+                              CANCELLED — no points awarded
                             </span>
                           </div>
                         </div>
@@ -482,11 +461,9 @@ export default function PredictionsPage() {
                         <div
                           style={{
                             minWidth: 0,
-                            whiteSpace:
-                              "nowrap",
+                            whiteSpace: "nowrap",
                             overflow: "hidden",
-                            textOverflow:
-                              "ellipsis",
+                            textOverflow: "ellipsis",
                             textAlign: "left",
                             fontWeight: "700",
                             fontSize: "14px",
@@ -501,15 +478,13 @@ export default function PredictionsPage() {
                             display: "flex",
                             flexWrap: "nowrap",
                             gap: "5px",
-                            justifyContent:
-                              "flex-end",
+                            justifyContent: "flex-end",
                           }}
                         >
                           {["H", "D", "A"].map(
                             (result) => {
                               const isSelected =
-                                selected ===
-                                result;
+                                selected === result;
 
                               return (
                                 <button
@@ -521,30 +496,22 @@ export default function PredictionsPage() {
                                       isOpen
                                     )
                                   }
-                                  disabled={
-                                    !isOpen
-                                  }
+                                  disabled={!isOpen}
                                   style={{
-                                    width:
-                                      "34px",
-                                    minWidth:
-                                      "34px",
-                                    height:
-                                      "34px",
+                                    width: "34px",
+                                    minWidth: "34px",
+                                    height: "34px",
                                     padding: 0,
-                                    borderRadius:
-                                      "50%",
-                                    fontSize:
-                                      "13px",
+                                    borderRadius: "50%",
+                                    fontSize: "13px",
                                     opacity:
                                       !isOpen &&
                                       !isSelected
                                         ? 0.28
                                         : 1,
-                                    cursor:
-                                      !isOpen
-                                        ? "not-allowed"
-                                        : "pointer",
+                                    cursor: !isOpen
+                                      ? "not-allowed"
+                                      : "pointer",
                                     background:
                                       isSelected
                                         ? "#061b33"
