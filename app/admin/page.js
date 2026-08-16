@@ -110,11 +110,13 @@ export default function AdminDashboardPage() {
   </a>
 </div>
 
-        <div className="card">
-          <h2>Members</h2>
-          <p>View Predictor members and account details.</p>
-          <button disabled>Coming Soon</button>
-        </div>
+<div className="card">
+  <h2>Members</h2>
+  <p>View Predictor members and account details.</p>
+  <a href="/admin/members">
+    <button>Members</button>
+  </a>
+</div>
 
         <a href="/predictor">
           <button>Back to Predictor</button>
