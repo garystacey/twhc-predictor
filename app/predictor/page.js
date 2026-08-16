@@ -73,7 +73,9 @@ export default function PredictorPage() {
         <div className="card">
           <h2>Last Week</h2>
           <p>See the best performers from the previous game week.</p>
-          <button>Last Week Leaderboard</button>
+          <a href="/last-week">
+  <button>Last Week Leaderboard</button>
+</a>
         </div>
 
         <div className="card">
