@@ -73,7 +73,7 @@ export default function AdminPage() {
       const { data, error } = await supabase
         .from("fixtures")
         .select(
-          "id, fixture_order, home_team, away_team, scheduled_date, result"
+          "id, fixture_order, home_team, away_team, scheduled_date, result, status"
         )
         .eq("match_week_id", selectedWeekId)
         .order("fixture_order", { ascending: true });
@@ -106,6 +106,7 @@ export default function AdminPage() {
       .update({
         result: resultMap[result],
         result_recorded_at: new Date().toISOString(),
+        status: "completed",
       })
       .eq("id", fixtureId);
 
@@ -118,7 +119,11 @@ export default function AdminPage() {
     setFixtures((current) =>
       current.map((fixture) =>
         fixture.id === fixtureId
-          ? { ...fixture, result: resultMap[result] }
+          ? {
+              ...fixture,
+              result: resultMap[result],
+              status: "completed",
+            }
           : fixture
       )
     );
@@ -136,6 +141,7 @@ export default function AdminPage() {
       .update({
         result: null,
         result_recorded_at: null,
+        status: "scheduled",
       })
       .eq("id", fixtureId);
 
@@ -148,12 +154,86 @@ export default function AdminPage() {
     setFixtures((current) =>
       current.map((fixture) =>
         fixture.id === fixtureId
-          ? { ...fixture, result: null }
+          ? {
+              ...fixture,
+              result: null,
+              status: "scheduled",
+            }
           : fixture
       )
     );
 
     setMessage("Result cleared.");
+    setSavingId(null);
+  }
+
+  async function cancelFixture(fixtureId) {
+    setSavingId(fixtureId);
+    setMessage("");
+
+    const { error } = await supabase
+      .from("fixtures")
+      .update({
+        result: null,
+        result_recorded_at: null,
+        status: "cancelled",
+      })
+      .eq("id", fixtureId);
+
+    if (error) {
+      setMessage(error.message);
+      setSavingId(null);
+      return;
+    }
+
+    setFixtures((current) =>
+      current.map((fixture) =>
+        fixture.id === fixtureId
+          ? {
+              ...fixture,
+              result: null,
+              status: "cancelled",
+            }
+          : fixture
+      )
+    );
+
+    setMessage("Fixture marked as cancelled.");
+    setSavingId(null);
+  }
+
+  async function restoreFixture(fixtureId) {
+    setSavingId(fixtureId);
+    setMessage("");
+
+    const { error } = await supabase
+      .from("fixtures")
+      .update({
+        result: null,
+        result_recorded_at: null,
+        status: "scheduled",
+      })
+      .eq("id", fixtureId);
+
+    if (error) {
+      setMessage(error.message);
+      setSavingId(null);
+      return;
+    }
+
+    setFixtures((current) =>
+      current.map((fixture) =>
+        fixture.id === fixtureId
+          ? {
+              ...fixture,
+              result: null,
+              status: "scheduled",
+            }
+          : fixture
+      )
+    );
+
+    setMessage("Fixture restored.");
     setSavingId(null);
   }
 
@@ -255,6 +335,7 @@ export default function AdminPage() {
               {fixtures.map((fixture) => {
                 const selected = displayResult(fixture.result);
                 const saving = savingId === fixture.id;
+                const cancelled = fixture.status === "cancelled";
 
                 return (
                   <div
@@ -273,6 +354,17 @@ export default function AdminPage() {
                       {fixture.home_team} v {fixture.away_team}
                     </div>
 
+                    {cancelled && (
+                      <div
+                        style={{
+                          marginBottom: "10px",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        CANCELLED — no points awarded
+                      </div>
+                    )}
+
                     <div
                       style={{
                         display: "flex",
@@ -281,31 +373,47 @@ export default function AdminPage() {
                         flexWrap: "wrap",
                       }}
                     >
-                      {["H", "D", "A"].map((result) => (
+                      {!cancelled &&
+                        ["H", "D", "A"].map((result) => (
+                          <button
+                            key={result}
+                            disabled={saving}
+                            onClick={() =>
+                              saveResult(fixture.id, result)
+                            }
+                            style={{
+                              width: "44px",
+                              minWidth: "44px",
+                              height: "44px",
+                              padding: 0,
+                              borderRadius: "50%",
+                              background:
+                                selected === result
+                                  ? "#061b33"
+                                  : "#0877c9",
+                              opacity: saving ? 0.5 : 1,
+                            }}
+                          >
+                            {result}
+                          </button>
+                        ))}
+
+                      {!cancelled && (
                         <button
-                          key={result}
                           disabled={saving}
-                          onClick={() =>
-                            saveResult(fixture.id, result)
-                          }
+                          onClick={() => cancelFixture(fixture.id)}
                           style={{
-                            width: "44px",
-                            minWidth: "44px",
-                            height: "44px",
-                            padding: 0,
-                            borderRadius: "50%",
-                            background:
-                              selected === result
-                                ? "#061b33"
-                                : "#0877c9",
+                            width: "auto",
+                            minWidth: "95px",
+                            padding: "8px 12px",
                             opacity: saving ? 0.5 : 1,
                           }}
                         >
-                          {result}
+                          Cancelled
                         </button>
-                      ))}
+                      )}
 
-                      {fixture.result && (
+                      {fixture.result && !cancelled && (
                         <button
                           disabled={saving}
                           onClick={() => clearResult(fixture.id)}
@@ -317,6 +425,21 @@ export default function AdminPage() {
                           }}
                         >
                           Clear
+                        </button>
+                      )}
+
+                      {cancelled && (
+                        <button
+                          disabled={saving}
+                          onClick={() => restoreFixture(fixture.id)}
+                          style={{
+                            width: "auto",
+                            minWidth: "90px",
+                            padding: "8px 12px",
+                            opacity: saving ? 0.5 : 1,
+                          }}
+                        >
+                          Restore
                         </button>
                       )}
                     </div>
