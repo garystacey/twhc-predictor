@@ -10,6 +10,7 @@ export default function PredictionsPage() {
   const [weeks, setWeeks] = useState([]);
   const [fixtures, setFixtures] = useState([]);
   const [choices, setChoices] = useState({});
+  const [selectedWeekId, setSelectedWeekId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
 
@@ -24,14 +25,10 @@ export default function PredictionsPage() {
         return;
       }
 
-      const today = new Date().toISOString().slice(0, 10);
-
       const { data: weekData, error: weekError } = await supabase
         .from("match_weeks")
         .select("id, week_no, match_date, opens_at, deadline")
-        .gte("match_date", today)
-        .order("week_no", { ascending: true })
-        .limit(3);
+        .order("week_no", { ascending: true });
 
       if (weekError) {
         setMessage(weekError.message);
@@ -39,7 +36,8 @@ export default function PredictionsPage() {
         return;
       }
 
-      const weekIds = (weekData || []).map((week) => week.id);
+      const allWeeks = weekData || [];
+      const weekIds = allWeeks.map((week) => week.id);
 
       if (weekIds.length === 0) {
         setWeeks([]);
@@ -58,91 +56,112 @@ export default function PredictionsPage() {
         .order("fixture_order", { ascending: true });
 
       if (fixtureError) {
-  setMessage(fixtureError.message);
-  setLoading(false);
-  return;
-}
-      
+        setMessage(fixtureError.message);
+        setLoading(false);
+        return;
+      }
+
       const fixtureIds = (fixtureData || []).map((fixture) => fixture.id);
 
-let savedChoices = {};
+      let savedChoices = {};
 
-if (fixtureIds.length > 0) {
-  const { data: predictionData, error: predictionError } = await supabase
-    .from("predictions")
-    .select("fixture_id, prediction")
-    .eq("user_id", user.id)
-    .in("fixture_id", fixtureIds);
+      if (fixtureIds.length > 0) {
+        const { data: predictionData, error: predictionError } = await supabase
+          .from("predictions")
+          .select("fixture_id, prediction")
+          .eq("user_id", user.id)
+          .in("fixture_id", fixtureIds);
 
-  if (predictionError) {
-    setMessage(predictionError.message);
-  } else {
-    const reverseMap = {
-      home: "H",
-      draw: "D",
-      away: "A",
-    };
+        if (predictionError) {
+          setMessage(predictionError.message);
+        } else {
+          const reverseMap = {
+            home: "H",
+            draw: "D",
+            away: "A",
+          };
 
-    savedChoices = (predictionData || []).reduce((choices, prediction) => {
-      choices[prediction.fixture_id] = reverseMap[prediction.prediction];
-      return choices;
-    }, {});
-  }
-}
+          savedChoices = (predictionData || []).reduce(
+            (currentChoices, prediction) => {
+              currentChoices[prediction.fixture_id] =
+                reverseMap[prediction.prediction];
+              return currentChoices;
+            },
+            {}
+          );
+        }
+      }
 
-setWeeks(weekData || []);
-setFixtures(fixtureData || []);
-setChoices(savedChoices);
-setLoading(false);
+      const now = new Date();
+
+      const currentOrNextWeek = allWeeks.find(
+        (week) => now < new Date(week.deadline)
+      );
+
+      const mostRecentClosedWeek = [...allWeeks]
+        .reverse()
+        .find((week) => now >= new Date(week.deadline));
+
+      setWeeks(allWeeks);
+      setFixtures(fixtureData || []);
+      setChoices(savedChoices);
+
+      if (currentOrNextWeek) {
+        setSelectedWeekId(currentOrNextWeek.id);
+      } else if (mostRecentClosedWeek) {
+        setSelectedWeekId(mostRecentClosedWeek.id);
+      }
+
+      setLoading(false);
     }
 
     loadPredictionsPage();
   }, [router]);
 
-async function chooseResult(fixtureId, result, isOpen) {
-  if (!isOpen) return;
+  async function chooseResult(fixtureId, result, isOpen) {
+    if (!isOpen) return;
 
-  const resultMap = {
-    H: "home",
-    D: "draw",
-    A: "away",
-  };
+    const resultMap = {
+      H: "home",
+      D: "draw",
+      A: "away",
+    };
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-  if (!user) {
-    router.push("/login");
-    return;
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+
+    const { error } = await supabase
+      .from("predictions")
+      .upsert(
+        {
+          user_id: user.id,
+          fixture_id: fixtureId,
+          prediction: resultMap[result],
+          updated_at: new Date().toISOString(),
+        },
+        {
+          onConflict: "user_id,fixture_id",
+        }
+      );
+
+    if (error) {
+      setMessage(error.message);
+      return;
+    }
+
+    setChoices((current) => ({
+      ...current,
+      [fixtureId]: result,
+    }));
+
+    setMessage("Prediction saved");
   }
-
-  const { error } = await supabase
-    .from("predictions")
-    .upsert(
-      {
-        user_id: user.id,
-        fixture_id: fixtureId,
-        prediction: resultMap[result],
-        updated_at: new Date().toISOString(),
-      },
-      {
-        onConflict: "user_id,fixture_id",
-      }
-    );
-
-  if (error) {
-    setMessage(error.message);
-    return;
-  }
-
-  setChoices((current) => ({
-    ...current,
-    [fixtureId]: result,
-  }));
-
-  setMessage("Prediction saved");
-}
 
   function formatDate(dateString) {
     return new Date(`${dateString}T12:00:00`).toLocaleDateString("en-GB", {
@@ -173,6 +192,20 @@ async function chooseResult(fixtureId, result, isOpen) {
     );
   }
 
+  const selectedWeek = weeks.find(
+    (week) => week.id === Number(selectedWeekId)
+  );
+
+  const now = new Date();
+
+  const previousWeeks = weeks.filter(
+    (week) => now >= new Date(week.deadline)
+  );
+
+  const currentAndFutureWeeks = weeks.filter(
+    (week) => now < new Date(week.deadline)
+  );
+
   return (
     <main>
       <div className="container" style={{ maxWidth: "760px" }}>
@@ -188,47 +221,66 @@ async function chooseResult(fixtureId, result, isOpen) {
           </div>
         )}
 
-        {weeks.length === 0 && (
-          <div className="card">
-            <h2>No upcoming match weeks</h2>
-          </div>
-        )}
+        <div className="card">
+          <h2>Select Match Week</h2>
 
-        {weeks
-  .filter((week, index) => {
-    const now = new Date();
+          <select
+            value={selectedWeekId || ""}
+            onChange={(e) => setSelectedWeekId(Number(e.target.value))}
+            style={{
+              width: "100%",
+              padding: "12px",
+              borderRadius: "8px",
+              border: "1px solid #d7dee7",
+              fontSize: "16px",
+              fontWeight: "bold",
+            }}
+          >
+            {currentAndFutureWeeks.length > 0 && (
+              <optgroup label="Current / Upcoming">
+                {currentAndFutureWeeks.map((week) => (
+                  <option key={week.id} value={week.id}>
+                    Match Week {week.week_no}
+                  </option>
+                ))}
+              </optgroup>
+            )}
 
-    // First week that has not yet passed its deadline
-    const currentWeekIndex = weeks.findIndex(
-      (w) => now < new Date(w.deadline)
-    );
+            {previousWeeks.length > 0 && (
+              <optgroup label="Previous Weeks">
+                {previousWeeks.map((week) => (
+                  <option key={week.id} value={week.id}>
+                    Match Week {week.week_no} — Locked
+                  </option>
+                ))}
+              </optgroup>
+            )}
+          </select>
+        </div>
 
-    return index === currentWeekIndex;
-  })
-  .map((week) => {
-          const now = new Date();
-          const opensAt = new Date(week.opens_at);
-          const deadline = new Date(week.deadline);
+        {selectedWeek && (() => {
+          const opensAt = new Date(selectedWeek.opens_at);
+          const deadline = new Date(selectedWeek.deadline);
 
           const isOpen = now >= opensAt && now < deadline;
           const notOpenYet = now < opensAt;
+          const isLocked = now >= deadline;
 
           const weekFixtures = fixtures.filter(
-            (fixture) => fixture.match_week_id === week.id
+            (fixture) => fixture.match_week_id === selectedWeek.id
           );
 
           return (
             <div
               className="card"
-              key={week.id}
               style={{ marginBottom: "20px", padding: "20px 12px" }}
             >
               <h2 style={{ marginBottom: "4px" }}>
-                Match Week {week.week_no}
+                Match Week {selectedWeek.week_no}
               </h2>
 
               <p style={{ marginBottom: "6px" }}>
-                {formatDate(week.match_date)}
+                {formatDate(selectedWeek.match_date)}
               </p>
 
               <p
@@ -239,11 +291,24 @@ async function chooseResult(fixtureId, result, isOpen) {
                 }}
               >
                 {notOpenYet
-                  ? `Opens ${formatDeadline(week.opens_at)}`
+                  ? `Opens ${formatDeadline(selectedWeek.opens_at)}`
                   : isOpen
-                  ? `Open — closes ${formatDeadline(week.deadline)}`
-                  : "Predictions closed"}
+                  ? `Open — closes ${formatDeadline(selectedWeek.deadline)}`
+                  : "🔒 Predictions Locked"}
               </p>
+
+              {isLocked && (
+                <p
+                  style={{
+                    fontSize: "13px",
+                    fontWeight: "700",
+                    marginBottom: "18px",
+                  }}
+                >
+                  Your selections are shown below for reference only and can no
+                  longer be changed.
+                </p>
+              )}
 
               {weekFixtures.map((fixture) => {
                 const selected = choices[fixture.id];
@@ -282,45 +347,54 @@ async function chooseResult(fixtureId, result, isOpen) {
                         justifyContent: "flex-end",
                       }}
                     >
-                      {["H", "D", "A"].map((result) => (
-                        <button
-                          key={result}
-                          onClick={() =>
-                            chooseResult(fixture.id, result, isOpen)
-                          }
-                          disabled={!isOpen}
-                          style={{
-                            width: "34px",
-                            minWidth: "34px",
-                            height: "34px",
-                            padding: 0,
-                            borderRadius: "50%",
-                            fontSize: "13px",
-                            opacity: !isOpen ? 0.28 : 1,
-cursor: !isOpen ? "not-allowed" : "pointer",
-background: !isOpen
-  ? "#9ca3af"
-  : selected === result
-  ? "#061b33"
-  : "#0877c9",
-                          }}
-                        >
-                          {result}
-                        </button>
-                      ))}
+                      {["H", "D", "A"].map((result) => {
+                        const isSelected = selected === result;
+
+                        return (
+                          <button
+                            key={result}
+                            onClick={() =>
+                              chooseResult(fixture.id, result, isOpen)
+                            }
+                            disabled={!isOpen}
+                            style={{
+                              width: "34px",
+                              minWidth: "34px",
+                              height: "34px",
+                              padding: 0,
+                              borderRadius: "50%",
+                              fontSize: "13px",
+                              opacity:
+                                !isOpen && !isSelected ? 0.28 : 1,
+                              cursor: !isOpen
+                                ? "not-allowed"
+                                : "pointer",
+                              background: isSelected
+                                ? "#061b33"
+                                : !isOpen
+                                ? "#9ca3af"
+                                : "#0877c9",
+                            }}
+                          >
+                            {result}
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
                 );
               })}
             </div>
           );
-        })}
+        })()}
 
         <a href="/predictor">
           <button>Back to Predictor</button>
         </a>
 
-        <p className="footer">Telford & Wrekin Hockey Club</p>
+        <p className="footer">
+          Telford & Wrekin Hockey Club
+        </p>
       </div>
     </main>
   );
