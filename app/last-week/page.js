@@ -364,24 +364,19 @@ export default function WeeklyLeaderboardsPage() {
                   return (
                     <div key={row.id}>
                       <div
-                        onClick={() =>
-                          setExpandedUserId(
-                            expanded ? null : row.id
-                          )
-                        }
-                        style={{
-                          display: "grid",
-                          gridTemplateColumns: "50px 1fr 90px",
-                          alignItems: "center",
-                          padding: "12px 8px",
-                          borderBottom: "1px solid #d7dee7",
-                          textAlign: "left",
-                          cursor: "pointer",
-                        }}
-                      >
-                        <strong>{row.position}</strong>>
+  style={{
+    display: "grid",
+    gridTemplateColumns: "50px 1fr 90px",
+    alignItems: "center",
+    padding: "12px 8px",
+    borderBottom: "1px solid #d7dee7",
+    textAlign: "left",
+    cursor: "pointer",
+  }}
+>
+  <strong>{row.position}</strong>
 
-                        <div>
+  <div>
                           <strong>
                             {row.firstName} {row.surname}
                           </strong>
