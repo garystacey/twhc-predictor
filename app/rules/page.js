@@ -1,4 +1,49 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { supabase } from "../../lib/supabase";
+
 export default function RulesPage() {
+  const [settings, setSettings] = useState({
+    entry_fee: 10,
+    first_prize: null,
+    second_prize: null,
+  });
+
+  const [loadingSettings, setLoadingSettings] = useState(true);
+
+  useEffect(() => {
+    async function loadCompetitionSettings() {
+      const { data, error } = await supabase
+        .from("competition_settings")
+        .select("entry_fee, first_prize, second_prize")
+        .limit(1)
+        .single();
+
+      if (!error && data) {
+        setSettings(data);
+      }
+
+      setLoadingSettings(false);
+    }
+
+    loadCompetitionSettings();
+  }, []);
+
+  function formatMoney(value) {
+    if (value === null || value === undefined || value === "") {
+      return "TBC";
+    }
+
+    const amount = Number(value);
+
+    if (Number.isInteger(amount)) {
+      return `£${amount}`;
+    }
+
+    return `£${amount.toFixed(2)}`;
+  }
+
   return (
     <main>
       <div className="container">
@@ -6,6 +51,61 @@ export default function RulesPage() {
 
         <h1>THE PREDICTOR</h1>
         <p className="subtitle">Competition Rules</p>
+
+        <div className="card">
+          <h2>Entry Fee & Prize Money</h2>
+
+          <div
+            style={{
+              textAlign: "left",
+              lineHeight: "1.6",
+            }}
+          >
+            {loadingSettings ? (
+              <p>Loading competition details...</p>
+            ) : (
+              <>
+                <p>
+                  <strong>
+                    Entry Fee: {formatMoney(settings.entry_fee)}
+                  </strong>
+                </p>
+
+                <p>
+                  The entry fee is to be paid via the
+                  <strong> Telford & Wrekin HC Teamo app</strong>.
+                </p>
+
+                <p>
+                  <strong>
+                    1st Prize: {formatMoney(settings.first_prize)}
+                  </strong>
+                  <br />
+                  <strong>
+                    2nd Prize: {formatMoney(settings.second_prize)}
+                  </strong>
+                </p>
+
+                <p>
+                  Prize amounts will be confirmed once the prize fund
+                  has been finalised.
+                </p>
+
+                <p>
+                  If two or more entrants are tied for 1st place, the
+                  1st and 2nd prize funds will be combined and divided
+                  equally between the joint winners.
+                </p>
+
+                <p>
+                  If there is one outright winner and two or more
+                  entrants are tied for 2nd place, the 2nd prize will be
+                  divided equally between those entrants.
+                </p>
+              </>
+            )}
+          </div>
+        </div>
 
         <div className="card">
           <h2>How To Play</h2>
@@ -21,9 +121,7 @@ export default function RulesPage() {
               Telford & Wrekin Hockey Club fixtures.
             </p>
 
-            <p>
-              For every fixture, choose one of:
-            </p>
+            <p>For every fixture, choose one of:</p>
 
             <p>
               <strong>H</strong> — Home Win
@@ -58,8 +156,8 @@ export default function RulesPage() {
             </p>
 
             <p>
-              Cancelled fixtures do not count and no points can be
-              won or lost on them.
+              Cancelled fixtures do not count and no points can be won
+              or lost on them.
             </p>
           </div>
         </div>
@@ -104,9 +202,7 @@ export default function RulesPage() {
               lineHeight: "1.6",
             }}
           >
-            <p>
-              You do not have to predict every fixture.
-            </p>
+            <p>You do not have to predict every fixture.</p>
 
             <p>
               However, if you do not submit a prediction for a fixture
@@ -238,9 +334,7 @@ export default function RulesPage() {
               leaderboard position.
             </p>
 
-            <p>
-              Standard competition ranking is used.
-            </p>
+            <p>Standard competition ranking is used.</p>
 
             <p>
               For example:
