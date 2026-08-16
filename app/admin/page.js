@@ -94,11 +94,13 @@ export default function AdminDashboardPage() {
           </a>
         </div>
 
-        <div className="card">
-          <h2>Manage Match Weeks</h2>
-          <p>Review match dates, opening times and prediction deadlines.</p>
-          <button disabled>Coming Soon</button>
-        </div>
+<div className="card">
+  <h2>Manage Match Weeks</h2>
+  <p>Review match dates, opening times and prediction deadlines.</p>
+  <a href="/admin/weeks">
+    <button>Manage Match Weeks</button>
+  </a>
+</div>
 
         <div className="card">
           <h2>Manage Fixtures</h2>
