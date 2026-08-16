@@ -99,6 +99,7 @@ export default function AdminDashboardPage() {
         <div className="card">
           <h2>Enter Results</h2>
           <p>Record the actual H / D / A result for each fixture.</p>
+
           <a href="/admin/results">
             <button>Enter Results</button>
           </a>
@@ -106,7 +107,10 @@ export default function AdminDashboardPage() {
 
         <div className="card">
           <h2>Manage Match Weeks</h2>
-          <p>Review match dates, opening times and prediction deadlines.</p>
+          <p>
+            Review match dates, opening times and prediction deadlines.
+          </p>
+
           <a href="/admin/weeks">
             <button>Manage Match Weeks</button>
           </a>
@@ -114,7 +118,10 @@ export default function AdminDashboardPage() {
 
         <div className="card">
           <h2>Manage Fixtures</h2>
-          <p>Review and manage the fixtures included in each match week.</p>
+          <p>
+            Review and manage the fixtures included in each match week.
+          </p>
+
           <a href="/admin/fixtures">
             <button>Manage Fixtures</button>
           </a>
@@ -123,8 +130,20 @@ export default function AdminDashboardPage() {
         <div className="card">
           <h2>Members</h2>
           <p>View Predictor members and account details.</p>
+
           <a href="/admin/members">
             <button>Members</button>
+          </a>
+        </div>
+
+        <div className="card">
+          <h2>Competition Settings</h2>
+          <p>
+            Manage the entry fee and prize money for The Predictor.
+          </p>
+
+          <a href="/admin/settings">
+            <button>Competition Settings</button>
           </a>
         </div>
 
