@@ -61,12 +61,17 @@ export default function PredictionsPage() {
         return;
       }
 
-      const fixtureIds = (fixtureData || []).map((fixture) => fixture.id);
+      const fixtureIds = (fixtureData || []).map(
+        (fixture) => fixture.id
+      );
 
       let savedChoices = {};
 
       if (fixtureIds.length > 0) {
-        const { data: predictionData, error: predictionError } = await supabase
+        const {
+          data: predictionData,
+          error: predictionError,
+        } = await supabase
           .from("predictions")
           .select("fixture_id, prediction")
           .eq("user_id", user.id)
@@ -85,6 +90,7 @@ export default function PredictionsPage() {
             (currentChoices, prediction) => {
               currentChoices[prediction.fixture_id] =
                 reverseMap[prediction.prediction];
+
               return currentChoices;
             },
             {}
@@ -164,7 +170,9 @@ export default function PredictionsPage() {
   }
 
   function formatDate(dateString) {
-    return new Date(`${dateString}T12:00:00`).toLocaleDateString("en-GB", {
+    return new Date(
+      `${dateString}T12:00:00`
+    ).toLocaleDateString("en-GB", {
       weekday: "short",
       day: "numeric",
       month: "short",
@@ -208,12 +216,19 @@ export default function PredictionsPage() {
 
   return (
     <main>
-      <div className="container" style={{ maxWidth: "760px" }}>
-        <div className="badge">TELFORD & WREKIN HC</div>
+      <div
+        className="container"
+        style={{ maxWidth: "760px" }}
+      >
+        <div className="badge">
+          TELFORD & WREKIN HC
+        </div>
 
         <h1>THE PREDICTOR</h1>
 
-        <p className="subtitle">Make Your Predictions</p>
+        <p className="subtitle">
+          Make Your Predictions
+        </p>
 
         {message && (
           <div className="card">
@@ -226,7 +241,11 @@ export default function PredictionsPage() {
 
           <select
             value={selectedWeekId || ""}
-            onChange={(e) => setSelectedWeekId(Number(e.target.value))}
+            onChange={(e) =>
+              setSelectedWeekId(
+                Number(e.target.value)
+              )
+            }
             style={{
               width: "100%",
               padding: "12px",
@@ -238,19 +257,28 @@ export default function PredictionsPage() {
           >
             {currentAndFutureWeeks.length > 0 && (
               <optgroup label="Current / Upcoming">
-                {currentAndFutureWeeks.map((week) => (
-                  <option key={week.id} value={week.id}>
-                    Match Week {week.week_no}
-                  </option>
-                ))}
+                {currentAndFutureWeeks.map(
+                  (week) => (
+                    <option
+                      key={week.id}
+                      value={week.id}
+                    >
+                      Match Week {week.week_no}
+                    </option>
+                  )
+                )}
               </optgroup>
             )}
 
             {previousWeeks.length > 0 && (
               <optgroup label="Previous Weeks">
                 {previousWeeks.map((week) => (
-                  <option key={week.id} value={week.id}>
-                    Match Week {week.week_no} — Locked
+                  <option
+                    key={week.id}
+                    value={week.id}
+                  >
+                    Match Week {week.week_no} —
+                    Locked
                   </option>
                 ))}
               </optgroup>
@@ -258,138 +286,287 @@ export default function PredictionsPage() {
           </select>
         </div>
 
-        {selectedWeek && (() => {
-          const opensAt = new Date(selectedWeek.opens_at);
-          const deadline = new Date(selectedWeek.deadline);
+        {selectedWeek &&
+          (() => {
+            const opensAt = new Date(
+              selectedWeek.opens_at
+            );
 
-          const isOpen = now >= opensAt && now < deadline;
-          const notOpenYet = now < opensAt;
-          const isLocked = now >= deadline;
+            const deadline = new Date(
+              selectedWeek.deadline
+            );
 
-          const weekFixtures = fixtures.filter(
-            (fixture) => fixture.match_week_id === selectedWeek.id
-          );
+            const isOpen =
+              now >= opensAt && now < deadline;
 
-          return (
-            <div
-              className="card"
-              style={{ marginBottom: "20px", padding: "20px 12px" }}
-            >
-              <h2 style={{ marginBottom: "4px" }}>
-                Match Week {selectedWeek.week_no}
-              </h2>
+            const notOpenYet = now < opensAt;
 
-              <p style={{ marginBottom: "6px" }}>
-                {formatDate(selectedWeek.match_date)}
-              </p>
+            const isLocked = now >= deadline;
 
-              <p
+            /*
+              Current/upcoming:
+              hide cancelled fixtures completely.
+
+              Previous locked weeks:
+              retain cancelled fixtures for history.
+            */
+            const weekFixtures = fixtures.filter(
+              (fixture) =>
+                fixture.match_week_id ===
+                  selectedWeek.id &&
+                (isLocked ||
+                  fixture.status !== "cancelled")
+            );
+
+            return (
+              <div
+                className="card"
                 style={{
-                  marginBottom: "18px",
-                  fontSize: "13px",
-                  fontWeight: "700",
+                  marginBottom: "20px",
+                  padding: "20px 12px",
                 }}
               >
-                {notOpenYet
-                  ? `Opens ${formatDeadline(selectedWeek.opens_at)}`
-                  : isOpen
-                  ? `Open — closes ${formatDeadline(selectedWeek.deadline)}`
-                  : "🔒 Predictions Locked"}
-              </p>
-
-              {isLocked && (
-                <p
+                <h2
                   style={{
-                    fontSize: "13px",
-                    fontWeight: "700",
-                    marginBottom: "18px",
+                    marginBottom: "4px",
                   }}
                 >
-                  Your selections are shown below for reference only and can no
-                  longer be changed.
+                  Match Week{" "}
+                  {selectedWeek.week_no}
+                </h2>
+
+                <p
+                  style={{
+                    marginBottom: "6px",
+                  }}
+                >
+                  {formatDate(
+                    selectedWeek.match_date
+                  )}
                 </p>
-              )}
 
-              {weekFixtures.map((fixture) => {
-                const selected = choices[fixture.id];
+                <p
+                  style={{
+                    marginBottom: "18px",
+                    fontSize: "13px",
+                    fontWeight: "700",
+                  }}
+                >
+                  {notOpenYet
+                    ? `Opens ${formatDeadline(
+                        selectedWeek.opens_at
+                      )}`
+                    : isOpen
+                    ? `Open — closes ${formatDeadline(
+                        selectedWeek.deadline
+                      )}`
+                    : "🔒 Predictions Locked"}
+                </p>
 
-                return (
-                  <div
-                    key={fixture.id}
+                {isLocked && (
+                  <p
                     style={{
-                      display: "grid",
-                      gridTemplateColumns: "minmax(0, 1fr) 116px",
-                      alignItems: "center",
-                      gap: "8px",
-                      padding: "10px 0",
-                      borderTop: "1px solid #d9e0e7",
+                      fontSize: "13px",
+                      fontWeight: "700",
+                      marginBottom: "18px",
                     }}
                   >
-                    <div
-                      style={{
-                        minWidth: 0,
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        textAlign: "left",
-                        fontWeight: "700",
-                        fontSize: "14px",
-                      }}
-                    >
-                      {fixture.home_team} v {fixture.away_team}
-                    </div>
+                    Your selections are shown
+                    below for reference only and
+                    can no longer be changed.
+                  </p>
+                )}
 
-                    <div
-                      style={{
-                        display: "flex",
-                        flexWrap: "nowrap",
-                        gap: "5px",
-                        justifyContent: "flex-end",
-                      }}
-                    >
-                      {["H", "D", "A"].map((result) => {
-                        const isSelected = selected === result;
+                {weekFixtures.map(
+                  (fixture) => {
+                    const selected =
+                      choices[fixture.id];
 
-                        return (
-                          <button
-                            key={result}
-                            onClick={() =>
-                              chooseResult(fixture.id, result, isOpen)
-                            }
-                            disabled={!isOpen}
+                    const cancelled =
+                      fixture.status ===
+                      "cancelled";
+
+                    if (
+                      cancelled &&
+                      isLocked
+                    ) {
+                      return (
+                        <div
+                          key={fixture.id}
+                          style={{
+                            padding: "10px 0",
+                            borderTop:
+                              "1px solid #d9e0e7",
+                          }}
+                        >
+                          <div
                             style={{
-                              width: "34px",
-                              minWidth: "34px",
-                              height: "34px",
-                              padding: 0,
-                              borderRadius: "50%",
-                              fontSize: "13px",
-                              opacity:
-                                !isOpen && !isSelected ? 0.28 : 1,
-                              cursor: !isOpen
-                                ? "not-allowed"
-                                : "pointer",
-                              background: isSelected
-                                ? "#061b33"
-                                : !isOpen
-                                ? "#9ca3af"
-                                : "#0877c9",
+                              fontWeight: "700",
+                              fontSize: "14px",
+                              textAlign: "left",
+                              marginBottom:
+                                "8px",
                             }}
                           >
-                            {result}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          );
-        })()}
+                            {fixture.home_team} v{" "}
+                            {fixture.away_team}
+                          </div>
+
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems:
+                                "center",
+                              gap: "8px",
+                              fontSize: "13px",
+                              fontWeight: "700",
+                            }}
+                          >
+                            <span>
+                              Your Prediction
+                            </span>
+
+                            <span
+                              style={{
+                                width: "34px",
+                                minWidth: "34px",
+                                height: "34px",
+                                borderRadius:
+                                  "50%",
+                                background:
+                                  selected
+                                    ? "#061b33"
+                                    : "#9ca3af",
+                                color:
+                                  "#ffffff",
+                                display:
+                                  "inline-flex",
+                                alignItems:
+                                  "center",
+                                justifyContent:
+                                  "center",
+                                fontWeight:
+                                  "bold",
+                              }}
+                            >
+                              {selected || "-"}
+                            </span>
+
+                            <span>
+                              CANCELLED — no
+                              points awarded
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    }
+
+                    return (
+                      <div
+                        key={fixture.id}
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns:
+                            "minmax(0, 1fr) 116px",
+                          alignItems: "center",
+                          gap: "8px",
+                          padding: "10px 0",
+                          borderTop:
+                            "1px solid #d9e0e7",
+                        }}
+                      >
+                        <div
+                          style={{
+                            minWidth: 0,
+                            whiteSpace:
+                              "nowrap",
+                            overflow: "hidden",
+                            textOverflow:
+                              "ellipsis",
+                            textAlign: "left",
+                            fontWeight: "700",
+                            fontSize: "14px",
+                          }}
+                        >
+                          {fixture.home_team} v{" "}
+                          {fixture.away_team}
+                        </div>
+
+                        <div
+                          style={{
+                            display: "flex",
+                            flexWrap: "nowrap",
+                            gap: "5px",
+                            justifyContent:
+                              "flex-end",
+                          }}
+                        >
+                          {["H", "D", "A"].map(
+                            (result) => {
+                              const isSelected =
+                                selected ===
+                                result;
+
+                              return (
+                                <button
+                                  key={result}
+                                  onClick={() =>
+                                    chooseResult(
+                                      fixture.id,
+                                      result,
+                                      isOpen
+                                    )
+                                  }
+                                  disabled={
+                                    !isOpen
+                                  }
+                                  style={{
+                                    width:
+                                      "34px",
+                                    minWidth:
+                                      "34px",
+                                    height:
+                                      "34px",
+                                    padding: 0,
+                                    borderRadius:
+                                      "50%",
+                                    fontSize:
+                                      "13px",
+                                    opacity:
+                                      !isOpen &&
+                                      !isSelected
+                                        ? 0.28
+                                        : 1,
+                                    cursor:
+                                      !isOpen
+                                        ? "not-allowed"
+                                        : "pointer",
+                                    background:
+                                      isSelected
+                                        ? "#061b33"
+                                        : !isOpen
+                                        ? "#9ca3af"
+                                        : "#0877c9",
+                                  }}
+                                >
+                                  {result}
+                                </button>
+                              );
+                            }
+                          )}
+                        </div>
+                      </div>
+                    );
+                  }
+                )}
+              </div>
+            );
+          })()}
 
         <a href="/predictor">
-          <button>Back to Predictor</button>
+          <button>
+            Back to Predictor
+          </button>
         </a>
 
         <p className="footer">
@@ -399,4 +576,3 @@ export default function PredictionsPage() {
     </main>
   );
 }
-
