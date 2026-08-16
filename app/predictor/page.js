@@ -45,10 +45,11 @@ export default function PredictorPage() {
         const week = weekData[0];
         setCurrentWeek(week);
 
-        const { data: fixtureData } = await supabase
-          .from("fixtures")
-          .select("id")
-          .eq("match_week_id", week.id);
+const { data: fixtureData } = await supabase
+  .from("fixtures")
+  .select("id, status")
+  .eq("match_week_id", week.id)
+  .neq("status", "cancelled");
 
         const fixtureIds = (fixtureData || []).map(
           (fixture) => fixture.id
