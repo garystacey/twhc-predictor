@@ -291,7 +291,6 @@ export default function WeeklyLeaderboardsPage() {
       : "results pending"}
   </div>
 )}
-            )}
 
             {loading ? (
               <p>Loading leaderboard...</p>
