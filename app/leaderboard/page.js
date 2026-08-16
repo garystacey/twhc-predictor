@@ -44,7 +44,7 @@ export default function LeaderboardPage() {
 
       const { data: fixtures, error: fixtureError } = await supabase
         .from("fixtures")
-        .select("id, result")
+        .select("id, result, status")
         .not("result", "is", null);
 
       if (fixtureError) {
@@ -54,17 +54,26 @@ export default function LeaderboardPage() {
       }
 
       const resultByFixture = {};
+      const statusByFixture = {};
 
       (fixtures || []).forEach((fixture) => {
         resultByFixture[fixture.id] = fixture.result;
+        statusByFixture[fixture.id] = fixture.status;
       });
 
       const pointsByUser = {};
 
       (predictions || []).forEach((prediction) => {
+        const actualResult =
+          resultByFixture[prediction.fixture_id];
+
+        const fixtureStatus =
+          statusByFixture[prediction.fixture_id];
+
         if (
-          resultByFixture[prediction.fixture_id] &&
-          prediction.prediction === resultByFixture[prediction.fixture_id]
+          fixtureStatus !== "cancelled" &&
+          actualResult &&
+          prediction.prediction === actualResult
         ) {
           pointsByUser[prediction.user_id] =
             (pointsByUser[prediction.user_id] || 0) + 1;
@@ -89,7 +98,28 @@ export default function LeaderboardPage() {
           );
         });
 
-      setRows(leaderboard);
+      let previousPoints = null;
+      let previousPosition = 0;
+
+      const rankedLeaderboard = leaderboard.map((row, index) => {
+        let position;
+
+        if (row.points === previousPoints) {
+          position = previousPosition;
+        } else {
+          position = index + 1;
+        }
+
+        previousPoints = row.points;
+        previousPosition = position;
+
+        return {
+          ...row,
+          position,
+        };
+      });
+
+      setRows(rankedLeaderboard);
       setLoading(false);
     }
 
@@ -136,7 +166,7 @@ export default function LeaderboardPage() {
               marginTop: "20px",
             }}
           >
-            {rows.map((row, index) => (
+            {rows.map((row) => (
               <div
                 key={row.id}
                 style={{
@@ -148,7 +178,7 @@ export default function LeaderboardPage() {
                   textAlign: "left",
                 }}
               >
-                <strong>{index + 1}</strong>
+                <strong>{row.position}</strong>
 
                 <div>
                   <strong>
@@ -174,7 +204,8 @@ export default function LeaderboardPage() {
                     fontWeight: "bold",
                   }}
                 >
-                  {row.points} {row.points === 1 ? "pt" : "pts"}
+                  {row.points}{" "}
+                  {row.points === 1 ? "pt" : "pts"}
                 </div>
               </div>
             ))}
@@ -187,7 +218,9 @@ export default function LeaderboardPage() {
           <button>Back to Predictor</button>
         </a>
 
-        <p className="footer">Telford & Wrekin Hockey Club</p>
+        <p className="footer">
+          Telford & Wrekin Hockey Club
+        </p>
       </div>
     </main>
   );
