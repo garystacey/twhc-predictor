@@ -65,7 +65,9 @@ export default function PredictorPage() {
         <div className="card">
           <h2>Overall Leaderboard</h2>
           <p>See who's leading The Predictor this season.</p>
-          <button>Overall Leaderboard</button>
+          <a href="/leaderboard">
+  <button>Overall Leaderboard</button>
+</a>
         </div>
 
         <div className="card">
