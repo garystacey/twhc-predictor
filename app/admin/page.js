@@ -4,19 +4,15 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabase";
 
-export default function AdminPage() {
+export default function AdminDashboardPage() {
   const router = useRouter();
 
-  const [weeks, setWeeks] = useState([]);
-  const [selectedWeekId, setSelectedWeekId] = useState("");
-  const [fixtures, setFixtures] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [savingId, setSavingId] = useState(null);
-  const [message, setMessage] = useState("");
   const [authorised, setAuthorised] = useState(false);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
-    async function loadAdmin() {
+    async function checkAdmin() {
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -26,150 +22,30 @@ export default function AdminPage() {
         return;
       }
 
-      const { data: profile, error: profileError } = await supabase
+      const { data: profile, error } = await supabase
         .from("profiles")
         .select("role")
         .eq("id", user.id)
         .single();
 
-      if (profileError || !profile || profile.role !== "admin") {
+      if (error || !profile || profile.role !== "admin") {
         setMessage("You do not have permission to access the Admin area.");
         setLoading(false);
         return;
       }
 
       setAuthorised(true);
-
-      const { data: weekData, error: weekError } = await supabase
-        .from("match_weeks")
-        .select("id, week_no, match_date")
-        .order("week_no", { ascending: true });
-
-      if (weekError) {
-        setMessage(weekError.message);
-        setLoading(false);
-        return;
-      }
-
-      setWeeks(weekData || []);
-
-      if (weekData && weekData.length > 0) {
-        setSelectedWeekId(weekData[0].id);
-      }
-
       setLoading(false);
     }
 
-    loadAdmin();
+    checkAdmin();
   }, [router]);
 
-  useEffect(() => {
-    if (!authorised || !selectedWeekId) return;
-
-    async function loadFixtures() {
-      setLoading(true);
-      setMessage("");
-
-      const { data, error } = await supabase
-        .from("fixtures")
-        .select(
-          "id, fixture_order, home_team, away_team, scheduled_date, result"
-        )
-        .eq("match_week_id", selectedWeekId)
-        .order("fixture_order", { ascending: true });
-
-      if (error) {
-        setMessage(error.message);
-        setLoading(false);
-        return;
-      }
-
-      setFixtures(data || []);
-      setLoading(false);
-    }
-
-    loadFixtures();
-  }, [selectedWeekId, authorised]);
-
-  async function saveResult(fixtureId, result) {
-    setSavingId(fixtureId);
-    setMessage("");
-
-    const resultMap = {
-      H: "home",
-      D: "draw",
-      A: "away",
-    };
-
-    const { error } = await supabase
-      .from("fixtures")
-      .update({
-        result: resultMap[result],
-        result_recorded_at: new Date().toISOString(),
-      })
-      .eq("id", fixtureId);
-
-    if (error) {
-      setMessage(error.message);
-      setSavingId(null);
-      return;
-    }
-
-    setFixtures((current) =>
-      current.map((fixture) =>
-        fixture.id === fixtureId
-          ? { ...fixture, result: resultMap[result] }
-          : fixture
-      )
-    );
-
-    setMessage("Result saved.");
-    setSavingId(null);
-  }
-
-  async function clearResult(fixtureId) {
-    setSavingId(fixtureId);
-    setMessage("");
-
-    const { error } = await supabase
-      .from("fixtures")
-      .update({
-        result: null,
-        result_recorded_at: null,
-      })
-      .eq("id", fixtureId);
-
-    if (error) {
-      setMessage(error.message);
-      setSavingId(null);
-      return;
-    }
-
-    setFixtures((current) =>
-      current.map((fixture) =>
-        fixture.id === fixtureId
-          ? { ...fixture, result: null }
-          : fixture
-      )
-    );
-
-    setMessage("Result cleared.");
-    setSavingId(null);
-  }
-
-  function displayResult(result) {
-    if (result === "home") return "H";
-    if (result === "draw") return "D";
-    if (result === "away") return "A";
-    return null;
-  }
-
-  if (loading && !authorised) {
+  if (loading) {
     return (
       <main>
         <div className="container">
           <div className="badge">TELFORD & WREKIN HC</div>
-
           <h1>THE PREDICTOR</h1>
           <p className="subtitle">Administrator</p>
 
@@ -186,7 +62,6 @@ export default function AdminPage() {
       <main>
         <div className="container">
           <div className="badge">TELFORD & WREKIN HC</div>
-
           <h1>THE PREDICTOR</h1>
           <p className="subtitle">Administrator</p>
 
@@ -209,122 +84,32 @@ export default function AdminPage() {
         <div className="badge">TELFORD & WREKIN HC</div>
 
         <h1>THE PREDICTOR</h1>
-        <p className="subtitle">Administrator — Enter Results</p>
-
-        {message && (
-          <div className="card">
-            <p>{message}</p>
-          </div>
-        )}
-
-        <div className="card">
-          <h2>Select Match Week</h2>
-
-          <select
-            value={selectedWeekId}
-            onChange={(e) =>
-              setSelectedWeekId(Number(e.target.value))
-            }
-            style={{
-              width: "100%",
-              padding: "12px",
-              borderRadius: "8px",
-              border: "1px solid #d7dee7",
-              fontSize: "16px",
-              fontWeight: "bold",
-            }}
-          >
-            {weeks.map((week) => (
-              <option key={week.id} value={week.id}>
-                Match Week {week.week_no}
-                {week.match_date ? ` — ${week.match_date}` : ""}
-              </option>
-            ))}
-          </select>
-        </div>
+        <p className="subtitle">Administrator Dashboard</p>
 
         <div className="card">
           <h2>Enter Results</h2>
+          <p>Record the actual H / D / A result for each fixture.</p>
+          <a href="/admin/results">
+            <button>Enter Results</button>
+          </a>
+        </div>
 
-          {loading ? (
-            <p>Loading fixtures...</p>
-          ) : fixtures.length === 0 ? (
-            <p>No fixtures found for this match week.</p>
-          ) : (
-            <div style={{ width: "100%" }}>
-              {fixtures.map((fixture) => {
-                const selected = displayResult(fixture.result);
-                const saving = savingId === fixture.id;
+        <div className="card">
+          <h2>Manage Match Weeks</h2>
+          <p>Review match dates, opening times and prediction deadlines.</p>
+          <button disabled>Coming Soon</button>
+        </div>
 
-                return (
-                  <div
-                    key={fixture.id}
-                    style={{
-                      padding: "14px 0",
-                      borderBottom: "1px solid #d7dee7",
-                    }}
-                  >
-                    <div
-                      style={{
-                        fontWeight: "bold",
-                        marginBottom: "10px",
-                      }}
-                    >
-                      {fixture.home_team} v {fixture.away_team}
-                    </div>
+        <div className="card">
+          <h2>Manage Fixtures</h2>
+          <p>Review and manage the fixtures included in each match week.</p>
+          <button disabled>Coming Soon</button>
+        </div>
 
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        gap: "8px",
-                        flexWrap: "wrap",
-                      }}
-                    >
-                      {["H", "D", "A"].map((result) => (
-                        <button
-                          key={result}
-                          disabled={saving}
-                          onClick={() =>
-                            saveResult(fixture.id, result)
-                          }
-                          style={{
-                            width: "44px",
-                            minWidth: "44px",
-                            height: "44px",
-                            padding: 0,
-                            borderRadius: "50%",
-                            background:
-                              selected === result
-                                ? "#061b33"
-                                : "#0877c9",
-                            opacity: saving ? 0.5 : 1,
-                          }}
-                        >
-                          {result}
-                        </button>
-                      ))}
-
-                      {fixture.result && (
-                        <button
-                          disabled={saving}
-                          onClick={() => clearResult(fixture.id)}
-                          style={{
-                            width: "auto",
-                            minWidth: "70px",
-                            padding: "8px 12px",
-                            opacity: saving ? 0.5 : 1,
-                          }}
-                        >
-                          Clear
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
+        <div className="card">
+          <h2>Members</h2>
+          <p>View Predictor members and account details.</p>
+          <button disabled>Coming Soon</button>
         </div>
 
         <a href="/predictor">
