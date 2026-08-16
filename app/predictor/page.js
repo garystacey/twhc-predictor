@@ -89,9 +89,15 @@ if (weekData && weekData.length > 0) {
 
         <h1>THE PREDICTOR</h1>
 
-        <p className="subtitle">
-          Welcome, {profile?.first_name}
-        </p>
+<p className="subtitle">
+  Welcome, {profile?.first_name} {profile?.surname}
+  {profile?.team_name && (
+    <>
+      <br />
+      <strong>{profile.team_name}</strong>
+    </>
+  )}
+</p>
 
 {currentWeek && predictionStatus && (
   <div className="card">
