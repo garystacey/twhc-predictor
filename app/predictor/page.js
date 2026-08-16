@@ -171,7 +171,9 @@ if (weekData && weekData.length > 0) {
           <div className="card">
             <h2>Admin</h2>
             <p>Manage fixtures, results and The Predictor.</p>
-            <button>Admin Area</button>
+<a href="/admin">
+  <button>Admin Area</button>
+</a>
           </div>
         )}
 
