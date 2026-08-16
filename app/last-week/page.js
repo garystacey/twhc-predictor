@@ -91,12 +91,10 @@ export default function WeeklyLeaderboardsPage() {
         return;
       }
 
-      // Load ALL fixtures for the week, including fixtures
-      // where a result has not yet been entered.
       const { data: fixtureData, error: fixtureError } = await supabase
         .from("fixtures")
         .select(
-          "id, fixture_order, home_team, away_team, result"
+          "id, fixture_order, home_team, away_team, result, status"
         )
         .eq("match_week_id", selectedWeekId)
         .order("fixture_order", { ascending: true });
@@ -132,9 +130,11 @@ export default function WeeklyLeaderboardsPage() {
       }
 
       const resultByFixture = {};
+      const statusByFixture = {};
 
       (fixtureData || []).forEach((fixture) => {
         resultByFixture[fixture.id] = fixture.result;
+        statusByFixture[fixture.id] = fixture.status;
       });
 
       const pointsByUser = {};
@@ -143,9 +143,11 @@ export default function WeeklyLeaderboardsPage() {
         const actualResult =
           resultByFixture[prediction.fixture_id];
 
-        // Only award a point if an actual result exists
-        // and the prediction matches it.
+        const fixtureStatus =
+          statusByFixture[prediction.fixture_id];
+
         if (
+          fixtureStatus !== "cancelled" &&
           actualResult &&
           prediction.prediction === actualResult
         ) {
@@ -215,12 +217,21 @@ export default function WeeklyLeaderboardsPage() {
     );
   }
 
-  const completedResults = fixtures.filter(
-    (fixture) => fixture.result
+  const cancelledResults = fixtures.filter(
+    (fixture) => fixture.status === "cancelled"
   ).length;
 
-  const pendingResults =
-    fixtures.length - completedResults;
+  const completedResults = fixtures.filter(
+    (fixture) =>
+      fixture.status !== "cancelled" &&
+      fixture.result
+  ).length;
+
+  const pendingResults = fixtures.filter(
+    (fixture) =>
+      fixture.status !== "cancelled" &&
+      !fixture.result
+  ).length;
 
   return (
     <main>
@@ -271,26 +282,50 @@ export default function WeeklyLeaderboardsPage() {
 
             <h2>Match Week {weekNo}</h2>
 
-{pendingResults > 0 && !loading && (
-  <div
-    style={{
-      marginTop: "8px",
-      marginBottom: "6px",
-      padding: "8px 10px",
-      borderRadius: "8px",
-      background: "#fff3cd",
-      color: "#664d03",
-      fontSize: "13px",
-      fontWeight: "700",
-      textAlign: "center",
-    }}
-  >
-    ⚠ Provisional standings — {pendingResults}{" "}
-    {pendingResults === 1
-      ? "result pending"
-      : "results pending"}
-  </div>
-)}
+            {pendingResults > 0 && !loading && (
+              <div
+                style={{
+                  marginTop: "8px",
+                  marginBottom: "6px",
+                  padding: "8px 10px",
+                  borderRadius: "8px",
+                  background: "#fff3cd",
+                  color: "#664d03",
+                  fontSize: "13px",
+                  fontWeight: "700",
+                  textAlign: "center",
+                }}
+              >
+                ⚠ Provisional standings — {pendingResults}{" "}
+                {pendingResults === 1
+                  ? "result pending"
+                  : "results pending"}
+
+                {cancelledResults > 0 && (
+                  <>
+                    {" • "}
+                    {cancelledResults} cancelled
+                  </>
+                )}
+              </div>
+            )}
+
+            {pendingResults === 0 &&
+              cancelledResults > 0 &&
+              !loading && (
+                <p
+                  style={{
+                    fontSize: "13px",
+                    fontWeight: "700",
+                    marginTop: "8px",
+                  }}
+                >
+                  {cancelledResults}{" "}
+                  {cancelledResults === 1
+                    ? "fixture cancelled"
+                    : "fixtures cancelled"}
+                </p>
+              )}
 
             {loading ? (
               <p>Loading leaderboard...</p>
@@ -368,6 +403,7 @@ export default function WeeklyLeaderboardsPage() {
                             }}
                           >
                             {row.points}/{completedResults} correct
+
                             {pendingResults > 0 && (
                               <>
                                 {" • "}
@@ -375,6 +411,13 @@ export default function WeeklyLeaderboardsPage() {
                                 {pendingResults === 1
                                   ? "result pending"
                                   : "results pending"}
+                              </>
+                            )}
+
+                            {cancelledResults > 0 && (
+                              <>
+                                {" • "}
+                                {cancelledResults} cancelled
                               </>
                             )}
                           </div>
@@ -386,7 +429,11 @@ export default function WeeklyLeaderboardsPage() {
                                 fixture.id
                               );
 
+                            const cancelled =
+                              fixture.status === "cancelled";
+
                             const hasResult =
+                              !cancelled &&
                               Boolean(fixture.result);
 
                             const correct =
@@ -435,28 +482,20 @@ export default function WeeklyLeaderboardsPage() {
                                   {fixture.away_team}
                                 </div>
 
-                                <div
-                                  style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent:
-                                      "space-between",
-                                    gap: "8px",
-                                    fontSize: "12px",
-                                  }}
-                                >
+                                {cancelled ? (
                                   <div
                                     style={{
-                                      display: "flex",
-                                      alignItems: "center",
-                                      gap: "6px",
+                                      fontSize: "12px",
+                                      fontWeight: "700",
+                                      textAlign: "left",
                                     }}
                                   >
-                                    <span>Prediction</span>
-
+                                    Prediction{" "}
                                     <span
                                       style={{
                                         ...circleStyle,
+                                        marginLeft: "6px",
+                                        marginRight: "12px",
                                         background:
                                           predictionLetter === "-"
                                             ? "#9ca3af"
@@ -465,45 +504,80 @@ export default function WeeklyLeaderboardsPage() {
                                     >
                                       {predictionLetter}
                                     </span>
-                                  </div>
 
+                                    CANCELLED — no points awarded
+                                  </div>
+                                ) : (
                                   <div
                                     style={{
                                       display: "flex",
                                       alignItems: "center",
-                                      gap: "6px",
+                                      justifyContent:
+                                        "space-between",
+                                      gap: "8px",
+                                      fontSize: "12px",
                                     }}
                                   >
-                                    <span>Result</span>
-
-                                    <span
+                                    <div
                                       style={{
-                                        ...circleStyle,
-                                        background: hasResult
-                                          ? "#061b33"
-                                          : "#9ca3af",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: "6px",
                                       }}
                                     >
-                                      {resultLetter}
-                                    </span>
-                                  </div>
+                                      <span>Prediction</span>
 
-                                  <div
-                                    style={{
-                                      width: "28px",
-                                      textAlign: "center",
-                                      fontWeight: "bold",
-                                      fontSize: "23px",
-                                      lineHeight: 1,
-                                    }}
-                                  >
-                                    {!hasResult
-                                      ? "…"
-                                      : correct
-                                      ? "✓"
-                                      : "✗"}
+                                      <span
+                                        style={{
+                                          ...circleStyle,
+                                          background:
+                                            predictionLetter === "-"
+                                              ? "#9ca3af"
+                                              : "#061b33",
+                                        }}
+                                      >
+                                        {predictionLetter}
+                                      </span>
+                                    </div>
+
+                                    <div
+                                      style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: "6px",
+                                      }}
+                                    >
+                                      <span>Result</span>
+
+                                      <span
+                                        style={{
+                                          ...circleStyle,
+                                          background: hasResult
+                                            ? "#061b33"
+                                            : "#9ca3af",
+                                        }}
+                                      >
+                                        {resultLetter}
+                                      </span>
+                                    </div>
+
+                                    <div
+                                      style={{
+                                        width: "28px",
+                                        textAlign: "center",
+                                        fontWeight: "bold",
+                                        fontSize: "23px",
+                                        lineHeight: 1,
+                                      }}
+                                    >
+                                      {!hasResult
+                                        ? "…"
+                                        : correct
+                                        ? "✓"
+                                        : "✗"}
+                                    </div>
                                   </div>
-                                </div>
+                                )}
                               </div>
                             );
                           })}
