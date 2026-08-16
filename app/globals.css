@@ -61,7 +61,7 @@ main {
 
 .club-logo {
   display: block;
-  width: 90px;
+  width: 100px;
   height: auto;
   margin: 0 auto 16px;
   object-fit: contain;
@@ -254,7 +254,7 @@ textarea:focus {
   }
 
 .club-logo {
-  width: 72px;
+  width: 85px;
   margin-bottom: 14px;
 }
   
