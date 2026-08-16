@@ -102,11 +102,13 @@ export default function AdminDashboardPage() {
   </a>
 </div>
 
-        <div className="card">
-          <h2>Manage Fixtures</h2>
-          <p>Review and manage the fixtures included in each match week.</p>
-          <button disabled>Coming Soon</button>
-        </div>
+<div className="card">
+  <h2>Manage Fixtures</h2>
+  <p>Review and manage the fixtures included in each match week.</p>
+  <a href="/admin/fixtures">
+    <button>Manage Fixtures</button>
+  </a>
+</div>
 
         <div className="card">
           <h2>Members</h2>
