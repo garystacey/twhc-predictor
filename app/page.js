@@ -15,7 +15,7 @@ export default function Home() {
             Sign in to make your predictions for the upcoming fixtures.
           </p>
 
-          <button>Sign In</button>
+<a href="/login"><button>Sign In</button></a>
         </div>
 
         <p className="footer">
