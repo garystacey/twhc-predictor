@@ -67,7 +67,9 @@ export default function Home() {
                 </p>
               )}
 
-              <button>Enter The Predictor</button>
+<a href="/predictor">
+  <button>Enter The Predictor</button>
+</a>
 
               <br />
               <br />
