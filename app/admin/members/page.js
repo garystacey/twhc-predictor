@@ -11,6 +11,7 @@ export default function MembersPage() {
   const [loading, setLoading] = useState(true);
   const [savingId, setSavingId] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
+  const [paymentId, setPaymentId] = useState(null);
   const [currentUserId, setCurrentUserId] = useState(null);
   const [message, setMessage] = useState("");
   const [members, setMembers] = useState([]);
@@ -47,7 +48,7 @@ export default function MembersPage() {
       const { data, error } = await supabase
         .from("profiles")
         .select(
-          "id, team_name, first_name, surname, role, created_at"
+          "id, team_name, first_name, surname, role, paid, created_at"
         )
         .order("created_at", { ascending: true });
 
@@ -108,6 +109,49 @@ export default function MembersPage() {
 
     setMessage("Member saved.");
     setSavingId(null);
+  }
+
+  async function togglePayment(member) {
+    const newPaidStatus = !member.paid;
+
+    setPaymentId(member.id);
+    setMessage("");
+
+    const { error } = await supabase
+      .from("profiles")
+      .update({
+        paid: newPaidStatus,
+      })
+      .eq("id", member.id);
+
+    if (error) {
+      setMessage(error.message);
+      setPaymentId(null);
+      return;
+    }
+
+    setMembers((current) =>
+      current.map((currentMember) =>
+        currentMember.id === member.id
+          ? {
+              ...currentMember,
+              paid: newPaidStatus,
+            }
+          : currentMember
+      )
+    );
+
+    const memberName = `${member.first_name || ""} ${
+      member.surname || ""
+    }`.trim();
+
+    setMessage(
+      newPaidStatus
+        ? `${memberName || "Member"} marked as PAID.`
+        : `${memberName || "Member"} marked as UNPAID.`
+    );
+
+    setPaymentId(null);
   }
 
   async function deleteMember(member) {
@@ -397,18 +441,76 @@ export default function MembersPage() {
                         </select>
                       </label>
 
+                      <div
+                        style={{
+                          padding: "14px",
+                          borderRadius: "10px",
+                          background: member.paid
+                            ? "#e7f7ed"
+                            : "#fdeaea",
+                          border: member.paid
+                            ? "2px solid #1f9d55"
+                            : "2px solid #e31b23",
+                          textAlign: "center",
+                        }}
+                      >
+                        <div
+                          style={{
+                            fontSize: "18px",
+                            fontWeight: "900",
+                            color: member.paid
+                              ? "#16733f"
+                              : "#c5161d",
+                            marginBottom: "10px",
+                          }}
+                        >
+                          {member.paid
+                            ? "✓ PAID"
+                            : "● UNPAID"}
+                        </div>
+
+                        <button
+                          onClick={() =>
+                            togglePayment(member)
+                          }
+                          disabled={
+                            paymentId === member.id ||
+                            deletingId === member.id
+                          }
+                          style={{
+                            background: member.paid
+                              ? "#6b7280"
+                              : "#1f9d55",
+                            color: "#ffffff",
+                            opacity:
+                              paymentId === member.id ||
+                              deletingId === member.id
+                                ? 0.5
+                                : 1,
+                          }}
+                        >
+                          {paymentId === member.id
+                            ? "Updating..."
+                            : member.paid
+                            ? "Mark as Unpaid"
+                            : "Mark as Paid"}
+                        </button>
+                      </div>
+
                       <button
                         onClick={() =>
                           saveMember(member)
                         }
                         disabled={
                           savingId === member.id ||
-                          deletingId === member.id
+                          deletingId === member.id ||
+                          paymentId === member.id
                         }
                         style={{
                           opacity:
                             savingId === member.id ||
-                            deletingId === member.id
+                            deletingId === member.id ||
+                            paymentId === member.id
                               ? 0.5
                               : 1,
                         }}
@@ -425,6 +527,7 @@ export default function MembersPage() {
                         disabled={
                           deletingId === member.id ||
                           savingId === member.id ||
+                          paymentId === member.id ||
                           isCurrentUser
                         }
                         style={{
@@ -433,6 +536,7 @@ export default function MembersPage() {
                           opacity:
                             deletingId === member.id ||
                             savingId === member.id ||
+                            paymentId === member.id ||
                             isCurrentUser
                               ? 0.45
                               : 1,
