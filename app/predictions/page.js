@@ -424,7 +424,7 @@ export default function PredictionsPage() {
                                 height: "34px",
                                 borderRadius: "50%",
                                 background: selected
-                                  ? "#061b33"
+                                  ? "#e31b23"
                                   : "#9ca3af",
                                 color: "#ffffff",
                                 display: "inline-flex",
@@ -514,7 +514,7 @@ export default function PredictionsPage() {
                                       : "pointer",
                                     background:
                                       isSelected
-                                        ? "#061b33"
+                                        ? "#e31b23"
                                         : !isOpen
                                         ? "#9ca3af"
                                         : "#0877c9",
