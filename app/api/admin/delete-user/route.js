@@ -1,8 +1,11 @@
 import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseUrl =
+  process.env.NEXT_PUBLIC_SUPABASE_URL;
+
 const supabasePublishableKey =
   process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+
 const supabaseSecretKey =
   process.env.SUPABASE_SECRET_KEY;
 
@@ -15,7 +18,8 @@ export async function POST(request) {
     ) {
       return Response.json(
         {
-          error: "Server configuration is incomplete.",
+          error:
+            "Server configuration is incomplete.",
         },
         {
           status: 500,
@@ -23,9 +27,13 @@ export async function POST(request) {
       );
     }
 
-    const authHeader = request.headers.get("authorization");
+    const authHeader =
+      request.headers.get("authorization");
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    if (
+      !authHeader ||
+      !authHeader.startsWith("Bearer ")
+    ) {
       return Response.json(
         {
           error: "Not authorised.",
@@ -36,11 +44,10 @@ export async function POST(request) {
       );
     }
 
-    const accessToken = authHeader.replace("Bearer ", "");
+    const accessToken =
+      authHeader.replace("Bearer ", "");
 
-    const {
-      userId,
-    } = await request.json();
+    const { userId } = await request.json();
 
     if (!userId) {
       return Response.json(
@@ -54,13 +61,18 @@ export async function POST(request) {
     }
 
     /*
-      Normal client:
-      used only to validate the currently signed-in user's token.
+      Create a normal Supabase client using the
+      signed-in Admin user's access token.
     */
-    const authClient = createClient(
+    const userClient = createClient(
       supabaseUrl,
       supabasePublishableKey,
       {
+        global: {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
         auth: {
           persistSession: false,
           autoRefreshToken: false,
@@ -68,12 +80,15 @@ export async function POST(request) {
       }
     );
 
+    /*
+      Validate the supplied login token.
+    */
     const {
-      data: {
-        user: requestingUser,
-      },
+      data: { user: requestingUser },
       error: requestingUserError,
-    } = await authClient.auth.getUser(accessToken);
+    } = await userClient.auth.getUser(
+      accessToken
+    );
 
     if (
       requestingUserError ||
@@ -81,7 +96,8 @@ export async function POST(request) {
     ) {
       return Response.json(
         {
-          error: "Your login session is invalid or has expired.",
+          error:
+            "Your login session is invalid or has expired.",
         },
         {
           status: 401,
@@ -90,13 +106,13 @@ export async function POST(request) {
     }
 
     /*
-      Prevent an administrator from deleting their own
-      currently logged-in account.
+      Prevent the current Admin deleting themselves.
     */
     if (requestingUser.id === userId) {
       return Response.json(
         {
-          error: "You cannot delete your own Admin account.",
+          error:
+            "You cannot delete your own Admin account.",
         },
         {
           status: 400,
@@ -105,8 +121,48 @@ export async function POST(request) {
     }
 
     /*
-      Server-only privileged client.
-      SUPABASE_SECRET_KEY must never be exposed in browser code.
+      Check the signed-in user's role using their
+      own authenticated session.
+    */
+    const {
+      data: adminProfile,
+      error: adminProfileError,
+    } = await userClient
+      .from("profiles")
+      .select("role")
+      .eq("id", requestingUser.id)
+      .single();
+
+    if (adminProfileError) {
+      return Response.json(
+        {
+          error:
+            `Could not verify Admin role: ${adminProfileError.message}`,
+        },
+        {
+          status: 403,
+        }
+      );
+    }
+
+    if (
+      !adminProfile ||
+      adminProfile.role !== "admin"
+    ) {
+      return Response.json(
+        {
+          error:
+            "You do not have permission to delete members.",
+        },
+        {
+          status: 403,
+        }
+      );
+    }
+
+    /*
+      Now create the privileged SERVER-ONLY client.
+      This key must never be exposed in browser code.
     */
     const adminClient = createClient(
       supabaseUrl,
@@ -120,49 +176,32 @@ export async function POST(request) {
     );
 
     /*
-      Confirm that the person making the request
-      is actually an Admin.
-    */
-    const {
-      data: adminProfile,
-      error: adminProfileError,
-    } = await adminClient
-      .from("profiles")
-      .select("role")
-      .eq("id", requestingUser.id)
-      .single();
-
-    if (
-      adminProfileError ||
-      !adminProfile ||
-      adminProfile.role !== "admin"
-    ) {
-      return Response.json(
-        {
-          error: "You do not have permission to delete members.",
-        },
-        {
-          status: 403,
-        }
-      );
-    }
-
-    /*
-      Make sure the target member exists.
+      Make sure the member exists before deleting.
     */
     const {
       data: targetProfile,
       error: targetProfileError,
     } = await adminClient
       .from("profiles")
-      .select("id, first_name, surname, team_name")
+      .select(
+        "id, first_name, surname, team_name"
+      )
       .eq("id", userId)
       .single();
 
-    if (
-      targetProfileError ||
-      !targetProfile
-    ) {
+    if (targetProfileError) {
+      return Response.json(
+        {
+          error:
+            `Could not find member: ${targetProfileError.message}`,
+        },
+        {
+          status: 500,
+        }
+      );
+    }
+
+    if (!targetProfile) {
       return Response.json(
         {
           error: "Member not found.",
@@ -174,7 +213,7 @@ export async function POST(request) {
     }
 
     /*
-      Delete all Predictor entries belonging to the member.
+      Delete all of their Predictor predictions.
     */
     const {
       error: predictionsError,
@@ -186,7 +225,8 @@ export async function POST(request) {
     if (predictionsError) {
       return Response.json(
         {
-          error: "Could not delete the member's predictions.",
+          error:
+            `Could not delete predictions: ${predictionsError.message}`,
         },
         {
           status: 500,
@@ -195,7 +235,7 @@ export async function POST(request) {
     }
 
     /*
-      Delete their Predictor profile.
+      Delete the public Predictor profile.
     */
     const {
       error: profileDeleteError,
@@ -207,7 +247,8 @@ export async function POST(request) {
     if (profileDeleteError) {
       return Response.json(
         {
-          error: "Could not delete the member profile.",
+          error:
+            `Could not delete member profile: ${profileDeleteError.message}`,
         },
         {
           status: 500,
@@ -216,17 +257,20 @@ export async function POST(request) {
     }
 
     /*
-      Finally delete the Supabase Auth account.
+      Finally remove their Supabase Auth login.
     */
     const {
       error: authDeleteError,
-    } = await adminClient.auth.admin.deleteUser(userId);
+    } =
+      await adminClient.auth.admin.deleteUser(
+        userId
+      );
 
     if (authDeleteError) {
       return Response.json(
         {
           error:
-            "The Predictor data was removed, but the login account could not be deleted.",
+            `Predictor data was removed, but the login account could not be deleted: ${authDeleteError.message}`,
         },
         {
           status: 500,
@@ -247,11 +291,15 @@ export async function POST(request) {
       },
     });
   } catch (error) {
-    console.error("Delete member error:", error);
+    console.error(
+      "Delete member error:",
+      error
+    );
 
     return Response.json(
       {
-        error: "An unexpected error occurred while deleting the member.",
+        error:
+          "An unexpected error occurred while deleting the member.",
       },
       {
         status: 500,
