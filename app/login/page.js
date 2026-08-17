@@ -53,43 +53,141 @@ export default function LoginPage() {
 
           <p>Enter your email address and password.</p>
 
-          <form onSubmit={handleLogin}>
-            <input
-              type="email"
-              placeholder="Email address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+          <form
+            onSubmit={handleLogin}
+            style={{
+              display: "grid",
+              gap: "18px",
+              textAlign: "left",
+            }}
+          >
+            <label>
+              <strong
+                style={{
+                  display: "block",
+                  marginBottom: "7px",
+                  fontSize: "15px",
+                }}
+              >
+                Email Address
+              </strong>
 
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+              <input
+                type="email"
+                placeholder="Enter your email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                style={{
+                  width: "100%",
+                  height: "54px",
+                  padding: "0 16px",
+                  borderRadius: "9px",
+                  border: "1px solid #b8c6d4",
+                  boxSizing: "border-box",
+                  fontSize: "17px",
+                  background: "#ffffff",
+                  color: "#10243a",
+                }}
+              />
+            </label>
 
-            <button type="submit" disabled={loading}>
+            <label>
+              <strong
+                style={{
+                  display: "block",
+                  marginBottom: "7px",
+                  fontSize: "15px",
+                }}
+              >
+                Password
+              </strong>
+
+              <input
+                type="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                style={{
+                  width: "100%",
+                  height: "54px",
+                  padding: "0 16px",
+                  borderRadius: "9px",
+                  border: "1px solid #b8c6d4",
+                  boxSizing: "border-box",
+                  fontSize: "17px",
+                  background: "#ffffff",
+                  color: "#10243a",
+                }}
+              />
+            </label>
+
+            <button
+              type="submit"
+              disabled={loading}
+              style={{
+                marginTop: "2px",
+              }}
+            >
               {loading ? "Signing In..." : "Sign In"}
             </button>
           </form>
 
-          <p style={{ marginTop: "16px" }}>
+          <p style={{ marginTop: "20px" }}>
             <a href="/forgot-password">
               Forgot Password?
             </a>
           </p>
 
-          <p style={{ marginTop: "20px" }}>
-            New to The Predictor?
-          </p>
+          <div
+            style={{
+              margin: "22px 0 16px",
+              display: "flex",
+              alignItems: "center",
+              gap: "12px",
+            }}
+          >
+            <div
+              style={{
+                height: "1px",
+                background: "#d7dee7",
+                flex: 1,
+              }}
+            />
+
+            <span
+              style={{
+                color: "#536579",
+                fontSize: "14px",
+              }}
+            >
+              New to The Predictor?
+            </span>
+
+            <div
+              style={{
+                height: "1px",
+                background: "#d7dee7",
+                flex: 1,
+              }}
+            />
+          </div>
 
           <a href="/register">
             <button>Create Account</button>
           </a>
 
-          {message && <p>{message}</p>}
+          {message && (
+            <p
+              style={{
+                marginTop: "18px",
+                fontWeight: "700",
+              }}
+            >
+              {message}
+            </p>
+          )}
         </div>
 
         <p className="footer">
