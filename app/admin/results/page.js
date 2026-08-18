@@ -170,6 +170,12 @@ export default function AdminPage() {
   }
 
   async function cancelFixture(fixtureId) {
+    const confirmed = window.confirm(
+      "Mark this fixture as cancelled?\n\nNo points will be awarded for this fixture."
+    );
+
+    if (!confirmed) return;
+
     setSavingId(fixtureId);
     setMessage("");
 
@@ -205,6 +211,12 @@ export default function AdminPage() {
   }
 
   async function restoreFixture(fixtureId) {
+    const confirmed = window.confirm(
+      "Restore this fixture to the active fixture list?"
+    );
+
+    if (!confirmed) return;
+
     setSavingId(fixtureId);
     setMessage("");
 
@@ -246,18 +258,87 @@ export default function AdminPage() {
     return null;
   }
 
+  function formatDate(dateString) {
+    if (!dateString) return "";
+
+    return new Date(`${dateString}T12:00:00`).toLocaleDateString(
+      "en-GB",
+      {
+        weekday: "short",
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      }
+    );
+  }
+
+  function Header() {
+    return (
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "11px",
+          marginBottom: "16px",
+        }}
+      >
+        <img
+          src="/TWHC-badge-white.png"
+          alt="Telford & Wrekin Hockey Club"
+          style={{
+            display: "block",
+            width: "58px",
+            height: "auto",
+            margin: 0,
+            filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.35))",
+          }}
+        />
+
+        <div style={{ textAlign: "left" }}>
+          <div
+            style={{
+              fontSize: "27px",
+              lineHeight: 0.95,
+              fontWeight: "900",
+              letterSpacing: "-1.2px",
+              color: "#ffffff",
+              whiteSpace: "nowrap",
+              textShadow: "0 2px 8px rgba(0,0,0,0.35)",
+            }}
+          >
+            THE PREDICTO
+            <span
+              style={{
+                color: "#ed1c24",
+                textShadow: "0 0 12px rgba(237,28,36,0.32)",
+              }}
+            >
+              R
+            </span>
+          </div>
+
+          <div
+            style={{
+              marginTop: "5px",
+              fontSize: "11px",
+              fontWeight: "900",
+              letterSpacing: "1.4px",
+              color: "#a9bfd5",
+            }}
+          >
+            ADMIN — ENTER RESULTS
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (loading && !authorised) {
     return (
       <main>
-        <div className="container">
-          <img
-            src="/TWHC-badge-white.png"
-            alt="Telford & Wrekin Hockey Club"
-            className="club-logo"
-          />
-
-          <h1>THE PREDICTOR</h1>
-          <p className="subtitle">Administrator</p>
+        <div className="container" style={{ maxWidth: "760px" }}>
+          <Header />
 
           <div className="card">
             <p>Loading Admin area...</p>
@@ -270,15 +351,8 @@ export default function AdminPage() {
   if (!authorised) {
     return (
       <main>
-        <div className="container">
-          <img
-            src="/TWHC-badge-white.png"
-            alt="Telford & Wrekin Hockey Club"
-            className="club-logo"
-          />
-
-          <h1>THE PREDICTOR</h1>
-          <p className="subtitle">Administrator</p>
+        <div className="container" style={{ maxWidth: "760px" }}>
+          <Header />
 
           <div className="card">
             <h2>Access Denied</h2>
@@ -293,61 +367,297 @@ export default function AdminPage() {
     );
   }
 
+  const selectedWeek = weeks.find(
+    (week) => week.id === Number(selectedWeekId)
+  );
+
+  const completedCount = fixtures.filter(
+    (fixture) =>
+      fixture.result && fixture.status !== "cancelled"
+  ).length;
+
+  const cancelledCount = fixtures.filter(
+    (fixture) => fixture.status === "cancelled"
+  ).length;
+
+  const activeCount = fixtures.filter(
+    (fixture) => fixture.status !== "cancelled"
+  ).length;
+
   return (
     <main>
-      <div className="container">
-        <img
-          src="/TWHC-badge-white.png"
-          alt="Telford & Wrekin Hockey Club"
-          className="club-logo"
-        />
-
-        <h1>THE PREDICTOR</h1>
-        <p className="subtitle">
-          Administrator — Enter Results
-        </p>
+      <div className="container" style={{ maxWidth: "760px" }}>
+        <Header />
 
         {message && (
-          <div className="card">
-            <p>{message}</p>
+          <div
+            className="card"
+            style={{
+              padding: "12px 16px",
+            }}
+          >
+            <p
+              style={{
+                margin: 0,
+                fontWeight: "800",
+              }}
+            >
+              {message}
+            </p>
           </div>
         )}
 
-        <div className="card">
-          <h2>Select Match Week</h2>
+        {/* MATCH WEEK SELECTOR */}
 
-          <select
-            value={selectedWeekId}
-            onChange={(e) =>
-              setSelectedWeekId(Number(e.target.value))
-            }
+        <div
+          className="card"
+          style={{
+            padding: "16px",
+          }}
+        >
+          <div
             style={{
-              width: "100%",
-              padding: "12px",
-              borderRadius: "8px",
-              border: "1px solid #d7dee7",
-              fontSize: "16px",
-              fontWeight: "bold",
+              display: "grid",
+              gridTemplateColumns: "110px 1fr",
+              alignItems: "center",
+              gap: "12px",
             }}
           >
-            {weeks.map((week) => (
-              <option key={week.id} value={week.id}>
-                Match Week {week.week_no}
-                {week.match_date ? ` — ${week.match_date}` : ""}
-              </option>
-            ))}
-          </select>
+            <div
+              style={{
+                textAlign: "left",
+                fontSize: "15px",
+                fontWeight: "900",
+                color: "#071d36",
+                whiteSpace: "nowrap",
+              }}
+            >
+              MATCH WEEK
+            </div>
+
+            <select
+              value={selectedWeekId}
+              onChange={(e) =>
+                setSelectedWeekId(Number(e.target.value))
+              }
+              style={{
+                width: "100%",
+                padding: "11px 12px",
+                borderRadius: "8px",
+                fontSize: "15px",
+                fontWeight: "800",
+              }}
+            >
+              {weeks.map((week) => (
+                <option key={week.id} value={week.id}>
+                  Match Week {week.week_no}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
-        <div className="card">
-          <h2>Enter Results</h2>
+        {/* RESULTS CARD */}
+
+        <div
+          className="card"
+          style={{
+            padding: "17px 12px 12px",
+          }}
+        >
+          <div
+            style={{
+              marginBottom: "12px",
+              padding: "0 4px",
+            }}
+          >
+            <div
+              style={{
+                fontSize: "11px",
+                fontWeight: "900",
+                letterSpacing: "1px",
+                color: "#7c8fa2",
+              }}
+            >
+              RECORD RESULTS
+            </div>
+
+            <div
+              style={{
+                marginTop: "2px",
+                fontSize: "24px",
+                fontWeight: "900",
+                color: "#071d36",
+              }}
+            >
+              Match Week {selectedWeek?.week_no}
+            </div>
+
+            {selectedWeek?.match_date && (
+              <div
+                style={{
+                  marginTop: "4px",
+                  fontSize: "12px",
+                  fontWeight: "700",
+                  color: "#71869a",
+                }}
+              >
+                {formatDate(selectedWeek.match_date)}
+              </div>
+            )}
+          </div>
+
+          {/* STATUS SUMMARY */}
+
+          {!loading && fixtures.length > 0 && (
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(3, 1fr)",
+                gap: "7px",
+                marginBottom: "14px",
+              }}
+            >
+              <div
+                style={{
+                  padding: "9px 5px",
+                  borderRadius: "8px",
+                  background: "#071d36",
+                  color: "#ffffff",
+                  textAlign: "center",
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: "17px",
+                    fontWeight: "900",
+                  }}
+                >
+                  {activeCount}
+                </div>
+
+                <div
+                  style={{
+                    marginTop: "2px",
+                    fontSize: "8px",
+                    fontWeight: "900",
+                    letterSpacing: "0.5px",
+                    color: "#b9cee2",
+                  }}
+                >
+                  ACTIVE
+                </div>
+              </div>
+
+              <div
+                style={{
+                  padding: "9px 5px",
+                  borderRadius: "8px",
+                  background: "#16733f",
+                  color: "#ffffff",
+                  textAlign: "center",
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: "17px",
+                    fontWeight: "900",
+                  }}
+                >
+                  {completedCount}
+                </div>
+
+                <div
+                  style={{
+                    marginTop: "2px",
+                    fontSize: "8px",
+                    fontWeight: "900",
+                    letterSpacing: "0.5px",
+                    color: "#d7f2e0",
+                  }}
+                >
+                  RESULTS IN
+                </div>
+              </div>
+
+              <div
+                style={{
+                  padding: "9px 5px",
+                  borderRadius: "8px",
+                  background: "#8d99a6",
+                  color: "#ffffff",
+                  textAlign: "center",
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: "17px",
+                    fontWeight: "900",
+                  }}
+                >
+                  {cancelledCount}
+                </div>
+
+                <div
+                  style={{
+                    marginTop: "2px",
+                    fontSize: "8px",
+                    fontWeight: "900",
+                    letterSpacing: "0.5px",
+                  }}
+                >
+                  CANCELLED
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* COLUMN HEADINGS */}
+
+          {!loading && fixtures.length > 0 && (
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "minmax(0, 1fr) 146px",
+                alignItems: "center",
+                gap: "8px",
+                padding: "0 4px 7px",
+                fontSize: "9px",
+                fontWeight: "900",
+                letterSpacing: "0.4px",
+                color: "#8a9aaa",
+              }}
+            >
+              <div style={{ textAlign: "left" }}>
+                FIXTURE
+              </div>
+
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(3, 1fr)",
+                  gap: "5px",
+                  textAlign: "center",
+                }}
+              >
+                <span>Home</span>
+                <span>Draw</span>
+                <span>Away</span>
+              </div>
+            </div>
+          )}
 
           {loading ? (
             <p>Loading fixtures...</p>
           ) : fixtures.length === 0 ? (
-            <p>No fixtures found for this match week.</p>
+            <p>No fixtures found for this Match Week.</p>
           ) : (
-            <div style={{ width: "100%" }}>
+            <div
+              style={{
+                width: "100%",
+                borderTop: "1px solid #d9e0e7",
+              }}
+            >
               {fixtures.map((fixture) => {
                 const selected = displayResult(fixture.result);
                 const saving = savingId === fixture.id;
@@ -358,65 +668,143 @@ export default function AdminPage() {
                   <div
                     key={fixture.id}
                     style={{
-                      padding: "14px 0",
-                      borderBottom: "1px solid #d7dee7",
+                      padding: "11px 3px",
+                      borderBottom: "1px solid #d9e0e7",
+                      background: cancelled
+                        ? "#f5f6f7"
+                        : "transparent",
                     }}
                   >
                     <div
                       style={{
-                        fontWeight: "bold",
-                        marginBottom: "10px",
+                        display: "grid",
+                        gridTemplateColumns:
+                          "minmax(0, 1fr) 146px",
+                        alignItems: "center",
+                        gap: "8px",
                       }}
                     >
-                      {fixture.home_team} v {fixture.away_team}
-                    </div>
+                      {/* FIXTURE NAME */}
 
-                    {cancelled && (
                       <div
+                        title={`${fixture.home_team} v ${fixture.away_team}`}
                         style={{
-                          marginBottom: "10px",
-                          fontWeight: "bold",
+                          minWidth: 0,
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          textAlign: "left",
+                          fontWeight: "800",
+                          fontSize: "13px",
+                          color: cancelled
+                            ? "#7b8792"
+                            : "#23394f",
+                          textDecoration: cancelled
+                            ? "line-through"
+                            : "none",
                         }}
                       >
-                        CANCELLED — no points awarded
+                        {fixture.home_team} v {fixture.away_team}
                       </div>
-                    )}
+
+                      {/* RESULT BUTTONS */}
+
+                      {!cancelled ? (
+                        <div
+                          style={{
+                            display: "flex",
+                            flexWrap: "nowrap",
+                            gap: "5px",
+                            justifyContent: "flex-end",
+                          }}
+                        >
+                          {["H", "D", "A"].map((result) => {
+                            const isSelected =
+                              selected === result;
+
+                            return (
+                              <button
+                                key={result}
+                                disabled={saving}
+                                onClick={() =>
+                                  saveResult(
+                                    fixture.id,
+                                    result
+                                  )
+                                }
+                                style={{
+                                  width: "44px",
+                                  minWidth: "44px",
+                                  height: "44px",
+                                  padding: 0,
+                                  borderRadius: "50%",
+                                  background: isSelected
+                                    ? "#e31b23"
+                                    : "#0877c9",
+                                  border: isSelected
+                                    ? "2px solid #ffffff"
+                                    : "0",
+                                  outline: isSelected
+                                    ? "2px solid #e31b23"
+                                    : "none",
+                                  boxShadow: isSelected
+                                    ? "0 2px 7px rgba(227,27,35,0.30)"
+                                    : "0 2px 4px rgba(0,0,0,0.15)",
+                                  opacity: saving ? 0.5 : 1,
+                                  fontSize: "13px",
+                                  fontWeight: "900",
+                                }}
+                              >
+                                {result}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      ) : (
+                        <div
+                          style={{
+                            textAlign: "right",
+                            fontSize: "10px",
+                            fontWeight: "900",
+                            color: "#c5161d",
+                          }}
+                        >
+                          CANCELLED
+                        </div>
+                      )}
+                    </div>
+
+                    {/* ADMIN ACTIONS */}
 
                     <div
                       style={{
                         display: "flex",
-                        justifyContent: "center",
-                        gap: "8px",
+                        justifyContent: "flex-end",
+                        gap: "7px",
+                        marginTop: "9px",
                         flexWrap: "wrap",
                       }}
                     >
-                      {!cancelled &&
-                        ["H", "D", "A"].map((result) => (
-                          <button
-                            key={result}
-                            disabled={saving}
-                            onClick={() =>
-                              saveResult(
-                                fixture.id,
-                                result
-                              )
-                            }
-                            style={{
-                              width: "44px",
-                              minWidth: "44px",
-                              height: "44px",
-                              padding: 0,
-                              borderRadius: "50%",
-                              background:
-                                selected === result
-                                  ? "#061b33"
-                                  : "#0877c9",
-                              opacity: saving ? 0.5 : 1,
-                            }}
-                          >
-                            {result}
-                          </button>
-                        ))}
+                      {!cancelled && fixture.result && (
+                        <button
+                          disabled={saving}
+                          onClick={() =>
+                            clearResult(fixture.id)
+                          }
+                          style={{
+                            width: "auto",
+                            minWidth: "75px",
+                            padding: "7px 11px",
+                            fontSize: "11px",
+                            background: "#536579",
+                            boxShadow:
+                              "0 2px 0 #354657, 0 3px 6px rgba(0,0,0,0.14)",
+                            opacity: saving ? 0.5 : 1,
+                          }}
+                        >
+                          Clear Result
+                        </button>
+                      )}
 
                       {!cancelled && (
                         <button
@@ -426,29 +814,16 @@ export default function AdminPage() {
                           }
                           style={{
                             width: "auto",
-                            minWidth: "95px",
-                            padding: "8px 12px",
+                            minWidth: "85px",
+                            padding: "7px 11px",
+                            fontSize: "11px",
+                            background: "#e31b23",
+                            boxShadow:
+                              "0 2px 0 #a20d13, 0 3px 6px rgba(0,0,0,0.14)",
                             opacity: saving ? 0.5 : 1,
                           }}
                         >
-                          Cancelled
-                        </button>
-                      )}
-
-                      {fixture.result && !cancelled && (
-                        <button
-                          disabled={saving}
-                          onClick={() =>
-                            clearResult(fixture.id)
-                          }
-                          style={{
-                            width: "auto",
-                            minWidth: "70px",
-                            padding: "8px 12px",
-                            opacity: saving ? 0.5 : 1,
-                          }}
-                        >
-                          Clear
+                          Cancel Fixture
                         </button>
                       )}
 
@@ -460,12 +835,16 @@ export default function AdminPage() {
                           }
                           style={{
                             width: "auto",
-                            minWidth: "90px",
-                            padding: "8px 12px",
+                            minWidth: "95px",
+                            padding: "7px 11px",
+                            fontSize: "11px",
+                            background: "#16733f",
+                            boxShadow:
+                              "0 2px 0 #0e502b, 0 3px 6px rgba(0,0,0,0.14)",
                             opacity: saving ? 0.5 : 1,
                           }}
                         >
-                          Restore
+                          Restore Fixture
                         </button>
                       )}
                     </div>
@@ -476,8 +855,8 @@ export default function AdminPage() {
           )}
         </div>
 
-        <a href="/predictor">
-          <button>Back to Predictor</button>
+        <a href="/admin">
+          <button>Back to Admin</button>
         </a>
 
         <p className="footer">
