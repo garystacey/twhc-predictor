@@ -91,69 +91,305 @@ export default function PredictorPage() {
   if (loading) {
     return (
       <main>
-        <div className="container">
-          <p>Loading The Predictor...</p>
+        <div
+          className="container"
+          style={{
+            maxWidth: "760px",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "11px",
+              marginBottom: "18px",
+            }}
+          >
+            <img
+              src="/TWHC-badge-white.png"
+              alt="Telford & Wrekin Hockey Club"
+              style={{
+                width: "58px",
+                height: "auto",
+                margin: 0,
+              }}
+            />
+
+            <div style={{ textAlign: "left" }}>
+              <div
+                style={{
+                  fontSize: "27px",
+                  lineHeight: 0.95,
+                  fontWeight: "900",
+                  letterSpacing: "-1.2px",
+                  color: "#ffffff",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                THE PREDICTO
+                <span style={{ color: "#ed1c24" }}>
+                  R
+                </span>
+              </div>
+
+              <div
+                style={{
+                  marginTop: "5px",
+                  fontSize: "11px",
+                  fontWeight: "900",
+                  letterSpacing: "1.4px",
+                  color: "#a9bfd5",
+                }}
+              >
+                LOADING...
+              </div>
+            </div>
+          </div>
         </div>
       </main>
     );
   }
 
+  const allComplete =
+    predictionStatus &&
+    predictionStatus.total > 0 &&
+    predictionStatus.completed === predictionStatus.total;
+
+  const remaining =
+    predictionStatus
+      ? predictionStatus.total - predictionStatus.completed
+      : 0;
+
   return (
     <main>
-      <div className="container">
-        <img
-          src="/TWHC-badge-white.png"
-          alt="Telford & Wrekin Hockey Club"
-          className="club-logo"
-        />
+      <div
+        className="container"
+        style={{
+          maxWidth: "760px",
+        }}
+      >
+        {/* COMPACT HEADER */}
 
-        <h1>THE PREDICTOR</h1>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "11px",
+            marginBottom: "16px",
+          }}
+        >
+          <img
+            src="/TWHC-badge-white.png"
+            alt="Telford & Wrekin Hockey Club"
+            style={{
+              display: "block",
+              width: "58px",
+              height: "auto",
+              margin: 0,
+              filter:
+                "drop-shadow(0 4px 8px rgba(0,0,0,0.35))",
+            }}
+          />
 
-        <p className="subtitle">
-          Welcome, {profile?.first_name} {profile?.surname}
+          <div
+            style={{
+              textAlign: "left",
+            }}
+          >
+            <div
+              style={{
+                fontSize: "27px",
+                lineHeight: 0.95,
+                fontWeight: "900",
+                letterSpacing: "-1.2px",
+                color: "#ffffff",
+                whiteSpace: "nowrap",
+                textShadow:
+                  "0 2px 8px rgba(0,0,0,0.35)",
+              }}
+            >
+              THE PREDICTO
+              <span
+                style={{
+                  color: "#ed1c24",
+                  textShadow:
+                    "0 0 12px rgba(237,28,36,0.32)",
+                }}
+              >
+                R
+              </span>
+            </div>
+
+            <div
+              style={{
+                marginTop: "5px",
+                fontSize: "11px",
+                fontWeight: "900",
+                letterSpacing: "1.4px",
+                color: "#a9bfd5",
+              }}
+            >
+              PREDICT. COMPETE. WIN.
+            </div>
+          </div>
+        </div>
+
+        {/* WELCOME */}
+
+        <div
+          style={{
+            marginBottom: "16px",
+            textAlign: "center",
+          }}
+        >
+          <div
+            style={{
+              fontSize: "14px",
+              color: "#b9cee2",
+              fontWeight: "700",
+            }}
+          >
+            Welcome, {profile?.first_name} {profile?.surname}
+          </div>
 
           {profile?.team_name && (
-            <>
-              <br />
-              <strong>{profile.team_name}</strong>
-            </>
+            <div
+              style={{
+                marginTop: "3px",
+                fontSize: "18px",
+                fontWeight: "900",
+                color: "#ffffff",
+              }}
+            >
+              {profile.team_name}
+            </div>
           )}
-        </p>
+        </div>
+
+        {/* CURRENT MATCH WEEK */}
 
         {currentWeek && predictionStatus && (
-          <div className="card">
-            <h2>Match Week {currentWeek.week_no}</h2>
+          <div
+            className="card"
+            style={{
+              padding: "18px 16px",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: "14px",
+                marginBottom: "15px",
+              }}
+            >
+              <div
+                style={{
+                  textAlign: "left",
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: "11px",
+                    fontWeight: "900",
+                    letterSpacing: "1px",
+                    color: "#7c8fa2",
+                  }}
+                >
+                  CURRENT
+                </div>
 
-            <p>
-              <strong>
-                {predictionStatus.completed} of{" "}
-                {predictionStatus.total}
-              </strong>{" "}
-              predictions completed
-            </p>
+                <div
+                  style={{
+                    marginTop: "2px",
+                    fontSize: "23px",
+                    fontWeight: "900",
+                    color: "#071d36",
+                  }}
+                >
+                  Match Week {currentWeek.week_no}
+                </div>
+              </div>
 
-            {predictionStatus.completed ===
-            predictionStatus.total ? (
-              <p>✅ All predictions completed</p>
+              <div
+                style={{
+                  flexShrink: 0,
+                  minWidth: "70px",
+                  padding: "9px 10px",
+                  borderRadius: "9px",
+                  background: allComplete
+                    ? "#16733f"
+                    : "#071d36",
+                  color: "#ffffff",
+                  textAlign: "center",
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: "18px",
+                    lineHeight: 1,
+                    fontWeight: "900",
+                  }}
+                >
+                  {predictionStatus.completed}/
+                  {predictionStatus.total}
+                </div>
+
+                <div
+                  style={{
+                    marginTop: "4px",
+                    fontSize: "8px",
+                    fontWeight: "900",
+                    letterSpacing: "0.7px",
+                    color: allComplete
+                      ? "#d7f2e0"
+                      : "#b9cee2",
+                  }}
+                >
+                  SELECTED
+                </div>
+              </div>
+            </div>
+
+            {allComplete ? (
+              <div
+                style={{
+                  marginBottom: "14px",
+                  padding: "10px 12px",
+                  borderRadius: "9px",
+                  background: "#e7f7ed",
+                  border: "1px solid #aad8bb",
+                  color: "#16733f",
+                  fontSize: "13px",
+                  fontWeight: "900",
+                }}
+              >
+                ✓ All predictions completed
+              </div>
             ) : (
-              <p>
-                ⚠️{" "}
-                {predictionStatus.total -
-                  predictionStatus.completed}{" "}
-                prediction
-                {predictionStatus.total -
-                  predictionStatus.completed ===
-                1
-                  ? ""
-                  : "s"}{" "}
-                still required
-              </p>
+              <div
+                style={{
+                  marginBottom: "14px",
+                  padding: "10px 12px",
+                  borderRadius: "9px",
+                  background: "#fff4e5",
+                  border: "1px solid #efd09a",
+                  color: "#8c5c0e",
+                  fontSize: "13px",
+                  fontWeight: "900",
+                }}
+              >
+                {remaining} prediction
+                {remaining === 1 ? "" : "s"} still required
+              </div>
             )}
 
             <a href="/predictions">
               <button>
-                {predictionStatus.completed ===
-                predictionStatus.total
+                {allComplete
                   ? "Review Predictions"
                   : "Complete Predictions"}
               </button>
@@ -161,71 +397,229 @@ export default function PredictorPage() {
           </div>
         )}
 
-        <div className="card">
-          <h2>Make Your Predictions</h2>
-          <p>
-            View the upcoming fixtures and submit your predictions.
-          </p>
+        {/* MAIN MENU */}
 
-          <a href="/predictions">
-            <button>Predictions</button>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns:
+              "repeat(auto-fit, minmax(220px, 1fr))",
+            gap: "14px",
+            marginBottom: "16px",
+          }}
+        >
+          {/* PREDICTIONS */}
+
+          <a
+            href="/predictions"
+            style={{
+              display: "block",
+            }}
+          >
+            <div
+              className="card"
+              style={{
+                height: "100%",
+                marginBottom: 0,
+                padding: "19px 16px",
+                cursor: "pointer",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "30px",
+                  marginBottom: "7px",
+                }}
+              >
+                ✓
+              </div>
+
+              <h2>Predictions</h2>
+
+              <p>
+                View the fixtures and make or review your selections.
+              </p>
+
+              <button>
+                Make Predictions
+              </button>
+            </div>
           </a>
-        </div>
 
-        <div className="card">
-          <h2>Overall Leaderboard</h2>
-          <p>
-            See who's leading The Predictor this season.
-          </p>
+          {/* OVERALL LEADERBOARD */}
 
-          <a href="/leaderboard">
-            <button>Overall Leaderboard</button>
+          <a
+            href="/leaderboard"
+            style={{
+              display: "block",
+            }}
+          >
+            <div
+              className="card"
+              style={{
+                height: "100%",
+                marginBottom: 0,
+                padding: "19px 16px",
+                cursor: "pointer",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "30px",
+                  marginBottom: "7px",
+                }}
+              >
+                🏆
+              </div>
+
+              <h2>Overall Leaderboard</h2>
+
+              <p>
+                See who's leading The Predictor across the season.
+              </p>
+
+              <button>
+                View Leaderboard
+              </button>
+            </div>
           </a>
-        </div>
 
-        <div className="card">
-          <h2>Weekly Leaderboards</h2>
-          <p>
-            View the leaderboard for any completed match week.
-          </p>
+          {/* WEEKLY LEADERBOARD */}
 
-          <a href="/last-week">
-            <button>Weekly Leaderboards</button>
+          <a
+            href="/last-week"
+            style={{
+              display: "block",
+            }}
+          >
+            <div
+              className="card"
+              style={{
+                height: "100%",
+                marginBottom: 0,
+                padding: "19px 16px",
+                cursor: "pointer",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "30px",
+                  marginBottom: "7px",
+                }}
+              >
+                📊
+              </div>
+
+              <h2>Weekly Leaderboards</h2>
+
+              <p>
+                View results and standings from completed Match Weeks.
+              </p>
+
+              <button>
+                Weekly Leaderboards
+              </button>
+            </div>
           </a>
-        </div>
 
-        <div className="card">
-          <h2>Rules</h2>
-          <p>
-            View the competition rules and scoring system.
-          </p>
+          {/* RULES */}
 
-          <a href="/rules">
-            <button>Competition Rules</button>
+          <a
+            href="/rules"
+            style={{
+              display: "block",
+            }}
+          >
+            <div
+              className="card"
+              style={{
+                height: "100%",
+                marginBottom: 0,
+                padding: "19px 16px",
+                cursor: "pointer",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "30px",
+                  marginBottom: "7px",
+                }}
+              >
+                📋
+              </div>
+
+              <h2>Competition Rules</h2>
+
+              <p>
+                Check scoring, deadlines, prizes and competition rules.
+              </p>
+
+              <button>
+                View Rules
+              </button>
+            </div>
           </a>
-        </div>
 
-        {profile?.role === "admin" && (
-          <div className="card">
-            <h2>Admin</h2>
-            <p>
-              Manage fixtures, results and The Predictor.
-            </p>
+          {/* ADMIN */}
 
-            <a href="/admin">
-              <button>Admin Area</button>
+          {profile?.role === "admin" && (
+            <a
+              href="/admin"
+              style={{
+                display: "block",
+              }}
+            >
+              <div
+                className="card"
+                style={{
+                  height: "100%",
+                  marginBottom: 0,
+                  padding: "19px 16px",
+                  cursor: "pointer",
+                  border:
+                    "1px solid rgba(237,28,36,0.35)",
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: "30px",
+                    marginBottom: "7px",
+                  }}
+                >
+                  ⚙️
+                </div>
+
+                <h2>Administrator</h2>
+
+                <p>
+                  Manage members, fixtures, results and competition settings.
+                </p>
+
+                <button
+                  style={{
+                    background: "#e31b23",
+                    boxShadow:
+                      "0 3px 0 #a20d13, 0 6px 12px rgba(0,0,0,0.16)",
+                  }}
+                >
+                  Admin Area
+                </button>
+              </div>
             </a>
-          </div>
-        )}
+          )}
+        </div>
+
+        {/* SIGN OUT */}
 
         <button
           onClick={handleSignOut}
           disabled={signingOut}
           style={{
-            width: "100%",
-            marginTop: "10px",
-            marginBottom: "10px",
+            background: "#536579",
+            boxShadow:
+              "0 3px 0 #354657, 0 5px 10px rgba(0,0,0,0.16)",
             opacity: signingOut ? 0.5 : 1,
+            marginTop: "4px",
           }}
         >
           {signingOut ? "Signing Out..." : "Sign Out"}
