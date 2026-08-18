@@ -158,7 +158,9 @@ export default function WeeklyLeaderboardsPage() {
       });
 
       const usersWhoPredictedThisWeek = new Set(
-        predictionData.map((prediction) => prediction.user_id)
+        predictionData.map(
+          (prediction) => prediction.user_id
+        )
       );
 
       const leaderboard = (profiles || [])
@@ -231,18 +233,37 @@ export default function WeeklyLeaderboardsPage() {
     return prediction?.prediction || null;
   }
 
+  function Header() {
+    return (
+      <div className="predictor-header">
+        <img
+          src="/TWHC-badge-white.png"
+          alt="Telford & Wrekin Hockey Club"
+          className="predictor-header-logo"
+        />
+
+        <div className="predictor-header-text">
+          <div className="predictor-header-title">
+            THE PREDICTO
+            <span>R</span>
+          </div>
+
+          <div className="predictor-header-subtitle">
+            WEEKLY LEADERBOARDS
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (loading && completedWeeks.length === 0) {
     return (
       <main>
-        <div className="container">
-          <img
-            src="/TWHC-badge-white.png"
-            alt="Telford & Wrekin Hockey Club"
-            className="club-logo"
-          />
-
-          <h1>THE PREDICTOR</h1>
-          <p className="subtitle">Weekly Leaderboards</p>
+        <div
+          className="container"
+          style={{ maxWidth: "760px" }}
+        >
+          <Header />
 
           <div className="card">
             <p>Loading leaderboard...</p>
@@ -270,370 +291,364 @@ export default function WeeklyLeaderboardsPage() {
 
   return (
     <main>
-      <div className="container">
-        <img
-          src="/TWHC-badge-white.png"
-          alt="Telford & Wrekin Hockey Club"
-          className="club-logo"
-        />
-
-        <h1>THE PREDICTOR</h1>
-        <p className="subtitle">Weekly Leaderboards</p>
+      <div
+        className="container"
+        style={{ maxWidth: "760px" }}
+      >
+        <Header />
 
         {message && (
-          <div className="card">
+          <div className="card compact-message-card">
             <p>{message}</p>
           </div>
         )}
 
         {completedWeeks.length === 0 ? (
           <div className="card">
-            <h2>No completed match week yet</h2>
+            <h2>No completed Match Week yet</h2>
 
             <p>
-              Weekly Leaderboards will appear once the first match
-              week has finished.
+              Weekly Leaderboards will appear once the first Match Week
+              has finished.
             </p>
           </div>
         ) : (
-          <div className="card">
-            <select
-              value={selectedWeekId || ""}
-              onChange={(e) =>
-                setSelectedWeekId(Number(e.target.value))
-              }
-              style={{
-                width: "100%",
-                padding: "12px",
-                marginBottom: "18px",
-                borderRadius: "8px",
-                border: "1px solid #d7dee7",
-                fontSize: "16px",
-                fontWeight: "bold",
-              }}
-            >
-              {completedWeeks.map((week) => (
-                <option key={week.id} value={week.id}>
-                  Match Week {week.week_no}
-                </option>
-              ))}
-            </select>
+          <>
+            <div className="card weekly-selector-card">
+              <div className="weekly-selector-row">
+                <div className="weekly-selector-label">
+                  MATCH WEEK
+                </div>
 
-            <h2>Match Week {weekNo}</h2>
-
-            {pendingResults > 0 && !loading && (
-              <div
-                style={{
-                  marginTop: "8px",
-                  marginBottom: "6px",
-                  padding: "8px 10px",
-                  borderRadius: "8px",
-                  background: "#fff3cd",
-                  color: "#664d03",
-                  fontSize: "13px",
-                  fontWeight: "700",
-                  textAlign: "center",
-                }}
-              >
-                ⚠ Provisional standings — {pendingResults}{" "}
-                {pendingResults === 1
-                  ? "result pending"
-                  : "results pending"}
-
-                {cancelledResults > 0 && (
-                  <>
-                    {" • "}
-                    {cancelledResults} cancelled
-                  </>
-                )}
-              </div>
-            )}
-
-            {pendingResults === 0 &&
-              cancelledResults > 0 &&
-              !loading && (
-                <p
-                  style={{
-                    fontSize: "13px",
-                    fontWeight: "700",
-                    marginTop: "8px",
-                  }}
+                <select
+                  value={selectedWeekId || ""}
+                  onChange={(e) =>
+                    setSelectedWeekId(
+                      Number(e.target.value)
+                    )
+                  }
                 >
-                  {cancelledResults}{" "}
-                  {cancelledResults === 1
-                    ? "fixture cancelled"
-                    : "fixtures cancelled"}
-                </p>
+                  {completedWeeks.map((week) => (
+                    <option
+                      key={week.id}
+                      value={week.id}
+                    >
+                      Match Week {week.week_no}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="card weekly-leaderboard-card">
+              <div className="weekly-heading">
+                <div className="weekly-heading-small">
+                  WEEKLY STANDINGS
+                </div>
+
+                <div className="weekly-heading-main">
+                  Match Week {weekNo}
+                </div>
+              </div>
+
+              {pendingResults > 0 && !loading && (
+                <div className="weekly-warning">
+                  ⚠ Provisional standings — {pendingResults}{" "}
+                  {pendingResults === 1
+                    ? "result pending"
+                    : "results pending"}
+
+                  {cancelledResults > 0 && (
+                    <>
+                      {" • "}
+                      {cancelledResults} cancelled
+                    </>
+                  )}
+                </div>
               )}
 
-            {loading ? (
-              <p>Loading leaderboard...</p>
-            ) : (
-              <div
-                style={{
-                  width: "100%",
-                  marginTop: "20px",
-                }}
-              >
-                {rows.map((row) => {
-                  const expanded =
-                    expandedUserId === row.id;
+              {pendingResults === 0 &&
+                cancelledResults > 0 &&
+                !loading && (
+                  <div className="weekly-cancelled-note">
+                    {cancelledResults}{" "}
+                    {cancelledResults === 1
+                      ? "fixture cancelled"
+                      : "fixtures cancelled"}
+                  </div>
+                )}
 
-                  return (
-                    <div key={row.id}>
-                      <div
-                        onClick={() =>
-                          setExpandedUserId(
-                            expanded ? null : row.id
-                          )
-                        }
-                        style={{
-                          display: "grid",
-                          gridTemplateColumns:
-                            "50px 1fr 90px",
-                          alignItems: "center",
-                          padding: "12px 8px",
-                          borderBottom:
-                            "1px solid #d7dee7",
-                          textAlign: "left",
-                          cursor: "pointer",
-                        }}
-                      >
-                        <strong>{row.position}</strong>
+              {loading ? (
+                <p>Loading leaderboard...</p>
+              ) : rows.length === 0 ? (
+                <p>
+                  No predictions found for this Match Week.
+                </p>
+              ) : (
+                <>
+                  <div className="weekly-tap-hint">
+                    TAP A PLAYER TO VIEW THEIR PREDICTIONS
+                  </div>
 
-                        <div>
-                          <strong>
-                            {row.firstName} {row.surname}
-                          </strong>
+                  <div className="weekly-table">
+                    {rows.map((row) => {
+                      const expanded =
+                        expandedUserId === row.id;
 
-                          {row.teamName && (
+                      const isWinner =
+                        row.position === 1;
+
+                      const isSecond =
+                        row.position === 2;
+
+                      const isThird =
+                        row.position === 3;
+
+                      return (
+                        <div
+                          key={row.id}
+                          className={`weekly-player-wrap ${
+                            expanded ? "expanded" : ""
+                          }`}
+                        >
+                          <div
+                            className={`weekly-player-row ${
+                              isWinner ? "winner" : ""
+                            }`}
+                            onClick={() =>
+                              setExpandedUserId(
+                                expanded ? null : row.id
+                              )
+                            }
+                          >
                             <div
-                              style={{
-                                fontSize: "13px",
-                                marginTop: "3px",
-                                opacity: 0.7,
-                              }}
+                              className={`weekly-position ${
+                                isWinner
+                                  ? "gold"
+                                  : isSecond
+                                  ? "silver"
+                                  : isThird
+                                  ? "bronze"
+                                  : "navy"
+                              }`}
                             >
-                              {row.teamName}
+                              {row.position}
+                            </div>
+
+                            <div className="weekly-player-name">
+                              <div className="weekly-player-main">
+                                {row.firstName} {row.surname}
+                              </div>
+
+                              {row.teamName && (
+                                <div className="weekly-player-team">
+                                  {row.teamName}
+                                </div>
+                              )}
+                            </div>
+
+                            <div className="weekly-points">
+                              <div className="weekly-points-number">
+                                {row.points}
+                              </div>
+
+                              <div className="weekly-points-label">
+                                {row.points === 1
+                                  ? "POINT"
+                                  : "POINTS"}
+                              </div>
+                            </div>
+
+                            <div
+                              className={`weekly-chevron ${
+                                expanded ? "open" : ""
+                              }`}
+                            >
+                              ▼
+                            </div>
+                          </div>
+
+                          {expanded && (
+                            <div className="weekly-expanded">
+                              <div className="weekly-score-summary">
+                                <div>
+                                  <div className="weekly-score-label">
+                                    WEEK SCORE
+                                  </div>
+
+                                  <div className="weekly-score-value">
+                                    {row.points}/{completedResults} correct
+                                  </div>
+                                </div>
+
+                                <div className="weekly-score-badge">
+                                  {row.points}{" "}
+                                  {row.points === 1 ? "pt" : "pts"}
+                                </div>
+                              </div>
+
+                              {(pendingResults > 0 ||
+                                cancelledResults > 0) && (
+                                <div className="weekly-extra-summary">
+                                  {pendingResults > 0 && (
+                                    <>
+                                      {pendingResults}{" "}
+                                      {pendingResults === 1
+                                        ? "result pending"
+                                        : "results pending"}
+                                    </>
+                                  )}
+
+                                  {pendingResults > 0 &&
+                                    cancelledResults > 0 &&
+                                    " • "}
+
+                                  {cancelledResults > 0 && (
+                                    <>
+                                      {cancelledResults} cancelled
+                                    </>
+                                  )}
+                                </div>
+                              )}
+
+                              <div className="weekly-fixtures-list">
+                                {fixtures.map((fixture) => {
+                                  const userPrediction =
+                                    getUserPrediction(
+                                      row.id,
+                                      fixture.id
+                                    );
+
+                                  const cancelled =
+                                    fixture.status ===
+                                    "cancelled";
+
+                                  const hasResult =
+                                    !cancelled &&
+                                    Boolean(fixture.result);
+
+                                  const correct =
+                                    hasResult &&
+                                    userPrediction &&
+                                    userPrediction ===
+                                      fixture.result;
+
+                                  const predictionLetter =
+                                    shortResult(
+                                      userPrediction
+                                    );
+
+                                  const resultLetter =
+                                    shortResult(
+                                      fixture.result
+                                    );
+
+                                  return (
+                                    <div
+                                      key={fixture.id}
+                                      className="weekly-fixture-detail"
+                                    >
+                                      <div
+                                        className="weekly-fixture-name"
+                                        title={`${fixture.home_team} v ${fixture.away_team}`}
+                                      >
+                                        {fixture.home_team} v{" "}
+                                        {fixture.away_team}
+                                      </div>
+
+                                      {cancelled ? (
+                                        <div className="weekly-cancelled-row">
+                                          <div className="weekly-result-block">
+                                            <span className="weekly-result-label">
+                                              Prediction
+                                            </span>
+
+                                            <span
+                                              className={`weekly-result-circle ${
+                                                predictionLetter === "-"
+                                                  ? "muted"
+                                                  : "prediction"
+                                              }`}
+                                            >
+                                              {predictionLetter}
+                                            </span>
+                                          </div>
+
+                                          <div className="weekly-cancelled-text">
+                                            CANCELLED — no points
+                                          </div>
+                                        </div>
+                                      ) : (
+                                        <div className="weekly-result-row">
+                                          <div className="weekly-result-block">
+                                            <span className="weekly-result-label">
+                                              Prediction
+                                            </span>
+
+                                            <span
+                                              className={`weekly-result-circle ${
+                                                predictionLetter === "-"
+                                                  ? "muted"
+                                                  : "prediction"
+                                              }`}
+                                            >
+                                              {predictionLetter}
+                                            </span>
+                                          </div>
+
+                                          <div className="weekly-result-block right">
+                                            <span className="weekly-result-label">
+                                              Result
+                                            </span>
+
+                                            <span
+                                              className={`weekly-result-circle ${
+                                                hasResult
+                                                  ? "actual"
+                                                  : "muted"
+                                              }`}
+                                            >
+                                              {resultLetter}
+                                            </span>
+                                          </div>
+
+                                          <div
+                                            className={`weekly-outcome ${
+                                              !hasResult
+                                                ? "pending"
+                                                : correct
+                                                ? "correct"
+                                                : "wrong"
+                                            }`}
+                                          >
+                                            {!hasResult
+                                              ? "…"
+                                              : correct
+                                              ? "✓"
+                                              : "✕"}
+                                          </div>
+                                        </div>
+                                      )}
+                                    </div>
+                                  );
+                                })}
+                              </div>
                             </div>
                           )}
                         </div>
-
-                        <div
-                          style={{
-                            textAlign: "right",
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {row.points}{" "}
-                          {row.points === 1 ? "pt" : "pts"}
-                        </div>
-                      </div>
-
-                      {expanded && (
-                        <div
-                          style={{
-                            padding: "10px 8px 16px",
-                            background: "#f7f9fb",
-                          }}
-                        >
-                          <div
-                            style={{
-                              fontWeight: "bold",
-                              marginBottom: "10px",
-                            }}
-                          >
-                            {row.points}/{completedResults} correct
-
-                            {pendingResults > 0 && (
-                              <>
-                                {" • "}
-                                {pendingResults}{" "}
-                                {pendingResults === 1
-                                  ? "result pending"
-                                  : "results pending"}
-                              </>
-                            )}
-
-                            {cancelledResults > 0 && (
-                              <>
-                                {" • "}
-                                {cancelledResults} cancelled
-                              </>
-                            )}
-                          </div>
-
-                          {fixtures.map((fixture) => {
-                            const userPrediction =
-                              getUserPrediction(
-                                row.id,
-                                fixture.id
-                              );
-
-                            const cancelled =
-                              fixture.status === "cancelled";
-
-                            const hasResult =
-                              !cancelled &&
-                              Boolean(fixture.result);
-
-                            const correct =
-                              hasResult &&
-                              userPrediction &&
-                              userPrediction === fixture.result;
-
-                            const predictionLetter =
-                              shortResult(userPrediction);
-
-                            const resultLetter =
-                              shortResult(fixture.result);
-
-                            const circleStyle = {
-                              width: "34px",
-                              minWidth: "34px",
-                              height: "34px",
-                              borderRadius: "50%",
-                              background: "#061b33",
-                              color: "#ffffff",
-                              display: "inline-flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              fontWeight: "bold",
-                              fontSize: "13px",
-                            };
-
-                            return (
-                              <div
-                                key={fixture.id}
-                                style={{
-                                  padding: "11px 0",
-                                  borderTop:
-                                    "1px solid #d7dee7",
-                                }}
-                              >
-                                <div
-                                  style={{
-                                    fontWeight: "700",
-                                    fontSize: "13px",
-                                    marginBottom: "9px",
-                                    textAlign: "left",
-                                  }}
-                                >
-                                  {fixture.home_team} v{" "}
-                                  {fixture.away_team}
-                                </div>
-
-                                {cancelled ? (
-                                  <div
-                                    style={{
-                                      fontSize: "12px",
-                                      fontWeight: "700",
-                                      textAlign: "left",
-                                    }}
-                                  >
-                                    Prediction{" "}
-                                    <span
-                                      style={{
-                                        ...circleStyle,
-                                        marginLeft: "6px",
-                                        marginRight: "12px",
-                                        background:
-                                          predictionLetter === "-"
-                                            ? "#9ca3af"
-                                            : "#061b33",
-                                      }}
-                                    >
-                                      {predictionLetter}
-                                    </span>
-
-                                    CANCELLED — no points awarded
-                                  </div>
-                                ) : (
-                                  <div
-                                    style={{
-                                      display: "flex",
-                                      alignItems: "center",
-                                      justifyContent:
-                                        "space-between",
-                                      gap: "8px",
-                                      fontSize: "12px",
-                                    }}
-                                  >
-                                    <div
-                                      style={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        gap: "6px",
-                                      }}
-                                    >
-                                      <span>Prediction</span>
-
-                                      <span
-                                        style={{
-                                          ...circleStyle,
-                                          background:
-                                            predictionLetter === "-"
-                                              ? "#9ca3af"
-                                              : "#061b33",
-                                        }}
-                                      >
-                                        {predictionLetter}
-                                      </span>
-                                    </div>
-
-                                    <div
-                                      style={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        gap: "6px",
-                                      }}
-                                    >
-                                      <span>Result</span>
-
-                                      <span
-                                        style={{
-                                          ...circleStyle,
-                                          background: hasResult
-                                            ? "#061b33"
-                                            : "#9ca3af",
-                                        }}
-                                      >
-                                        {resultLetter}
-                                      </span>
-                                    </div>
-
-                                    <div
-                                      style={{
-                                        width: "28px",
-                                        textAlign: "center",
-                                        fontWeight: "bold",
-                                        fontSize: "23px",
-                                        lineHeight: 1,
-                                      }}
-                                    >
-                                      {!hasResult
-                                        ? "…"
-                                        : correct
-                                        ? "✓"
-                                        : "✗"}
-                                    </div>
-                                  </div>
-                                )}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
+            </div>
+          </>
         )}
 
         <a href="/predictor">
-          <button>Back to Predictor</button>
+          <button>
+            Back to Predictor
+          </button>
         </a>
 
         <p className="footer">
