@@ -753,9 +753,9 @@ export default function PredictionsPage() {
                       textAlign: "center",
                     }}
                   >
-                    <span>Home</span>
-                    <span>Draw</span>
-                    <span>Away</span>
+                    <span>H</span>
+                    <span>D</span>
+                    <span>A</span>
                   </div>
                 </div>
 
