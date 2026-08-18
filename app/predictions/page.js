@@ -257,8 +257,61 @@ export default function PredictionsPage() {
   if (loading) {
     return (
       <main>
-        <div className="container">
-          <p>Loading fixtures...</p>
+        <div
+          className="container"
+          style={{ maxWidth: "760px" }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "10px",
+              marginBottom: "18px",
+            }}
+          >
+            <img
+              src="/TWHC-badge-white.png"
+              alt="Telford & Wrekin Hockey Club"
+              style={{
+                width: "54px",
+                height: "auto",
+                margin: 0,
+              }}
+            />
+
+            <div style={{ textAlign: "left" }}>
+              <div
+                style={{
+                  fontSize: "24px",
+                  lineHeight: 1,
+                  fontWeight: "900",
+                  letterSpacing: "-1px",
+                }}
+              >
+                THE PREDICTO
+                <span style={{ color: "#ed1c24" }}>
+                  R
+                </span>
+              </div>
+
+              <div
+                style={{
+                  marginTop: "4px",
+                  fontSize: "11px",
+                  fontWeight: "800",
+                  letterSpacing: "1.2px",
+                  color: "#9eb5cc",
+                }}
+              >
+                MAKE YOUR PREDICTIONS
+              </div>
+            </div>
+          </div>
+
+          <div className="card">
+            <p>Loading fixtures...</p>
+          </div>
         </div>
       </main>
     );
@@ -284,72 +337,187 @@ export default function PredictionsPage() {
         className="container"
         style={{ maxWidth: "760px" }}
       >
-        <img
-          src="/TWHC-badge-white.png"
-          alt="Telford & Wrekin Hockey Club"
-          className="club-logo"
-        />
+        {/* COMPACT INTERNAL HEADER */}
 
-        <h1>THE PREDICTOR</h1>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "11px",
+            marginBottom: "18px",
+          }}
+        >
+          <img
+            src="/TWHC-badge-white.png"
+            alt="Telford & Wrekin Hockey Club"
+            style={{
+              display: "block",
+              width: "58px",
+              height: "auto",
+              margin: 0,
+              filter:
+                "drop-shadow(0 4px 8px rgba(0,0,0,0.35))",
+            }}
+          />
 
-        <p className="subtitle">
-          Make Your Predictions
-        </p>
+          <div
+            style={{
+              textAlign: "left",
+            }}
+          >
+            <div
+              style={{
+                fontSize: "27px",
+                lineHeight: 0.95,
+                fontWeight: "900",
+                letterSpacing: "-1.2px",
+                color: "#ffffff",
+                textShadow:
+                  "0 2px 8px rgba(0,0,0,0.35)",
+                whiteSpace: "nowrap",
+              }}
+            >
+              THE PREDICTO
+              <span
+                style={{
+                  color: "#ed1c24",
+                  textShadow:
+                    "0 0 12px rgba(237,28,36,0.32)",
+                }}
+              >
+                R
+              </span>
+            </div>
+
+            <div
+              style={{
+                marginTop: "5px",
+                fontSize: "11px",
+                fontWeight: "900",
+                letterSpacing: "1.4px",
+                color: "#a9bfd5",
+              }}
+            >
+              MAKE YOUR PREDICTIONS
+            </div>
+          </div>
+        </div>
+
+        {/* MESSAGE */}
 
         {message && (
-          <div className="card">
-            <p>{message}</p>
+          <div
+            className="card"
+            style={{
+              padding: "13px 16px",
+            }}
+          >
+            <p
+              style={{
+                margin: 0,
+                fontWeight: "700",
+              }}
+            >
+              {message}
+            </p>
           </div>
         )}
 
-        <div className="card">
-          <h2>Select Match Week</h2>
+        {/* MATCH WEEK SELECTOR */}
 
-          <select
-            value={selectedWeekId || ""}
-            onChange={(e) =>
-              setSelectedWeekId(
-                Number(e.target.value)
-              )
-            }
+        <div
+          className="card"
+          style={{
+            padding: "17px 16px",
+          }}
+        >
+          <div
             style={{
-              width: "100%",
-              padding: "12px",
-              borderRadius: "8px",
-              border: "1px solid #d7dee7",
-              fontSize: "16px",
-              fontWeight: "bold",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: "12px",
             }}
           >
-            {currentAndFutureWeeks.length > 0 && (
-              <optgroup label="Current / Upcoming">
-                {currentAndFutureWeeks.map(
-                  (week) => (
+            <div
+              style={{
+                textAlign: "left",
+                minWidth: "92px",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "11px",
+                  fontWeight: "900",
+                  letterSpacing: "0.8px",
+                  color: "#71869a",
+                  textTransform: "uppercase",
+                }}
+              >
+                Select
+              </div>
+
+              <div
+                style={{
+                  marginTop: "2px",
+                  fontSize: "16px",
+                  fontWeight: "900",
+                  color: "#071d36",
+                }}
+              >
+                Match Week
+              </div>
+            </div>
+
+            <select
+              value={selectedWeekId || ""}
+              onChange={(e) =>
+                setSelectedWeekId(
+                  Number(e.target.value)
+                )
+              }
+              style={{
+                width: "100%",
+                maxWidth: "350px",
+                padding: "11px 12px",
+                borderRadius: "8px",
+                fontSize: "15px",
+                fontWeight: "800",
+              }}
+            >
+              {currentAndFutureWeeks.length > 0 && (
+                <optgroup label="Current / Upcoming">
+                  {currentAndFutureWeeks.map(
+                    (week) => (
+                      <option
+                        key={week.id}
+                        value={week.id}
+                      >
+                        Match Week {week.week_no}
+                      </option>
+                    )
+                  )}
+                </optgroup>
+              )}
+
+              {previousWeeks.length > 0 && (
+                <optgroup label="Previous Weeks">
+                  {previousWeeks.map((week) => (
                     <option
                       key={week.id}
                       value={week.id}
                     >
-                      Match Week {week.week_no}
+                      Match Week {week.week_no} — Locked
                     </option>
-                  )
-                )}
-              </optgroup>
-            )}
-
-            {previousWeeks.length > 0 && (
-              <optgroup label="Previous Weeks">
-                {previousWeeks.map((week) => (
-                  <option
-                    key={week.id}
-                    value={week.id}
-                  >
-                    Match Week {week.week_no} — Locked
-                  </option>
-                ))}
-              </optgroup>
-            )}
-          </select>
+                  ))}
+                </optgroup>
+              )}
+            </select>
+          </div>
         </div>
+
+        {/* FIXTURES */}
 
         {selectedWeek &&
           (() => {
@@ -377,222 +545,484 @@ export default function PredictionsPage() {
             );
 
             const hasAnyPredictions = weekFixtures.some(
-              (fixture) => Boolean(choices[fixture.id])
+              (fixture) =>
+                Boolean(choices[fixture.id])
             );
+
+            const activeFixtures =
+              weekFixtures.filter(
+                (fixture) =>
+                  fixture.status !== "cancelled"
+              );
+
+            const completedPredictionCount =
+              activeFixtures.filter(
+                (fixture) =>
+                  Boolean(choices[fixture.id])
+              ).length;
 
             return (
               <div
                 className="card"
                 style={{
-                  marginBottom: "20px",
-                  padding: "20px 12px",
+                  padding: "17px 12px 16px",
                 }}
               >
-                <h2
+                {/* WEEK HEADING */}
+
+                <div
                   style={{
-                    marginBottom: "4px",
+                    marginBottom: "14px",
+                    padding: "0 4px",
                   }}
                 >
-                  Match Week{" "}
-                  {selectedWeek.week_no}
-                </h2>
-
-                <p
-                  style={{
-                    marginBottom: "6px",
-                  }}
-                >
-                  {formatDate(
-                    selectedWeek.match_date
-                  )}
-                </p>
-
-                <p
-                  style={{
-                    marginBottom: "18px",
-                    fontSize: "13px",
-                    fontWeight: "700",
-                  }}
-                >
-                  {notOpenYet
-                    ? `Opens ${formatDeadline(
-                        selectedWeek.opens_at
-                      )}`
-                    : isOpen
-                    ? `Open — closes ${formatDeadline(
-                        selectedWeek.deadline
-                      )}`
-                    : "🔒 Predictions Locked"}
-                </p>
-
-                {isLocked && (
-                  <p
+                  <div
                     style={{
-                      fontSize: "13px",
-                      fontWeight: "700",
-                      marginBottom: "18px",
+                      fontSize: "11px",
+                      fontWeight: "900",
+                      letterSpacing: "1.2px",
+                      color: "#71869a",
                     }}
                   >
-                    Your selections are shown below for
-                    reference only and can no longer be
-                    changed.
-                  </p>
-                )}
+                    MATCH WEEK
+                  </div>
 
-                {weekFixtures.map((fixture) => {
-                  const selected =
-                    choices[fixture.id];
+                  <div
+                    style={{
+                      marginTop: "1px",
+                      fontSize: "28px",
+                      lineHeight: 1,
+                      fontWeight: "900",
+                      color: "#071d36",
+                    }}
+                  >
+                    {selectedWeek.week_no}
+                  </div>
 
-                  const cancelled =
-                    fixture.status === "cancelled";
+                  <div
+                    style={{
+                      marginTop: "5px",
+                      fontSize: "13px",
+                      fontWeight: "700",
+                      color: "#65788c",
+                    }}
+                  >
+                    {formatDate(
+                      selectedWeek.match_date
+                    )}
+                  </div>
+                </div>
 
-                  if (cancelled && isLocked) {
-                    return (
-                      <div
-                        key={fixture.id}
-                        style={{
-                          padding: "10px 0",
-                          borderTop:
-                            "1px solid #d9e0e7",
-                        }}
-                      >
-                        <div
-                          style={{
-                            fontWeight: "700",
-                            fontSize: "14px",
-                            textAlign: "left",
-                            marginBottom: "8px",
-                          }}
-                        >
-                          {fixture.home_team} v{" "}
-                          {fixture.away_team}
-                        </div>
+                {/* STATUS BAR */}
 
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "8px",
-                            fontSize: "13px",
-                            fontWeight: "700",
-                          }}
-                        >
-                          <span>
-                            Your Prediction
-                          </span>
-
-                          <span
-                            style={{
-                              width: "34px",
-                              minWidth: "34px",
-                              height: "34px",
-                              borderRadius: "50%",
-                              background: selected
-                                ? "#e31b23"
-                                : "#9ca3af",
-                              color: "#ffffff",
-                              display: "inline-flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              fontWeight: "bold",
-                            }}
-                          >
-                            {selected || "-"}
-                          </span>
-
-                          <span>
-                            CANCELLED — no points awarded
-                          </span>
-                        </div>
-                      </div>
-                    );
-                  }
-
-                  return (
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    gap: "8px",
+                    marginBottom: "14px",
+                    padding: "10px 12px",
+                    borderRadius: "9px",
+                    background: isOpen
+                      ? "#edf7ff"
+                      : isLocked
+                      ? "#f1f3f5"
+                      : "#fff7e8",
+                    border: isOpen
+                      ? "1px solid #b8ddfa"
+                      : isLocked
+                      ? "1px solid #d4d9df"
+                      : "1px solid #f1d49d",
+                  }}
+                >
+                  <div
+                    style={{
+                      textAlign: "left",
+                      minWidth: 0,
+                    }}
+                  >
                     <div
-                      key={fixture.id}
                       style={{
-                        display: "grid",
-                        gridTemplateColumns:
-                          "minmax(0, 1fr) 116px",
-                        alignItems: "center",
-                        gap: "8px",
-                        padding: "10px 0",
-                        borderTop:
-                          "1px solid #d9e0e7",
+                        fontSize: "12px",
+                        fontWeight: "900",
+                        color: isOpen
+                          ? "#0867aa"
+                          : isLocked
+                          ? "#586675"
+                          : "#966714",
+                      }}
+                    >
+                      {notOpenYet
+                        ? "NOT OPEN YET"
+                        : isOpen
+                        ? "PREDICTIONS OPEN"
+                        : "🔒 PREDICTIONS LOCKED"}
+                    </div>
+
+                    <div
+                      style={{
+                        marginTop: "2px",
+                        fontSize: "11px",
+                        fontWeight: "700",
+                        color: "#71869a",
+                      }}
+                    >
+                      {notOpenYet
+                        ? `Opens ${formatDeadline(
+                            selectedWeek.opens_at
+                          )}`
+                        : isOpen
+                        ? `Closes ${formatDeadline(
+                            selectedWeek.deadline
+                          )}`
+                        : "Selections can no longer be changed"}
+                    </div>
+                  </div>
+
+                  {!isLocked && (
+                    <div
+                      style={{
+                        flexShrink: 0,
+                        minWidth: "58px",
+                        padding: "7px 8px",
+                        borderRadius: "8px",
+                        background: "#071d36",
+                        color: "#ffffff",
+                        textAlign: "center",
                       }}
                     >
                       <div
                         style={{
-                          minWidth: 0,
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          textAlign: "left",
-                          fontWeight: "700",
-                          fontSize: "14px",
+                          fontSize: "16px",
+                          lineHeight: 1,
+                          fontWeight: "900",
                         }}
                       >
-                        {fixture.home_team} v{" "}
-                        {fixture.away_team}
+                        {completedPredictionCount}/
+                        {activeFixtures.length}
                       </div>
 
                       <div
                         style={{
-                          display: "flex",
-                          flexWrap: "nowrap",
-                          gap: "5px",
-                          justifyContent: "flex-end",
+                          marginTop: "3px",
+                          fontSize: "8px",
+                          fontWeight: "900",
+                          letterSpacing: "0.7px",
+                          color: "#b9cee2",
                         }}
                       >
-                        {["H", "D", "A"].map(
-                          (result) => {
-                            const isSelected =
-                              selected === result;
-
-                            return (
-                              <button
-                                key={result}
-                                onClick={() =>
-                                  chooseResult(
-                                    fixture.id,
-                                    result,
-                                    isOpen
-                                  )
-                                }
-                                disabled={!isOpen}
-                                style={{
-                                  width: "34px",
-                                  minWidth: "34px",
-                                  height: "34px",
-                                  padding: 0,
-                                  borderRadius: "50%",
-                                  fontSize: "13px",
-                                  opacity:
-                                    !isOpen &&
-                                    !isSelected
-                                      ? 0.28
-                                      : 1,
-                                  cursor: !isOpen
-                                    ? "not-allowed"
-                                    : "pointer",
-                                  background:
-                                    isSelected
-                                      ? "#e31b23"
-                                      : !isOpen
-                                      ? "#9ca3af"
-                                      : "#0877c9",
-                                }}
-                              >
-                                {result}
-                              </button>
-                            );
-                          }
-                        )}
+                        SELECTED
                       </div>
                     </div>
-                  );
-                })}
+                  )}
+                </div>
+
+                {/* H D A KEY */}
+
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns:
+                      "minmax(0, 1fr) 116px",
+                    alignItems: "center",
+                    gap: "8px",
+                    padding:
+                      "0 3px 7px 3px",
+                    fontSize: "9px",
+                    fontWeight: "900",
+                    letterSpacing: "0.8px",
+                    color: "#8a9aaa",
+                  }}
+                >
+                  <div
+                    style={{
+                      textAlign: "left",
+                    }}
+                  >
+                    FIXTURE
+                  </div>
+
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns:
+                        "repeat(3, 34px)",
+                      justifyContent: "end",
+                      gap: "5px",
+                      textAlign: "center",
+                    }}
+                  >
+                    <span>H</span>
+                    <span>D</span>
+                    <span>A</span>
+                  </div>
+                </div>
+
+                {/* FIXTURE ROWS */}
+
+                <div
+                  style={{
+                    borderTop:
+                      "1px solid #d9e0e7",
+                  }}
+                >
+                  {weekFixtures.map(
+                    (fixture) => {
+                      const selected =
+                        choices[fixture.id];
+
+                      const cancelled =
+                        fixture.status ===
+                        "cancelled";
+
+                      if (
+                        cancelled &&
+                        isLocked
+                      ) {
+                        return (
+                          <div
+                            key={fixture.id}
+                            style={{
+                              padding:
+                                "12px 3px",
+                              borderBottom:
+                                "1px solid #d9e0e7",
+                            }}
+                          >
+                            <div
+                              style={{
+                                fontWeight:
+                                  "800",
+                                fontSize:
+                                  "13px",
+                                textAlign:
+                                  "left",
+                                marginBottom:
+                                  "8px",
+                                color:
+                                  "#354b61",
+                              }}
+                            >
+                              {fixture.home_team} v{" "}
+                              {fixture.away_team}
+                            </div>
+
+                            <div
+                              style={{
+                                display:
+                                  "flex",
+                                alignItems:
+                                  "center",
+                                gap: "7px",
+                                fontSize:
+                                  "11px",
+                                fontWeight:
+                                  "800",
+                                color:
+                                  "#6e7e8e",
+                              }}
+                            >
+                              <span>
+                                Prediction
+                              </span>
+
+                              <span
+                                style={{
+                                  width:
+                                    "32px",
+                                  minWidth:
+                                    "32px",
+                                  height:
+                                    "32px",
+                                  borderRadius:
+                                    "50%",
+                                  background:
+                                    selected
+                                      ? "#e31b23"
+                                      : "#9ca3af",
+                                  color:
+                                    "#ffffff",
+                                  display:
+                                    "inline-flex",
+                                  alignItems:
+                                    "center",
+                                  justifyContent:
+                                    "center",
+                                  fontWeight:
+                                    "900",
+                                }}
+                              >
+                                {selected || "-"}
+                              </span>
+
+                              <span
+                                style={{
+                                  color:
+                                    "#c5161d",
+                                }}
+                              >
+                                CANCELLED — no
+                                points
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      }
+
+                      return (
+                        <div
+                          key={fixture.id}
+                          style={{
+                            display: "grid",
+                            gridTemplateColumns:
+                              "minmax(0, 1fr) 116px",
+                            alignItems:
+                              "center",
+                            gap: "8px",
+                            padding:
+                              "11px 3px",
+                            borderBottom:
+                              "1px solid #d9e0e7",
+                          }}
+                        >
+                          <div
+                            title={`${fixture.home_team} v ${fixture.away_team}`}
+                            style={{
+                              minWidth: 0,
+                              whiteSpace:
+                                "nowrap",
+                              overflow:
+                                "hidden",
+                              textOverflow:
+                                "ellipsis",
+                              textAlign:
+                                "left",
+                              fontWeight:
+                                "800",
+                              fontSize:
+                                "13px",
+                              color:
+                                "#23394f",
+                            }}
+                          >
+                            {fixture.home_team} v{" "}
+                            {fixture.away_team}
+                          </div>
+
+                          <div
+                            style={{
+                              display: "flex",
+                              flexWrap:
+                                "nowrap",
+                              gap: "5px",
+                              justifyContent:
+                                "flex-end",
+                            }}
+                          >
+                            {["H", "D", "A"].map(
+                              (result) => {
+                                const isSelected =
+                                  selected ===
+                                  result;
+
+                                return (
+                                  <button
+                                    key={result}
+                                    onClick={() =>
+                                      chooseResult(
+                                        fixture.id,
+                                        result,
+                                        isOpen
+                                      )
+                                    }
+                                    disabled={!isOpen}
+                                    style={{
+                                      width:
+                                        "34px",
+                                      minWidth:
+                                        "34px",
+                                      height:
+                                        "34px",
+                                      padding: 0,
+                                      borderRadius:
+                                        "50%",
+                                      border:
+                                        isSelected
+                                          ? "2px solid #ffffff"
+                                          : "0",
+                                      outline:
+                                        isSelected
+                                          ? "2px solid #e31b23"
+                                          : "none",
+                                      fontSize:
+                                        "12px",
+                                      fontWeight:
+                                        "900",
+                                      boxShadow:
+                                        isSelected
+                                          ? "0 2px 7px rgba(227,27,35,0.3)"
+                                          : "0 2px 4px rgba(0,0,0,0.15)",
+                                      opacity:
+                                        !isOpen &&
+                                        !isSelected
+                                          ? 0.3
+                                          : 1,
+                                      cursor:
+                                        !isOpen
+                                          ? "not-allowed"
+                                          : "pointer",
+                                      background:
+                                        isSelected
+                                          ? "#e31b23"
+                                          : !isOpen
+                                          ? "#9ca3af"
+                                          : "#0877c9",
+                                    }}
+                                  >
+                                    {result}
+                                  </button>
+                                );
+                              }
+                            )}
+                          </div>
+                        </div>
+                      );
+                    }
+                  )}
+                </div>
+
+                {/* COMPLETION MESSAGE */}
+
+                {isOpen &&
+                  completedPredictionCount ===
+                    activeFixtures.length &&
+                  activeFixtures.length > 0 && (
+                    <div
+                      style={{
+                        marginTop: "15px",
+                        padding:
+                          "10px 12px",
+                        borderRadius:
+                          "9px",
+                        background:
+                          "#e7f7ed",
+                        border:
+                          "1px solid #aad8bb",
+                        color:
+                          "#16733f",
+                        fontSize:
+                          "12px",
+                        fontWeight:
+                          "900",
+                      }}
+                    >
+                      ✓ All predictions
+                      completed
+                    </div>
+                  )}
+
+                {/* CLEAR ALL */}
 
                 {isOpen && (
                   <button
@@ -608,14 +1038,17 @@ export default function PredictionsPage() {
                       !hasAnyPredictions
                     }
                     style={{
-                      marginTop: "22px",
-                      background: "#e31b23",
+                      marginTop: "16px",
+                      background:
+                        "#e31b23",
                       color: "#ffffff",
                       opacity:
                         clearingAll ||
                         !hasAnyPredictions
-                          ? 0.5
+                          ? 0.45
                           : 1,
+                      boxShadow:
+                        "0 3px 0 #a20d13, 0 6px 12px rgba(0,0,0,0.16)",
                     }}
                   >
                     {clearingAll
@@ -626,6 +1059,8 @@ export default function PredictionsPage() {
               </div>
             );
           })()}
+
+        {/* BACK */}
 
         <a href="/predictor">
           <button>
