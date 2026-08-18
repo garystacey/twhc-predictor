@@ -37,7 +37,9 @@ export default function ManageMatchWeeksPage() {
         .single();
 
       if (profileError || !profile || profile.role !== "admin") {
-        setMessage("You do not have permission to access this page.");
+        setMessage(
+          "You do not have permission to access this page."
+        );
         setLoading(false);
         return;
       }
@@ -100,7 +102,9 @@ export default function ManageMatchWeeksPage() {
     if (!selectedWeekId) return;
 
     if (!matchDate || !opensAt || !deadline) {
-      setMessage("Please complete all three date/time fields.");
+      setMessage(
+        "Please complete all three date/time fields."
+      );
       return;
     }
 
@@ -108,7 +112,9 @@ export default function ManageMatchWeeksPage() {
     const deadlineDate = new Date(deadline);
 
     if (openDate >= deadlineDate) {
-      setMessage("The opening time must be before the deadline.");
+      setMessage(
+        "The opening time must be before the deadline."
+      );
       return;
     }
 
@@ -143,25 +149,86 @@ export default function ManageMatchWeeksPage() {
       )
     );
 
-    setMessage("Match week saved.");
+    setMessage("Match Week saved.");
     setSaving(false);
+  }
+
+  function Header() {
+    return (
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "11px",
+          marginBottom: "16px",
+        }}
+      >
+        <img
+          src="/TWHC-badge-white.png"
+          alt="Telford & Wrekin Hockey Club"
+          style={{
+            display: "block",
+            width: "58px",
+            height: "auto",
+            margin: 0,
+            filter:
+              "drop-shadow(0 4px 8px rgba(0,0,0,0.35))",
+          }}
+        />
+
+        <div style={{ textAlign: "left" }}>
+          <div
+            style={{
+              fontSize: "27px",
+              lineHeight: 0.95,
+              fontWeight: "900",
+              letterSpacing: "-1.2px",
+              color: "#ffffff",
+              whiteSpace: "nowrap",
+              textShadow:
+                "0 2px 8px rgba(0,0,0,0.35)",
+            }}
+          >
+            THE PREDICTO
+            <span
+              style={{
+                color: "#ed1c24",
+                textShadow:
+                  "0 0 12px rgba(237,28,36,0.32)",
+              }}
+            >
+              R
+            </span>
+          </div>
+
+          <div
+            style={{
+              marginTop: "5px",
+              fontSize: "11px",
+              fontWeight: "900",
+              letterSpacing: "1.4px",
+              color: "#a9bfd5",
+            }}
+          >
+            ADMIN — MATCH WEEKS
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (loading) {
     return (
       <main>
-        <div className="container">
-          <img
-            src="/TWHC-badge-white.png"
-            alt="Telford & Wrekin Hockey Club"
-            className="club-logo"
-          />
-
-          <h1>THE PREDICTOR</h1>
-          <p className="subtitle">Manage Match Weeks</p>
+        <div
+          className="container"
+          style={{ maxWidth: "760px" }}
+        >
+          <Header />
 
           <div className="card">
-            <p>Loading match weeks...</p>
+            <p>Loading Match Weeks...</p>
           </div>
         </div>
       </main>
@@ -171,15 +238,11 @@ export default function ManageMatchWeeksPage() {
   if (!authorised) {
     return (
       <main>
-        <div className="container">
-          <img
-            src="/TWHC-badge-white.png"
-            alt="Telford & Wrekin Hockey Club"
-            className="club-logo"
-          />
-
-          <h1>THE PREDICTOR</h1>
-          <p className="subtitle">Manage Match Weeks</p>
+        <div
+          className="container"
+          style={{ maxWidth: "760px" }}
+        >
+          <Header />
 
           <div className="card">
             <h2>Access Denied</h2>
@@ -194,70 +257,154 @@ export default function ManageMatchWeeksPage() {
     );
   }
 
+  const selectedWeek = weeks.find(
+    (week) => week.id === Number(selectedWeekId)
+  );
+
   return (
     <main>
-      <div className="container">
-        <img
-          src="/TWHC-badge-white.png"
-          alt="Telford & Wrekin Hockey Club"
-          className="club-logo"
-        />
-
-        <h1>THE PREDICTOR</h1>
-        <p className="subtitle">Manage Match Weeks</p>
+      <div
+        className="container"
+        style={{ maxWidth: "760px" }}
+      >
+        <Header />
 
         {message && (
-          <div className="card">
-            <p>{message}</p>
+          <div
+            className="card"
+            style={{
+              padding: "12px 16px",
+            }}
+          >
+            <p
+              style={{
+                margin: 0,
+                fontWeight: "800",
+              }}
+            >
+              {message}
+            </p>
           </div>
         )}
 
-        <div className="card">
-          <h2>Select Match Week</h2>
+        {/* MATCH WEEK SELECTOR */}
 
-          <select
-            value={selectedWeekId}
-            onChange={(e) => setSelectedWeekId(e.target.value)}
+        <div
+          className="card"
+          style={{
+            padding: "16px",
+          }}
+        >
+          <div
             style={{
-              width: "100%",
-              padding: "12px",
-              borderRadius: "8px",
-              border: "1px solid #d7dee7",
-              fontSize: "16px",
-              fontWeight: "bold",
+              display: "grid",
+              gridTemplateColumns: "110px 1fr",
+              alignItems: "center",
+              gap: "12px",
             }}
           >
-            {weeks.map((week) => (
-              <option key={week.id} value={week.id}>
-                Match Week {week.week_no}
-              </option>
-            ))}
-          </select>
+            <div
+              style={{
+                textAlign: "left",
+                fontSize: "15px",
+                fontWeight: "900",
+                color: "#071d36",
+                whiteSpace: "nowrap",
+              }}
+            >
+              MATCH WEEK
+            </div>
+
+            <select
+              value={selectedWeekId}
+              onChange={(e) =>
+                setSelectedWeekId(e.target.value)
+              }
+              style={{
+                width: "100%",
+                padding: "11px 12px",
+                borderRadius: "8px",
+                fontSize: "15px",
+                fontWeight: "800",
+              }}
+            >
+              {weeks.map((week) => (
+                <option
+                  key={week.id}
+                  value={week.id}
+                >
+                  Match Week {week.week_no}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
-        <div className="card">
-          <h2>Edit Match Week</h2>
+        {/* EDIT MATCH WEEK */}
+
+        <div
+          className="card"
+          style={{
+            padding: "18px 16px",
+          }}
+        >
+          <div
+            style={{
+              marginBottom: "16px",
+              textAlign: "left",
+            }}
+          >
+            <div
+              style={{
+                fontSize: "11px",
+                fontWeight: "900",
+                letterSpacing: "1px",
+                color: "#7c8fa2",
+              }}
+            >
+              EDIT SCHEDULE
+            </div>
+
+            <div
+              style={{
+                marginTop: "2px",
+                fontSize: "24px",
+                fontWeight: "900",
+                color: "#071d36",
+              }}
+            >
+              Match Week {selectedWeek?.week_no}
+            </div>
+          </div>
 
           <div
             style={{
               display: "grid",
-              gap: "18px",
+              gap: "15px",
               textAlign: "left",
             }}
           >
             <label>
-              <strong>Match Date</strong>
+              <strong
+                style={{
+                  fontSize: "13px",
+                  color: "#21384f",
+                }}
+              >
+                Match Date
+              </strong>
 
               <input
                 type="date"
                 value={matchDate}
-                onChange={(e) => setMatchDate(e.target.value)}
+                onChange={(e) =>
+                  setMatchDate(e.target.value)
+                }
                 style={{
                   width: "100%",
                   padding: "12px",
                   marginTop: "6px",
                   borderRadius: "8px",
-                  border: "1px solid #d7dee7",
                   fontSize: "16px",
                   boxSizing: "border-box",
                 }}
@@ -265,18 +412,26 @@ export default function ManageMatchWeeksPage() {
             </label>
 
             <label>
-              <strong>Predictions Open</strong>
+              <strong
+                style={{
+                  fontSize: "13px",
+                  color: "#21384f",
+                }}
+              >
+                Predictions Open
+              </strong>
 
               <input
                 type="datetime-local"
                 value={opensAt}
-                onChange={(e) => setOpensAt(e.target.value)}
+                onChange={(e) =>
+                  setOpensAt(e.target.value)
+                }
                 style={{
                   width: "100%",
                   padding: "12px",
                   marginTop: "6px",
                   borderRadius: "8px",
-                  border: "1px solid #d7dee7",
                   fontSize: "16px",
                   boxSizing: "border-box",
                 }}
@@ -284,38 +439,163 @@ export default function ManageMatchWeeksPage() {
             </label>
 
             <label>
-              <strong>Prediction Deadline</strong>
+              <strong
+                style={{
+                  fontSize: "13px",
+                  color: "#21384f",
+                }}
+              >
+                Prediction Deadline
+              </strong>
 
               <input
                 type="datetime-local"
                 value={deadline}
-                onChange={(e) => setDeadline(e.target.value)}
+                onChange={(e) =>
+                  setDeadline(e.target.value)
+                }
                 style={{
                   width: "100%",
                   padding: "12px",
                   marginTop: "6px",
                   borderRadius: "8px",
-                  border: "1px solid #d7dee7",
                   fontSize: "16px",
                   boxSizing: "border-box",
                 }}
               />
             </label>
+
+            {/* TIMING SUMMARY */}
+
+            {opensAt && deadline && (
+              <div
+                style={{
+                  padding: "12px",
+                  borderRadius: "9px",
+                  background: "#f1f4f7",
+                  border: "1px solid #d7dee7",
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: "10px",
+                    fontWeight: "900",
+                    letterSpacing: "0.8px",
+                    color: "#71869a",
+                    marginBottom: "6px",
+                  }}
+                >
+                  PREDICTION WINDOW
+                </div>
+
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns:
+                      "1fr 1fr",
+                    gap: "8px",
+                  }}
+                >
+                  <div
+                    style={{
+                      padding: "9px",
+                      borderRadius: "8px",
+                      background: "#edf7ff",
+                      border:
+                        "1px solid #b8ddfa",
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: "9px",
+                        fontWeight: "900",
+                        color: "#0867aa",
+                      }}
+                    >
+                      OPENS
+                    </div>
+
+                    <div
+                      style={{
+                        marginTop: "3px",
+                        fontSize: "12px",
+                        fontWeight: "800",
+                        color: "#21384f",
+                      }}
+                    >
+                      {new Date(opensAt).toLocaleString(
+                        "en-GB",
+                        {
+                          day: "numeric",
+                          month: "short",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        }
+                      )}
+                    </div>
+                  </div>
+
+                  <div
+                    style={{
+                      padding: "9px",
+                      borderRadius: "8px",
+                      background: "#fff1f1",
+                      border:
+                        "1px solid #efb5b8",
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: "9px",
+                        fontWeight: "900",
+                        color: "#c5161d",
+                      }}
+                    >
+                      CLOSES
+                    </div>
+
+                    <div
+                      style={{
+                        marginTop: "3px",
+                        fontSize: "12px",
+                        fontWeight: "800",
+                        color: "#21384f",
+                      }}
+                    >
+                      {new Date(deadline).toLocaleString(
+                        "en-GB",
+                        {
+                          day: "numeric",
+                          month: "short",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        }
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
 
             <button
               onClick={saveWeek}
               disabled={saving}
               style={{
+                marginTop: "2px",
                 opacity: saving ? 0.5 : 1,
               }}
             >
-              {saving ? "Saving..." : "Save Match Week"}
+              {saving
+                ? "Saving..."
+                : "Save Match Week"}
             </button>
           </div>
         </div>
 
         <a href="/admin">
-          <button>Back to Admin</button>
+          <button>
+            Back to Admin
+          </button>
         </a>
 
         <p className="footer">
