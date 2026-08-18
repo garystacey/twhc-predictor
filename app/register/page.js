@@ -63,9 +63,7 @@ export default function RegisterPage() {
     }
 
     setSuccess(true);
-    setMessage(
-      "Registration successful. Please check your email and confirm your account before signing in."
-    );
+    setMessage("");
     setLoading(false);
   }
 
@@ -131,211 +129,189 @@ export default function RegisterPage() {
         {/* REGISTER PANEL */}
 
         <div className="wow-register-card">
-          <div className="register-label">
-            JOIN THE COMPETITION
-          </div>
-
-          <h2>Create Account</h2>
-
-          <p className="register-copy">
-            Create your Predictor account and choose your team name.
-          </p>
-
-          <form
-            onSubmit={handleRegister}
-            className="wow-form"
-          >
-            {/* TEAM NAME */}
-
-            <label>
-              <strong>
-                PREDICTOR TEAM NAME
-              </strong>
-
-              <div className="field-wrap">
-                <span className="field-icon blue-icon">
-                  ★
-                </span>
-
-                <input
-                  type="text"
-                  value={teamName}
-                  onChange={(e) =>
-                    setTeamName(e.target.value)
-                  }
-                  placeholder="e.g. Stick Wizards"
-                  required
-                />
-              </div>
-            </label>
-
-            {/* NAME ROW */}
-
-            <div className="name-grid">
-              <label>
-                <strong>
-                  FIRST NAME
-                </strong>
-
-                <div className="field-wrap">
-                  <span className="field-icon blue-icon">
-                    ●
-                  </span>
-
-                  <input
-                    type="text"
-                    value={firstName}
-                    onChange={(e) =>
-                      setFirstName(e.target.value)
-                    }
-                    placeholder="First name"
-                    required
-                  />
-                </div>
-              </label>
-
-              <label>
-                <strong>
-                  SURNAME
-                </strong>
-
-                <div className="field-wrap">
-                  <span className="field-icon blue-icon">
-                    ●
-                  </span>
-
-                  <input
-                    type="text"
-                    value={surname}
-                    onChange={(e) =>
-                      setSurname(e.target.value)
-                    }
-                    placeholder="Surname"
-                    required
-                  />
-                </div>
-              </label>
-            </div>
-
-            {/* EMAIL */}
-
-            <label>
-              <strong>
-                EMAIL ADDRESS
-              </strong>
-
-              <div className="field-wrap">
-                <span className="field-icon blue-icon">
-                  @
-                </span>
-
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) =>
-                    setEmail(e.target.value)
-                  }
-                  placeholder="Enter your email address"
-                  required
-                />
-              </div>
-            </label>
-
-            {/* PASSWORD */}
-
-            <label>
-              <strong>
-                PASSWORD
-              </strong>
-
-              <div className="field-wrap">
-                <span className="field-icon red-icon">
-                  ●
-                </span>
-
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) =>
-                    setPassword(e.target.value)
-                  }
-                  placeholder="Minimum 8 characters"
-                  required
-                />
-              </div>
-            </label>
-
-            {/* CONFIRM PASSWORD */}
-
-            <label>
-              <strong>
-                CONFIRM PASSWORD
-              </strong>
-
-              <div className="field-wrap">
-                <span className="field-icon red-icon">
-                  ●
-                </span>
-
-                <input
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) =>
-                    setConfirmPassword(e.target.value)
-                  }
-                  placeholder="Enter your password again"
-                  required
-                />
-              </div>
-            </label>
-
-            {/* SUBMIT */}
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="wow-register-button"
-            >
-              {loading
-                ? "CREATING ACCOUNT..."
-                : "CREATE ACCOUNT  →"}
-            </button>
-          </form>
-
-          {/* MESSAGE */}
-
-          {message && (
-            <div
-              className={
-                success
-                  ? "wow-message success"
-                  : "wow-message error"
-              }
-            >
-              {message}
-            </div>
-          )}
-
-          {/* SUCCESS */}
-
-          {success && (
-            <a
-              href="/login"
-              className="success-link-wrap"
-            >
-              <button
-                type="button"
-                className="wow-sign-in-link"
-              >
-                GO TO SIGN IN
-              </button>
-            </a>
-          )}
-
-          {/* DIVIDER */}
-
-          {!success && (
+          {!success ? (
             <>
+              <div className="register-label">
+                JOIN THE COMPETITION
+              </div>
+
+              <h2>Create Account</h2>
+
+              <p className="register-copy">
+                Create your Predictor account and choose your team name.
+              </p>
+
+              <form
+                onSubmit={handleRegister}
+                className="wow-form"
+              >
+                {/* TEAM NAME */}
+
+                <label>
+                  <strong>
+                    PREDICTOR TEAM NAME
+                  </strong>
+
+                  <div className="field-wrap">
+                    <span className="field-icon blue-icon">
+                      ★
+                    </span>
+
+                    <input
+                      type="text"
+                      value={teamName}
+                      onChange={(e) =>
+                        setTeamName(e.target.value)
+                      }
+                      placeholder="e.g. Stick Wizards"
+                      required
+                    />
+                  </div>
+                </label>
+
+                {/* NAME ROW */}
+
+                <div className="name-grid">
+                  <label>
+                    <strong>
+                      FIRST NAME
+                    </strong>
+
+                    <div className="field-wrap">
+                      <span className="field-icon blue-icon">
+                        ●
+                      </span>
+
+                      <input
+                        type="text"
+                        value={firstName}
+                        onChange={(e) =>
+                          setFirstName(e.target.value)
+                        }
+                        placeholder="First name"
+                        required
+                      />
+                    </div>
+                  </label>
+
+                  <label>
+                    <strong>
+                      SURNAME
+                    </strong>
+
+                    <div className="field-wrap">
+                      <span className="field-icon blue-icon">
+                        ●
+                      </span>
+
+                      <input
+                        type="text"
+                        value={surname}
+                        onChange={(e) =>
+                          setSurname(e.target.value)
+                        }
+                        placeholder="Surname"
+                        required
+                      />
+                    </div>
+                  </label>
+                </div>
+
+                {/* EMAIL */}
+
+                <label>
+                  <strong>
+                    EMAIL ADDRESS
+                  </strong>
+
+                  <div className="field-wrap">
+                    <span className="field-icon blue-icon">
+                      @
+                    </span>
+
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) =>
+                        setEmail(e.target.value)
+                      }
+                      placeholder="Enter your email address"
+                      required
+                    />
+                  </div>
+                </label>
+
+                {/* PASSWORD */}
+
+                <label>
+                  <strong>
+                    PASSWORD
+                  </strong>
+
+                  <div className="field-wrap">
+                    <span className="field-icon red-icon">
+                      ●
+                    </span>
+
+                    <input
+                      type="password"
+                      value={password}
+                      onChange={(e) =>
+                        setPassword(e.target.value)
+                      }
+                      placeholder="Minimum 8 characters"
+                      required
+                    />
+                  </div>
+                </label>
+
+                {/* CONFIRM PASSWORD */}
+
+                <label>
+                  <strong>
+                    CONFIRM PASSWORD
+                  </strong>
+
+                  <div className="field-wrap">
+                    <span className="field-icon red-icon">
+                      ●
+                    </span>
+
+                    <input
+                      type="password"
+                      value={confirmPassword}
+                      onChange={(e) =>
+                        setConfirmPassword(e.target.value)
+                      }
+                      placeholder="Enter your password again"
+                      required
+                    />
+                  </div>
+                </label>
+
+                {/* SUBMIT */}
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="wow-register-button"
+                >
+                  {loading
+                    ? "CREATING ACCOUNT..."
+                    : "CREATE ACCOUNT  →"}
+                </button>
+              </form>
+
+              {/* ERROR MESSAGE */}
+
+              {message && (
+                <div className="wow-message error">
+                  {message}
+                </div>
+              )}
+
+              {/* DIVIDER */}
+
               <div className="wow-divider">
                 <div />
 
@@ -352,6 +328,99 @@ export default function RegisterPage() {
                   className="wow-back"
                 >
                   BACK TO SIGN IN
+                </button>
+              </a>
+            </>
+          ) : (
+            <>
+              {/* SUCCESS STATE */}
+
+              <div className="success-icon">
+                ✓
+              </div>
+
+              <div className="success-label">
+                ACCOUNT CREATED
+              </div>
+
+              <h2>Check Your Email</h2>
+
+              <p className="success-intro">
+                We&apos;ve sent a confirmation email to:
+              </p>
+
+              <div className="success-email">
+                {email}
+              </div>
+
+              <div className="success-panel">
+                <div className="success-step">
+                  <div className="step-number">
+                    1
+                  </div>
+
+                  <div>
+                    <strong>
+                      Open the confirmation email
+                    </strong>
+
+                    <p>
+                      Look for an email from
+                      <span> The Hockey Predictor</span>.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="success-step">
+                  <div className="step-number">
+                    2
+                  </div>
+
+                  <div>
+                    <strong>
+                      Click the confirmation link
+                    </strong>
+
+                    <p>
+                      This activates your Predictor account.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="success-step junk-step">
+                  <div className="step-number">
+                    !
+                  </div>
+
+                  <div>
+                    <strong>
+                      Can&apos;t see the email?
+                    </strong>
+
+                    <p>
+                      Please check your
+                      <span> Junk / Spam folder</span>.
+                      Confirmation emails can occasionally
+                      be filtered there.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <p className="success-final">
+                Once your email is confirmed, return to
+                The Predictor and sign in.
+              </p>
+
+              <a
+                href="/login"
+                className="success-link-wrap"
+              >
+                <button
+                  type="button"
+                  className="wow-sign-in-link"
+                >
+                  GO TO SIGN IN  →
                 </button>
               </a>
             </>
@@ -812,11 +881,11 @@ export default function RegisterPage() {
         .success-link-wrap {
           display: block;
 
-          margin-top: 14px;
+          margin-top: 18px;
         }
 
         /* =====================================================
-           MESSAGES
+           ERROR MESSAGE
            ===================================================== */
 
         .wow-message {
@@ -843,15 +912,190 @@ export default function RegisterPage() {
           color: #ff9da1;
         }
 
-        .wow-message.success {
+        /* =====================================================
+           SUCCESS SCREEN
+           ===================================================== */
+
+        .success-icon {
+          width: 62px;
+          height: 62px;
+
+          margin: 0 auto 13px;
+
+          border-radius: 50%;
+
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
           background:
-            rgba(20, 150, 79, 0.14);
+            linear-gradient(
+              180deg,
+              #2ab866 0%,
+              #118344 100%
+            );
+
+          border:
+            2px solid
+              rgba(139, 232, 174, 0.55);
+
+          color: #ffffff;
+
+          font-size: 31px;
+          font-weight: 900;
+
+          box-shadow:
+            0 8px 24px
+              rgba(25, 160, 82, 0.25),
+            0 0 20px
+              rgba(42, 184, 102, 0.16);
+        }
+
+        .success-label {
+          margin-bottom: 5px;
+
+          color: #6dde99;
+
+          font-size: 11px;
+          font-weight: 900;
+
+          letter-spacing: 2px;
+        }
+
+        .success-intro {
+          margin: 9px 0 7px;
+
+          color: #b4bfd0;
+
+          font-size: 13px;
+        }
+
+        .success-email {
+          display: inline-block;
+
+          margin-bottom: 20px;
+
+          padding: 8px 13px;
+
+          border-radius: 8px;
+
+          background:
+            rgba(39, 142, 255, 0.09);
 
           border:
             1px solid
-              rgba(69, 194, 117, 0.38);
+              rgba(39, 142, 255, 0.25);
 
-          color: #8ce1ab;
+          color: #65adff;
+
+          font-size: 13px;
+          font-weight: 900;
+
+          word-break: break-word;
+        }
+
+        .success-panel {
+          display: grid;
+
+          gap: 10px;
+
+          text-align: left;
+        }
+
+        .success-step {
+          display: grid;
+
+          grid-template-columns: 36px 1fr;
+
+          align-items: start;
+
+          gap: 11px;
+
+          padding: 12px;
+
+          border-radius: 10px;
+
+          background:
+            rgba(255, 255, 255, 0.035);
+
+          border:
+            1px solid
+              rgba(136, 160, 190, 0.19);
+        }
+
+        .step-number {
+          width: 32px;
+          height: 32px;
+
+          border-radius: 50%;
+
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          background: #0877c9;
+
+          color: #ffffff;
+
+          font-size: 13px;
+          font-weight: 900;
+        }
+
+        .success-step strong {
+          display: block;
+
+          margin-top: 1px;
+
+          color: #ffffff;
+
+          font-size: 13px;
+          font-weight: 900;
+        }
+
+        .success-step p {
+          margin: 4px 0 0;
+
+          color: #9faec0;
+
+          font-size: 12px;
+          line-height: 1.45;
+        }
+
+        .success-step p span {
+          color: #ffffff;
+
+          font-weight: 800;
+        }
+
+        .junk-step {
+          background:
+            rgba(237, 28, 36, 0.07);
+
+          border:
+            1px solid
+              rgba(237, 28, 36, 0.24);
+        }
+
+        .junk-step .step-number {
+          background: #ed1c24;
+        }
+
+        .junk-step strong {
+          color: #ff747a;
+        }
+
+        .junk-step p span {
+          color: #ff9ca0;
+        }
+
+        .success-final {
+          margin: 17px 0 0;
+
+          color: #b4bfd0;
+
+          font-size: 12px;
+
+          line-height: 1.5;
         }
 
         /* =====================================================
@@ -1042,6 +1286,26 @@ export default function RegisterPage() {
             min-height: 52px;
           }
 
+          .success-icon {
+            width: 56px;
+            height: 56px;
+
+            font-size: 28px;
+          }
+
+          .success-email {
+            max-width: 100%;
+
+            font-size: 12px;
+          }
+
+          .success-step {
+            grid-template-columns:
+              34px 1fr;
+
+            padding: 11px;
+          }
+
           .energy-blue-1 {
             left: -350px;
           }
@@ -1100,6 +1364,18 @@ export default function RegisterPage() {
           .wow-register-card {
             padding-left: 13px;
             padding-right: 13px;
+          }
+
+          .success-step {
+            grid-template-columns:
+              31px 1fr;
+
+            gap: 9px;
+          }
+
+          .step-number {
+            width: 29px;
+            height: 29px;
           }
         }
       `}</style>
