@@ -345,7 +345,7 @@ export default function PredictionsPage() {
             alignItems: "center",
             justifyContent: "center",
             gap: "11px",
-            marginBottom: "18px",
+            marginBottom: "16px",
           }}
         >
           <img
@@ -424,50 +424,32 @@ export default function PredictionsPage() {
           </div>
         )}
 
-        {/* MATCH WEEK SELECTOR */}
+        {/* COMPACT MATCH WEEK SELECTOR */}
 
         <div
           className="card"
           style={{
-            padding: "17px 16px",
+            padding: "16px",
           }}
         >
           <div
             style={{
-              display: "flex",
+              display: "grid",
+              gridTemplateColumns: "110px 1fr",
               alignItems: "center",
-              justifyContent: "space-between",
               gap: "12px",
             }}
           >
             <div
               style={{
                 textAlign: "left",
-                minWidth: "92px",
+                fontSize: "15px",
+                fontWeight: "900",
+                color: "#071d36",
+                letterSpacing: "0.2px",
               }}
             >
-              <div
-                style={{
-                  fontSize: "11px",
-                  fontWeight: "900",
-                  letterSpacing: "0.8px",
-                  color: "#71869a",
-                  textTransform: "uppercase",
-                }}
-              >
-                Select
-              </div>
-
-              <div
-                style={{
-                  marginTop: "2px",
-                  fontSize: "16px",
-                  fontWeight: "900",
-                  color: "#071d36",
-                }}
-              >
-                Match Week
-              </div>
+              MATCH WEEK
             </div>
 
             <select
@@ -479,7 +461,6 @@ export default function PredictionsPage() {
               }
               style={{
                 width: "100%",
-                maxWidth: "350px",
                 padding: "11px 12px",
                 borderRadius: "8px",
                 fontSize: "15px",
@@ -565,37 +546,26 @@ export default function PredictionsPage() {
               <div
                 className="card"
                 style={{
-                  padding: "17px 12px 16px",
+                  padding: "16px 12px",
                 }}
               >
-                {/* WEEK HEADING */}
+                {/* COMPACT WEEK HEADING */}
 
                 <div
                   style={{
-                    marginBottom: "14px",
+                    marginBottom: "12px",
                     padding: "0 4px",
                   }}
                 >
                   <div
                     style={{
-                      fontSize: "11px",
-                      fontWeight: "900",
-                      letterSpacing: "1.2px",
-                      color: "#71869a",
-                    }}
-                  >
-                    MATCH WEEK
-                  </div>
-
-                  <div
-                    style={{
-                      marginTop: "1px",
-                      fontSize: "28px",
-                      lineHeight: 1,
+                      fontSize: "22px",
+                      lineHeight: 1.1,
                       fontWeight: "900",
                       color: "#071d36",
                     }}
                   >
+                    MATCH WEEK{" "}
                     {selectedWeek.week_no}
                   </div>
 
@@ -621,7 +591,7 @@ export default function PredictionsPage() {
                     alignItems: "center",
                     justifyContent: "space-between",
                     gap: "8px",
-                    marginBottom: "14px",
+                    marginBottom: "13px",
                     padding: "10px 12px",
                     borderRadius: "9px",
                     background: isOpen
@@ -718,20 +688,19 @@ export default function PredictionsPage() {
                   )}
                 </div>
 
-                {/* H D A KEY */}
+                {/* HOME DRAW AWAY KEY */}
 
                 <div
                   style={{
                     display: "grid",
                     gridTemplateColumns:
-                      "minmax(0, 1fr) 116px",
+                      "minmax(0, 1fr) 146px",
                     alignItems: "center",
                     gap: "8px",
-                    padding:
-                      "0 3px 7px 3px",
+                    padding: "0 3px 7px",
                     fontSize: "9px",
                     fontWeight: "900",
-                    letterSpacing: "0.8px",
+                    letterSpacing: "0.4px",
                     color: "#8a9aaa",
                   }}
                 >
@@ -747,15 +716,14 @@ export default function PredictionsPage() {
                     style={{
                       display: "grid",
                       gridTemplateColumns:
-                        "repeat(3, 34px)",
-                      justifyContent: "end",
+                        "repeat(3, 1fr)",
                       gap: "5px",
                       textAlign: "center",
                     }}
                   >
-                    <span>H</span>
-                    <span>D</span>
-                    <span>A</span>
+                    <span>Home</span>
+                    <span>Draw</span>
+                    <span>Away</span>
                   </div>
                 </div>
 
@@ -784,24 +752,18 @@ export default function PredictionsPage() {
                           <div
                             key={fixture.id}
                             style={{
-                              padding:
-                                "12px 3px",
+                              padding: "12px 3px",
                               borderBottom:
                                 "1px solid #d9e0e7",
                             }}
                           >
                             <div
                               style={{
-                                fontWeight:
-                                  "800",
-                                fontSize:
-                                  "13px",
-                                textAlign:
-                                  "left",
-                                marginBottom:
-                                  "8px",
-                                color:
-                                  "#354b61",
+                                fontWeight: "800",
+                                fontSize: "13px",
+                                textAlign: "left",
+                                marginBottom: "8px",
+                                color: "#354b61",
                               }}
                             >
                               {fixture.home_team} v{" "}
@@ -810,17 +772,12 @@ export default function PredictionsPage() {
 
                             <div
                               style={{
-                                display:
-                                  "flex",
-                                alignItems:
-                                  "center",
+                                display: "flex",
+                                alignItems: "center",
                                 gap: "7px",
-                                fontSize:
-                                  "11px",
-                                fontWeight:
-                                  "800",
-                                color:
-                                  "#6e7e8e",
+                                fontSize: "11px",
+                                fontWeight: "800",
+                                color: "#6e7e8e",
                               }}
                             >
                               <span>
@@ -829,28 +786,22 @@ export default function PredictionsPage() {
 
                               <span
                                 style={{
-                                  width:
-                                    "32px",
-                                  minWidth:
-                                    "32px",
-                                  height:
-                                    "32px",
-                                  borderRadius:
-                                    "50%",
+                                  width: "32px",
+                                  minWidth: "32px",
+                                  height: "32px",
+                                  borderRadius: "50%",
                                   background:
                                     selected
                                       ? "#e31b23"
                                       : "#9ca3af",
-                                  color:
-                                    "#ffffff",
+                                  color: "#ffffff",
                                   display:
                                     "inline-flex",
                                   alignItems:
                                     "center",
                                   justifyContent:
                                     "center",
-                                  fontWeight:
-                                    "900",
+                                  fontWeight: "900",
                                 }}
                               >
                                 {selected || "-"}
@@ -858,12 +809,10 @@ export default function PredictionsPage() {
 
                               <span
                                 style={{
-                                  color:
-                                    "#c5161d",
+                                  color: "#c5161d",
                                 }}
                               >
-                                CANCELLED — no
-                                points
+                                CANCELLED — no points
                               </span>
                             </div>
                           </div>
@@ -876,12 +825,10 @@ export default function PredictionsPage() {
                           style={{
                             display: "grid",
                             gridTemplateColumns:
-                              "minmax(0, 1fr) 116px",
-                            alignItems:
-                              "center",
+                              "minmax(0, 1fr) 146px",
+                            alignItems: "center",
                             gap: "8px",
-                            padding:
-                              "11px 3px",
+                            padding: "11px 3px",
                             borderBottom:
                               "1px solid #d9e0e7",
                           }}
@@ -890,20 +837,13 @@ export default function PredictionsPage() {
                             title={`${fixture.home_team} v ${fixture.away_team}`}
                             style={{
                               minWidth: 0,
-                              whiteSpace:
-                                "nowrap",
-                              overflow:
-                                "hidden",
-                              textOverflow:
-                                "ellipsis",
-                              textAlign:
-                                "left",
-                              fontWeight:
-                                "800",
-                              fontSize:
-                                "13px",
-                              color:
-                                "#23394f",
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              textAlign: "left",
+                              fontWeight: "800",
+                              fontSize: "13px",
+                              color: "#23394f",
                             }}
                           >
                             {fixture.home_team} v{" "}
@@ -913,11 +853,9 @@ export default function PredictionsPage() {
                           <div
                             style={{
                               display: "flex",
-                              flexWrap:
-                                "nowrap",
+                              flexWrap: "nowrap",
                               gap: "5px",
-                              justifyContent:
-                                "flex-end",
+                              justifyContent: "flex-end",
                             }}
                           >
                             {["H", "D", "A"].map(
@@ -938,15 +876,11 @@ export default function PredictionsPage() {
                                     }
                                     disabled={!isOpen}
                                     style={{
-                                      width:
-                                        "34px",
-                                      minWidth:
-                                        "34px",
-                                      height:
-                                        "34px",
+                                      width: "44px",
+                                      minWidth: "44px",
+                                      height: "44px",
                                       padding: 0,
-                                      borderRadius:
-                                        "50%",
+                                      borderRadius: "50%",
                                       border:
                                         isSelected
                                           ? "2px solid #ffffff"
@@ -955,10 +889,8 @@ export default function PredictionsPage() {
                                         isSelected
                                           ? "2px solid #e31b23"
                                           : "none",
-                                      fontSize:
-                                        "12px",
-                                      fontWeight:
-                                        "900",
+                                      fontSize: "13px",
+                                      fontWeight: "900",
                                       boxShadow:
                                         isSelected
                                           ? "0 2px 7px rgba(227,27,35,0.3)"
@@ -1001,24 +933,17 @@ export default function PredictionsPage() {
                     <div
                       style={{
                         marginTop: "15px",
-                        padding:
-                          "10px 12px",
-                        borderRadius:
-                          "9px",
-                        background:
-                          "#e7f7ed",
+                        padding: "10px 12px",
+                        borderRadius: "9px",
+                        background: "#e7f7ed",
                         border:
                           "1px solid #aad8bb",
-                        color:
-                          "#16733f",
-                        fontSize:
-                          "12px",
-                        fontWeight:
-                          "900",
+                        color: "#16733f",
+                        fontSize: "12px",
+                        fontWeight: "900",
                       }}
                     >
-                      ✓ All predictions
-                      completed
+                      ✓ All predictions completed
                     </div>
                   )}
 
@@ -1039,8 +964,7 @@ export default function PredictionsPage() {
                     }
                     style={{
                       marginTop: "16px",
-                      background:
-                        "#e31b23",
+                      background: "#e31b23",
                       color: "#ffffff",
                       opacity:
                         clearingAll ||
@@ -1059,8 +983,6 @@ export default function PredictionsPage() {
               </div>
             );
           })()}
-
-        {/* BACK */}
 
         <a href="/predictor">
           <button>
