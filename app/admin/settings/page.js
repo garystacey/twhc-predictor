@@ -34,8 +34,14 @@ export default function CompetitionSettingsPage() {
         .eq("id", user.id)
         .single();
 
-      if (profileError || !profile || profile.role !== "admin") {
-        setMessage("You do not have permission to access this page.");
+      if (
+        profileError ||
+        !profile ||
+        profile.role !== "admin"
+      ) {
+        setMessage(
+          "You do not have permission to access this page."
+        );
         setLoading(false);
         return;
       }
@@ -44,7 +50,9 @@ export default function CompetitionSettingsPage() {
 
       const { data, error } = await supabase
         .from("competition_settings")
-        .select("id, entry_fee, first_prize, second_prize")
+        .select(
+          "id, entry_fee, first_prize, second_prize"
+        )
         .limit(1)
         .single();
 
@@ -57,19 +65,22 @@ export default function CompetitionSettingsPage() {
       setSettingsId(data.id);
 
       setEntryFee(
-        data.entry_fee !== null && data.entry_fee !== undefined
+        data.entry_fee !== null &&
+          data.entry_fee !== undefined
           ? String(data.entry_fee)
           : "10"
       );
 
       setFirstPrize(
-        data.first_prize !== null && data.first_prize !== undefined
+        data.first_prize !== null &&
+          data.first_prize !== undefined
           ? String(data.first_prize)
           : ""
       );
 
       setSecondPrize(
-        data.second_prize !== null && data.second_prize !== undefined
+        data.second_prize !== null &&
+          data.second_prize !== undefined
           ? String(data.second_prize)
           : ""
       );
@@ -84,17 +95,29 @@ export default function CompetitionSettingsPage() {
     if (!settingsId) return;
 
     if (!entryFee || Number(entryFee) < 0) {
-      setMessage("Please enter a valid entry fee.");
+      setMessage(
+        "Please enter a valid entry fee."
+      );
       return;
     }
 
-    if (firstPrize && Number(firstPrize) < 0) {
-      setMessage("Please enter a valid 1st Prize amount.");
+    if (
+      firstPrize &&
+      Number(firstPrize) < 0
+    ) {
+      setMessage(
+        "Please enter a valid 1st Prize amount."
+      );
       return;
     }
 
-    if (secondPrize && Number(secondPrize) < 0) {
-      setMessage("Please enter a valid 2nd Prize amount.");
+    if (
+      secondPrize &&
+      Number(secondPrize) < 0
+    ) {
+      setMessage(
+        "Please enter a valid 2nd Prize amount."
+      );
       return;
     }
 
@@ -106,10 +129,15 @@ export default function CompetitionSettingsPage() {
       .update({
         entry_fee: Number(entryFee),
         first_prize:
-          firstPrize.trim() === "" ? null : Number(firstPrize),
+          firstPrize.trim() === ""
+            ? null
+            : Number(firstPrize),
         second_prize:
-          secondPrize.trim() === "" ? null : Number(secondPrize),
-        updated_at: new Date().toISOString(),
+          secondPrize.trim() === ""
+            ? null
+            : Number(secondPrize),
+        updated_at:
+          new Date().toISOString(),
       })
       .eq("id", settingsId);
 
@@ -119,25 +147,118 @@ export default function CompetitionSettingsPage() {
       return;
     }
 
-    setMessage("Competition settings saved.");
+    setMessage(
+      "Competition settings saved."
+    );
     setSaving(false);
+  }
+
+  function formatPreview(value) {
+    if (
+      value === null ||
+      value === undefined ||
+      value === ""
+    ) {
+      return "TBC";
+    }
+
+    const amount = Number(value);
+
+    if (Number.isNaN(amount)) {
+      return "TBC";
+    }
+
+    if (Number.isInteger(amount)) {
+      return `£${amount}`;
+    }
+
+    return `£${amount.toFixed(2)}`;
+  }
+
+  function Header() {
+    return (
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "11px",
+          marginBottom: "16px",
+        }}
+      >
+        <img
+          src="/TWHC-badge-white.png"
+          alt="Telford & Wrekin Hockey Club"
+          style={{
+            display: "block",
+            width: "58px",
+            height: "auto",
+            margin: 0,
+            filter:
+              "drop-shadow(0 4px 8px rgba(0,0,0,0.35))",
+          }}
+        />
+
+        <div
+          style={{
+            textAlign: "left",
+          }}
+        >
+          <div
+            style={{
+              fontSize: "27px",
+              lineHeight: 0.95,
+              fontWeight: "900",
+              letterSpacing: "-1.2px",
+              color: "#ffffff",
+              whiteSpace: "nowrap",
+              textShadow:
+                "0 2px 8px rgba(0,0,0,0.35)",
+            }}
+          >
+            THE PREDICTO
+            <span
+              style={{
+                color: "#ed1c24",
+                textShadow:
+                  "0 0 12px rgba(237,28,36,0.32)",
+              }}
+            >
+              R
+            </span>
+          </div>
+
+          <div
+            style={{
+              marginTop: "5px",
+              fontSize: "11px",
+              fontWeight: "900",
+              letterSpacing: "1.4px",
+              color: "#a9bfd5",
+            }}
+          >
+            ADMIN — COMPETITION SETTINGS
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (loading) {
     return (
       <main>
-        <div className="container">
-          <img
-            src="/TWHC-badge-white.png"
-            alt="Telford & Wrekin Hockey Club"
-            className="club-logo"
-          />
-
-          <h1>THE PREDICTOR</h1>
-          <p className="subtitle">Competition Settings</p>
+        <div
+          className="container"
+          style={{
+            maxWidth: "760px",
+          }}
+        >
+          <Header />
 
           <div className="card">
-            <p>Loading settings...</p>
+            <p>
+              Loading settings...
+            </p>
           </div>
         </div>
       </main>
@@ -147,23 +268,28 @@ export default function CompetitionSettingsPage() {
   if (!authorised) {
     return (
       <main>
-        <div className="container">
-          <img
-            src="/TWHC-badge-white.png"
-            alt="Telford & Wrekin Hockey Club"
-            className="club-logo"
-          />
-
-          <h1>THE PREDICTOR</h1>
-          <p className="subtitle">Competition Settings</p>
+        <div
+          className="container"
+          style={{
+            maxWidth: "760px",
+          }}
+        >
+          <Header />
 
           <div className="card">
-            <h2>Access Denied</h2>
-            <p>{message}</p>
+            <h2>
+              Access Denied
+            </h2>
+
+            <p>
+              {message}
+            </p>
           </div>
 
           <a href="/admin">
-            <button>Back to Admin</button>
+            <button>
+              Back to Admin
+            </button>
           </a>
         </div>
       </main>
@@ -172,121 +298,321 @@ export default function CompetitionSettingsPage() {
 
   return (
     <main>
-      <div className="container">
-        <img
-          src="/TWHC-badge-white.png"
-          alt="Telford & Wrekin Hockey Club"
-          className="club-logo"
-        />
-
-        <h1>THE PREDICTOR</h1>
-        <p className="subtitle">Competition Settings</p>
+      <div
+        className="container"
+        style={{
+          maxWidth: "760px",
+        }}
+      >
+        <Header />
 
         {message && (
-          <div className="card">
-            <p>{message}</p>
+          <div
+            className="card"
+            style={{
+              padding: "12px 16px",
+            }}
+          >
+            <p
+              style={{
+                margin: 0,
+                fontWeight: "800",
+              }}
+            >
+              {message}
+            </p>
           </div>
         )}
 
-        <div className="card">
-          <h2>Entry & Prize Money</h2>
+        {/* CURRENT SETTINGS PREVIEW */}
+
+        <div
+          className="card"
+          style={{
+            padding: "16px",
+          }}
+        >
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns:
+                "repeat(3, 1fr)",
+              gap: "8px",
+            }}
+          >
+            <div
+              style={{
+                padding: "12px 7px",
+                borderRadius: "9px",
+                background: "#071d36",
+                color: "#ffffff",
+                textAlign: "center",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "9px",
+                  fontWeight: "900",
+                  letterSpacing: "0.7px",
+                  color: "#b9cee2",
+                }}
+              >
+                ENTRY
+              </div>
+
+              <div
+                style={{
+                  marginTop: "4px",
+                  fontSize: "20px",
+                  fontWeight: "900",
+                }}
+              >
+                {formatPreview(entryFee)}
+              </div>
+            </div>
+
+            <div
+              style={{
+                padding: "12px 7px",
+                borderRadius: "9px",
+                background: "#d9a900",
+                color: "#ffffff",
+                textAlign: "center",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "9px",
+                  fontWeight: "900",
+                  letterSpacing: "0.7px",
+                  color: "#fff7d1",
+                }}
+              >
+                1ST PRIZE
+              </div>
+
+              <div
+                style={{
+                  marginTop: "4px",
+                  fontSize: "20px",
+                  fontWeight: "900",
+                }}
+              >
+                {formatPreview(firstPrize)}
+              </div>
+            </div>
+
+            <div
+              style={{
+                padding: "12px 7px",
+                borderRadius: "9px",
+                background: "#8d99a6",
+                color: "#ffffff",
+                textAlign: "center",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "9px",
+                  fontWeight: "900",
+                  letterSpacing: "0.7px",
+                }}
+              >
+                2ND PRIZE
+              </div>
+
+              <div
+                style={{
+                  marginTop: "4px",
+                  fontSize: "20px",
+                  fontWeight: "900",
+                }}
+              >
+                {formatPreview(secondPrize)}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* EDIT SETTINGS */}
+
+        <div
+          className="card"
+          style={{
+            padding: "18px 16px",
+          }}
+        >
+          <div
+            style={{
+              marginBottom: "16px",
+              textAlign: "left",
+            }}
+          >
+            <div
+              style={{
+                fontSize: "11px",
+                fontWeight: "900",
+                letterSpacing: "1px",
+                color: "#7c8fa2",
+              }}
+            >
+              COMPETITION FINANCES
+            </div>
+
+            <div
+              style={{
+                marginTop: "2px",
+                fontSize: "24px",
+                fontWeight: "900",
+                color: "#071d36",
+              }}
+            >
+              Entry & Prize Money
+            </div>
+          </div>
 
           <div
             style={{
               display: "grid",
-              gap: "18px",
+              gap: "15px",
               textAlign: "left",
             }}
           >
             <label>
-              <strong>Entry Fee (£)</strong>
+              <strong
+                style={{
+                  fontSize: "13px",
+                  color: "#354b61",
+                }}
+              >
+                Entry Fee (£)
+              </strong>
 
               <input
                 type="number"
                 min="0"
                 step="0.01"
                 value={entryFee}
-                onChange={(e) => setEntryFee(e.target.value)}
+                onChange={(e) =>
+                  setEntryFee(
+                    e.target.value
+                  )
+                }
                 style={{
                   width: "100%",
                   padding: "12px",
                   marginTop: "6px",
                   borderRadius: "8px",
-                  border: "1px solid #d7dee7",
-                  boxSizing: "border-box",
+                  boxSizing:
+                    "border-box",
                   fontSize: "16px",
                 }}
               />
             </label>
 
             <label>
-              <strong>1st Prize (£)</strong>
+              <strong
+                style={{
+                  fontSize: "13px",
+                  color: "#354b61",
+                }}
+              >
+                1st Prize (£)
+              </strong>
 
               <input
                 type="number"
                 min="0"
                 step="0.01"
                 value={firstPrize}
-                onChange={(e) => setFirstPrize(e.target.value)}
+                onChange={(e) =>
+                  setFirstPrize(
+                    e.target.value
+                  )
+                }
                 placeholder="Leave blank for TBC"
                 style={{
                   width: "100%",
                   padding: "12px",
                   marginTop: "6px",
                   borderRadius: "8px",
-                  border: "1px solid #d7dee7",
-                  boxSizing: "border-box",
+                  boxSizing:
+                    "border-box",
                   fontSize: "16px",
                 }}
               />
             </label>
 
             <label>
-              <strong>2nd Prize (£)</strong>
+              <strong
+                style={{
+                  fontSize: "13px",
+                  color: "#354b61",
+                }}
+              >
+                2nd Prize (£)
+              </strong>
 
               <input
                 type="number"
                 min="0"
                 step="0.01"
                 value={secondPrize}
-                onChange={(e) => setSecondPrize(e.target.value)}
+                onChange={(e) =>
+                  setSecondPrize(
+                    e.target.value
+                  )
+                }
                 placeholder="Leave blank for TBC"
                 style={{
                   width: "100%",
                   padding: "12px",
                   marginTop: "6px",
                   borderRadius: "8px",
-                  border: "1px solid #d7dee7",
-                  boxSizing: "border-box",
+                  boxSizing:
+                    "border-box",
                   fontSize: "16px",
                 }}
               />
             </label>
 
-            <p
+            <div
               style={{
-                fontSize: "13px",
-                margin: 0,
+                padding: "11px 12px",
+                borderRadius: "9px",
+                background: "#f1f4f7",
+                border:
+                  "1px solid #d7dee7",
+                color: "#65788c",
+                fontSize: "12px",
+                fontWeight: "700",
               }}
             >
               Leave a prize field blank and the Rules page will show
               <strong> TBC</strong>.
-            </p>
+            </div>
 
             <button
               onClick={saveSettings}
               disabled={saving}
               style={{
-                opacity: saving ? 0.5 : 1,
+                opacity:
+                  saving
+                    ? 0.5
+                    : 1,
               }}
             >
-              {saving ? "Saving..." : "Save Competition Settings"}
+              {saving
+                ? "Saving..."
+                : "Save Competition Settings"}
             </button>
           </div>
         </div>
 
         <a href="/admin">
-          <button>Back to Admin</button>
+          <button>
+            Back to Admin
+          </button>
         </a>
 
         <p className="footer">
