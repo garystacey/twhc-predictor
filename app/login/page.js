@@ -35,13 +35,16 @@ export default function LoginPage() {
 
   return (
     <main className="wow-login-page">
+      {/* BACKGROUND ENERGY */}
+
       <div className="energy energy-blue energy-blue-1" />
       <div className="energy energy-blue energy-blue-2" />
+
       <div className="energy energy-red energy-red-1" />
       <div className="energy energy-red energy-red-2" />
 
       <div className="wow-shell">
-        {/* REAL CLUB BADGE */}
+        {/* REAL TELFORD & WREKIN BADGE */}
 
         <img
           src="/TWHC-badge-white.png"
@@ -53,21 +56,40 @@ export default function LoginPage() {
 
         <div className="wow-brand">
           <div className="wow-title">
-            THE
-            <br className="mobile-title-break" />
+            <span className="wow-the">
+              THE
+            </span>
+
             <span className="wow-title-main">
-              PREDICTO<span className="wow-red-r">R</span>
+              PREDICTO
+              <span className="wow-red-r">
+                R
+              </span>
             </span>
           </div>
 
           <div className="wow-glow-line" />
 
           <div className="wow-tagline">
-            <span className="tag-blue">PREDICT</span>
-            <span className="tag-dot">•</span>
-            <span className="tag-white">COMPETE</span>
-            <span className="tag-dot">•</span>
-            <span className="tag-red">WIN</span>
+            <span className="tag-blue">
+              PREDICT
+            </span>
+
+            <span className="tag-dot">
+              •
+            </span>
+
+            <span className="tag-white">
+              COMPETE
+            </span>
+
+            <span className="tag-dot">
+              •
+            </span>
+
+            <span className="tag-red">
+              WIN
+            </span>
           </div>
         </div>
 
@@ -78,7 +100,9 @@ export default function LoginPage() {
             WELCOME BACK
           </div>
 
-          <h2>Sign In</h2>
+          <h2>
+            Sign In
+          </h2>
 
           <p className="welcome-copy">
             Enter your email address and password to continue
@@ -88,8 +112,12 @@ export default function LoginPage() {
             onSubmit={handleLogin}
             className="wow-form"
           >
+            {/* EMAIL */}
+
             <label>
-              <strong>EMAIL ADDRESS</strong>
+              <strong>
+                EMAIL ADDRESS
+              </strong>
 
               <div className="field-wrap">
                 <span className="field-icon blue-icon">
@@ -108,8 +136,12 @@ export default function LoginPage() {
               </div>
             </label>
 
+            {/* PASSWORD */}
+
             <label>
-              <strong>PASSWORD</strong>
+              <strong>
+                PASSWORD
+              </strong>
 
               <div className="field-wrap">
                 <span className="field-icon red-icon">
@@ -128,6 +160,8 @@ export default function LoginPage() {
               </div>
             </label>
 
+            {/* SIGN IN */}
+
             <button
               type="submit"
               disabled={loading}
@@ -139,6 +173,8 @@ export default function LoginPage() {
             </button>
           </form>
 
+          {/* FORGOT PASSWORD */}
+
           <a
             href="/forgot-password"
             className="wow-forgot"
@@ -146,11 +182,19 @@ export default function LoginPage() {
             Forgot Password?
           </a>
 
+          {/* DIVIDER */}
+
           <div className="wow-divider">
             <div />
-            <span>NEW TO THE PREDICTOR?</span>
+
+            <span>
+              NEW TO THE PREDICTOR?
+            </span>
+
             <div />
           </div>
+
+          {/* CREATE ACCOUNT */}
 
           <a href="/register">
             <button
@@ -161,6 +205,8 @@ export default function LoginPage() {
             </button>
           </a>
 
+          {/* ERROR MESSAGE */}
+
           {message && (
             <div className="wow-message">
               {message}
@@ -168,24 +214,24 @@ export default function LoginPage() {
           )}
         </div>
 
-        <div className="wow-footer">
-          <img
-            src="/TWHC-badge-white.png"
-            alt=""
-            className="wow-footer-badge"
-          />
+        {/* FOOTER */}
 
-          <div>
-            Telford & Wrekin Hockey Club
-          </div>
+        <div className="wow-footer">
+          Telford & Wrekin Hockey Club
         </div>
       </div>
 
       <style jsx>{`
+        /* =====================================================
+           PAGE
+           ===================================================== */
+
         .wow-login-page {
           position: relative;
+
           min-height: 100vh;
           width: 100%;
+
           overflow: hidden;
 
           display: flex;
@@ -227,7 +273,9 @@ export default function LoginPage() {
           text-align: center;
         }
 
-        /* BADGE */
+        /* =====================================================
+           BADGE
+           ===================================================== */
 
         .wow-badge {
           display: block;
@@ -246,33 +294,45 @@ export default function LoginPage() {
             );
         }
 
-        /* BRAND */
+        /* =====================================================
+           BRANDING
+           ===================================================== */
 
         .wow-brand {
           margin-bottom: 22px;
         }
 
         .wow-title {
+          display: flex;
+          align-items: baseline;
+          justify-content: center;
+
+          gap: 10px;
+
           color: #ffffff;
 
-          font-size: 22px;
-          line-height: 0.9;
+          line-height: 0.95;
 
           font-weight: 900;
 
-          letter-spacing: 2px;
+          white-space: nowrap;
 
           text-shadow:
             0 4px 0 rgba(0, 0, 0, 0.28),
             0 0 22px rgba(20, 112, 255, 0.12);
         }
 
+        .wow-the {
+          font-size: 22px;
+
+          letter-spacing: 1px;
+        }
+
         .wow-title-main {
           display: inline-block;
 
-          margin-top: 7px;
-
           font-size: 62px;
+
           letter-spacing: -2px;
 
           white-space: nowrap;
@@ -285,9 +345,7 @@ export default function LoginPage() {
             0 0 20px rgba(237, 28, 36, 0.48);
         }
 
-        .mobile-title-break {
-          display: none;
-        }
+        /* GLOW LINE */
 
         .wow-glow-line {
           width: 82%;
@@ -309,8 +367,11 @@ export default function LoginPage() {
             0 0 15px rgba(35, 128, 255, 0.36);
         }
 
+        /* TAGLINE */
+
         .wow-tagline {
           display: flex;
+
           justify-content: center;
           align-items: center;
 
@@ -338,7 +399,9 @@ export default function LoginPage() {
           color: #8aa0b8;
         }
 
-        /* CARD */
+        /* =====================================================
+           LOGIN CARD
+           ===================================================== */
 
         .wow-login-card {
           position: relative;
@@ -361,7 +424,8 @@ export default function LoginPage() {
 
           box-shadow:
             0 24px 55px rgba(0, 0, 0, 0.55),
-            inset 0 0 24px rgba(255, 255, 255, 0.025);
+            inset 0 0 24px
+              rgba(255, 255, 255, 0.025);
 
           backdrop-filter: blur(10px);
           -webkit-backdrop-filter: blur(10px);
@@ -396,10 +460,13 @@ export default function LoginPage() {
           line-height: 1.45;
         }
 
-        /* FORM */
+        /* =====================================================
+           FORM
+           ===================================================== */
 
         .wow-form {
           display: grid;
+
           gap: 16px;
 
           text-align: left;
@@ -433,6 +500,7 @@ export default function LoginPage() {
           z-index: 2;
 
           display: flex;
+
           align-items: center;
           justify-content: center;
 
@@ -459,7 +527,8 @@ export default function LoginPage() {
           border-radius: 10px;
 
           border:
-            1px solid rgba(144, 166, 201, 0.45) !important;
+            1px solid
+            rgba(144, 166, 201, 0.45) !important;
 
           background:
             rgba(5, 16, 34, 0.62);
@@ -491,7 +560,9 @@ export default function LoginPage() {
               rgba(39, 142, 255, 0.12);
         }
 
-        /* SIGN IN */
+        /* =====================================================
+           SIGN IN BUTTON
+           ===================================================== */
 
         .wow-sign-in {
           min-height: 54px;
@@ -511,14 +582,20 @@ export default function LoginPage() {
 
           box-shadow:
             0 4px 0 rgba(0, 0, 0, 0.3),
-            0 9px 22px rgba(13, 75, 180, 0.28),
-            0 0 20px rgba(237, 28, 36, 0.1);
+            0 9px 22px
+              rgba(13, 75, 180, 0.28),
+            0 0 20px
+              rgba(237, 28, 36, 0.1);
 
           font-size: 15px;
           font-weight: 900;
 
           letter-spacing: 1.2px;
         }
+
+        /* =====================================================
+           FORGOT PASSWORD
+           ===================================================== */
 
         .wow-forgot {
           display: inline-block;
@@ -533,10 +610,13 @@ export default function LoginPage() {
           text-decoration: none;
         }
 
-        /* DIVIDER */
+        /* =====================================================
+           DIVIDER
+           ===================================================== */
 
         .wow-divider {
           display: flex;
+
           align-items: center;
 
           gap: 12px;
@@ -546,6 +626,7 @@ export default function LoginPage() {
 
         .wow-divider div {
           flex: 1;
+
           height: 1px;
 
           background:
@@ -563,7 +644,9 @@ export default function LoginPage() {
           white-space: nowrap;
         }
 
-        /* CREATE */
+        /* =====================================================
+           CREATE ACCOUNT
+           ===================================================== */
 
         .wow-create {
           min-height: 49px;
@@ -590,7 +673,9 @@ export default function LoginPage() {
             rgba(237, 28, 36, 0.08);
         }
 
-        /* ERROR */
+        /* =====================================================
+           ERROR MESSAGE
+           ===================================================== */
 
         .wow-message {
           margin-top: 17px;
@@ -611,51 +696,44 @@ export default function LoginPage() {
           font-weight: 800;
         }
 
-        /* FOOTER */
+        /* =====================================================
+           FOOTER
+           ===================================================== */
 
         .wow-footer {
           margin-top: 23px;
-
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-
-          gap: 7px;
 
           color: #8799ad;
 
           font-size: 11px;
         }
 
-        .wow-footer-badge {
-          width: 42px;
-          height: auto;
-
-          opacity: 0.75;
-        }
-
-        /* ENERGY */
+        /* =====================================================
+           BACKGROUND ENERGY
+           ===================================================== */
 
         .energy {
           position: absolute;
 
           pointer-events: none;
 
-          opacity: 0.65;
+          opacity: 0.55;
         }
 
         .energy-blue {
           background:
             linear-gradient(
               135deg,
-              transparent 15%,
-              rgba(15, 121, 255, 0.95) 48%,
-              transparent 52%
+              transparent 28%,
+              rgba(15, 121, 255, 0.9) 48%,
+              transparent 54%
             );
 
           filter:
+            blur(1px)
             drop-shadow(
-              0 0 12px rgba(15, 121, 255, 0.6)
+              0 0 14px
+              rgba(15, 121, 255, 0.5)
             );
         }
 
@@ -663,58 +741,62 @@ export default function LoginPage() {
           background:
             linear-gradient(
               135deg,
-              transparent 15%,
-              rgba(237, 28, 36, 0.95) 48%,
-              transparent 52%
+              transparent 28%,
+              rgba(237, 28, 36, 0.9) 48%,
+              transparent 54%
             );
 
           filter:
+            blur(1px)
             drop-shadow(
-              0 0 12px rgba(237, 28, 36, 0.5)
+              0 0 14px
+              rgba(237, 28, 36, 0.45)
             );
         }
 
         .energy-blue-1 {
-          width: 470px;
-          height: 170px;
+          width: 520px;
+          height: 95px;
 
-          left: -250px;
-          top: 19%;
+          left: -290px;
+          top: 22%;
 
-          transform: rotate(-8deg);
+          transform: rotate(-13deg);
         }
 
         .energy-blue-2 {
-          width: 390px;
-          height: 150px;
+          width: 440px;
+          height: 85px;
 
-          right: -230px;
-          bottom: 12%;
+          right: -260px;
+          bottom: 13%;
 
-          transform: rotate(7deg);
+          transform: rotate(10deg);
         }
 
         .energy-red-1 {
-          width: 430px;
-          height: 160px;
+          width: 480px;
+          height: 90px;
 
-          right: -250px;
-          top: 25%;
+          right: -280px;
+          top: 28%;
 
-          transform: rotate(8deg);
+          transform: rotate(12deg);
         }
 
         .energy-red-2 {
-          width: 390px;
-          height: 150px;
+          width: 430px;
+          height: 85px;
 
-          left: -220px;
-          bottom: 15%;
+          left: -250px;
+          bottom: 16%;
 
-          transform: rotate(-8deg);
+          transform: rotate(-10deg);
         }
 
-        /* MOBILE */
+        /* =====================================================
+           MOBILE
+           ===================================================== */
 
         @media (max-width: 600px) {
           .wow-login-page {
@@ -726,26 +808,47 @@ export default function LoginPage() {
             max-width: 100%;
           }
 
+          /* BADGE */
+
           .wow-badge {
             width: 92px;
 
-            margin-bottom: 11px;
+            margin-bottom: 13px;
           }
+
+          /* BRAND */
 
           .wow-brand {
             margin-bottom: 17px;
           }
 
           .wow-title {
-            font-size: 17px;
+            gap: 7px;
+
+            line-height: 1;
+
+            white-space: nowrap;
+          }
+
+          .wow-the {
+            font-size: 28px;
+
+            letter-spacing: -0.8px;
           }
 
           .wow-title-main {
-            margin-top: 5px;
+            font-size: 42px;
 
-            font-size: 43px;
+            letter-spacing: -1.5px;
 
-            letter-spacing: -1.4px;
+            white-space: nowrap;
+          }
+
+          .wow-glow-line {
+            width: 86%;
+
+            margin:
+              11px auto 10px;
           }
 
           .wow-tagline {
@@ -756,16 +859,19 @@ export default function LoginPage() {
             letter-spacing: 1.8px;
           }
 
-          .wow-glow-line {
-            margin:
-              10px auto 10px;
-          }
+          /* CARD */
 
           .wow-login-card {
             padding:
               23px 16px 20px;
 
             border-radius: 15px;
+          }
+
+          .welcome-label {
+            font-size: 10px;
+
+            letter-spacing: 1.8px;
           }
 
           .wow-login-card h2 {
@@ -778,6 +884,8 @@ export default function LoginPage() {
             font-size: 12px;
           }
 
+          /* FORM */
+
           .wow-form {
             gap: 14px;
           }
@@ -788,26 +896,73 @@ export default function LoginPage() {
             font-size: 16px;
           }
 
+          /* BUTTON */
+
           .wow-sign-in {
             min-height: 52px;
           }
+
+          /* ENERGY */
+
+          .energy-blue-1 {
+            left: -350px;
+            top: 21%;
+          }
+
+          .energy-red-1 {
+            right: -350px;
+            top: 30%;
+          }
+
+          .energy-blue-2 {
+            right: -330px;
+          }
+
+          .energy-red-2 {
+            left: -330px;
+          }
+
+          /* FOOTER */
+
+          .wow-footer {
+            margin-top: 20px;
+
+            padding-bottom: 12px;
+          }
         }
 
-        /* SMALL PHONES */
+        /* =====================================================
+           SMALL PHONES
+           ===================================================== */
 
         @media (max-width: 380px) {
+          .wow-login-page {
+            padding-left: 9px;
+            padding-right: 9px;
+          }
+
           .wow-badge {
             width: 82px;
           }
 
+          .wow-title {
+            gap: 5px;
+          }
+
+          .wow-the {
+            font-size: 23px;
+          }
+
           .wow-title-main {
-            font-size: 38px;
+            font-size: 35px;
+
+            letter-spacing: -1.3px;
           }
 
           .wow-tagline {
             font-size: 8px;
 
-            letter-spacing: 1.4px;
+            letter-spacing: 1.3px;
           }
 
           .wow-login-card {
