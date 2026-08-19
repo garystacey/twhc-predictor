@@ -17,6 +17,8 @@ export default function CompetitionSettingsPage() {
   const [firstPrize, setFirstPrize] = useState("");
   const [secondPrize, setSecondPrize] = useState("");
   const [paymentDeadline, setPaymentDeadline] = useState("");
+  const [predictionRemindersEnabled, setPredictionRemindersEnabled] =
+    useState(false);
 
   useEffect(() => {
     async function loadSettings() {
@@ -52,7 +54,7 @@ export default function CompetitionSettingsPage() {
       const { data, error } = await supabase
         .from("competition_settings")
         .select(
-          "id, entry_fee, first_prize, second_prize, payment_deadline"
+          "id, entry_fee, first_prize, second_prize, payment_deadline, prediction_reminders_enabled"
         )
         .limit(1)
         .single();
@@ -88,6 +90,10 @@ export default function CompetitionSettingsPage() {
 
       setPaymentDeadline(
         data.payment_deadline || ""
+      );
+
+      setPredictionRemindersEnabled(
+        data.prediction_reminders_enabled === true
       );
 
       setLoading(false);
@@ -133,18 +139,25 @@ export default function CompetitionSettingsPage() {
       .from("competition_settings")
       .update({
         entry_fee: Number(entryFee),
+
         first_prize:
           firstPrize.trim() === ""
             ? null
             : Number(firstPrize),
+
         second_prize:
           secondPrize.trim() === ""
             ? null
             : Number(secondPrize),
+
         payment_deadline:
           paymentDeadline.trim() === ""
             ? null
             : paymentDeadline,
+
+        prediction_reminders_enabled:
+          predictionRemindersEnabled,
+
         updated_at:
           new Date().toISOString(),
       })
@@ -159,6 +172,7 @@ export default function CompetitionSettingsPage() {
     setMessage(
       "Competition settings saved."
     );
+
     setSaving(false);
   }
 
@@ -368,7 +382,7 @@ export default function CompetitionSettingsPage() {
             style={{
               display: "grid",
               gridTemplateColumns:
-                "repeat(auto-fit, minmax(130px, 1fr))",
+                "repeat(auto-fit, minmax(120px, 1fr))",
               gap: "8px",
             }}
           >
@@ -504,6 +518,47 @@ export default function CompetitionSettingsPage() {
                 {formatDatePreview(
                   paymentDeadline
                 )}
+              </div>
+            </div>
+
+            {/* EMAIL REMINDER STATUS */}
+
+            <div
+              style={{
+                padding: "12px 7px",
+                borderRadius: "9px",
+                background:
+                  predictionRemindersEnabled
+                    ? "linear-gradient(135deg, #116b3d 0%, #18a15c 100%)"
+                    : "linear-gradient(135deg, #59697a 0%, #7c8b99 100%)",
+                color: "#ffffff",
+                textAlign: "center",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "9px",
+                  fontWeight: "900",
+                  letterSpacing: "0.7px",
+                  color:
+                    predictionRemindersEnabled
+                      ? "#d9f7e7"
+                      : "#edf1f4",
+                }}
+              >
+                EMAIL REMINDERS
+              </div>
+
+              <div
+                style={{
+                  marginTop: "4px",
+                  fontSize: "20px",
+                  fontWeight: "900",
+                }}
+              >
+                {predictionRemindersEnabled
+                  ? "ON"
+                  : "OFF"}
               </div>
             </div>
           </div>
@@ -697,9 +752,118 @@ export default function CompetitionSettingsPage() {
                   lineHeight: 1.4,
                 }}
               >
-                Unpaid entrants will be reminded on the Predictor home page.
+                Unpaid entrants will be reminded on the
+                Predictor home page.
               </div>
             </label>
+
+            {/* PREDICTION REMINDER EMAILS */}
+
+            <div
+              style={{
+                padding: "15px",
+                borderRadius: "10px",
+                background:
+                  predictionRemindersEnabled
+                    ? "#edf8f2"
+                    : "#f1f4f7",
+                border:
+                  predictionRemindersEnabled
+                    ? "1px solid #acd8be"
+                    : "1px solid #d7dee7",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: "15px",
+                }}
+              >
+                <div
+                  style={{
+                    flex: 1,
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: "13px",
+                      fontWeight: "900",
+                      color: "#071d36",
+                    }}
+                  >
+                    Prediction Reminder Emails
+                  </div>
+
+                  <div
+                    style={{
+                      marginTop: "5px",
+                      color: "#65788c",
+                      fontSize: "11px",
+                      fontWeight: "700",
+                      lineHeight: 1.45,
+                    }}
+                  >
+                    Send an automatic reminder to entrants
+                    who have not completed all their
+                    predictions approximately 24 hours
+                    before that Match Week closes.
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    setPredictionRemindersEnabled(
+                      (current) => !current
+                    )
+                  }
+                  style={{
+                    width: "74px",
+                    minWidth: "74px",
+                    padding: "11px 8px",
+                    margin: 0,
+                    borderRadius: "9px",
+                    border: "none",
+                    background:
+                      predictionRemindersEnabled
+                        ? "#16884e"
+                        : "#68798a",
+                    color: "#ffffff",
+                    fontSize: "12px",
+                    fontWeight: "900",
+                    boxShadow:
+                      predictionRemindersEnabled
+                        ? "0 3px 0 #0d5f35"
+                        : "0 3px 0 #465565",
+                    cursor: "pointer",
+                  }}
+                >
+                  {predictionRemindersEnabled
+                    ? "ON"
+                    : "OFF"}
+                </button>
+              </div>
+
+              <div
+                style={{
+                  marginTop: "11px",
+                  padding: "9px 10px",
+                  borderRadius: "8px",
+                  background: "#ffffff",
+                  color: "#71869a",
+                  fontSize: "10px",
+                  fontWeight: "700",
+                  lineHeight: 1.45,
+                }}
+              >
+                Each reminder will check only the specific
+                Match Week approaching its deadline. Any
+                later Match Weeks already open for
+                predictions are ignored.
+              </div>
+            </div>
 
             {/* INFO */}
 
@@ -716,10 +880,17 @@ export default function CompetitionSettingsPage() {
                 lineHeight: 1.5,
               }}
             >
-              Leave a prize field blank and the Rules page will show
+              Leave a prize field blank and the Rules page
+              will show
               <strong> TBC</strong>.
               <br />
-              Leave the payment closing date blank if you do not want to show a payment deadline.
+
+              Leave the payment closing date blank if you
+              do not want to show a payment deadline.
+              <br />
+
+              Prediction reminder emails can be switched
+              on or off at any time.
             </div>
 
             {/* SAVE */}
