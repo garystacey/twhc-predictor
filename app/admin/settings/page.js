@@ -10,15 +10,20 @@ export default function CompetitionSettingsPage() {
   const [authorised, setAuthorised] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [savingReminder, setSavingReminder] = useState(false);
   const [message, setMessage] = useState("");
 
   const [settingsId, setSettingsId] = useState(null);
+
   const [entryFee, setEntryFee] = useState("10");
   const [firstPrize, setFirstPrize] = useState("");
   const [secondPrize, setSecondPrize] = useState("");
   const [paymentDeadline, setPaymentDeadline] = useState("");
-  const [predictionRemindersEnabled, setPredictionRemindersEnabled] =
-    useState(false);
+
+  const [
+    predictionRemindersEnabled,
+    setPredictionRemindersEnabled,
+  ] = useState(false);
 
   useEffect(() => {
     async function loadSettings() {
@@ -31,7 +36,10 @@ export default function CompetitionSettingsPage() {
         return;
       }
 
-      const { data: profile, error: profileError } = await supabase
+      const {
+        data: profile,
+        error: profileError,
+      } = await supabase
         .from("profiles")
         .select("role")
         .eq("id", user.id)
@@ -45,13 +53,17 @@ export default function CompetitionSettingsPage() {
         setMessage(
           "You do not have permission to access this page."
         );
+
         setLoading(false);
         return;
       }
 
       setAuthorised(true);
 
-      const { data, error } = await supabase
+      const {
+        data,
+        error,
+      } = await supabase
         .from("competition_settings")
         .select(
           "id, entry_fee, first_prize, second_prize, payment_deadline, prediction_reminders_enabled"
@@ -102,10 +114,17 @@ export default function CompetitionSettingsPage() {
     loadSettings();
   }, [router]);
 
+  /* =====================================================
+     SAVE MAIN SETTINGS
+     ===================================================== */
+
   async function saveSettings() {
     if (!settingsId) return;
 
-    if (!entryFee || Number(entryFee) < 0) {
+    if (
+      !entryFee ||
+      Number(entryFee) < 0
+    ) {
       setMessage(
         "Please enter a valid entry fee."
       );
@@ -135,10 +154,13 @@ export default function CompetitionSettingsPage() {
     setSaving(true);
     setMessage("");
 
-    const { error } = await supabase
+    const {
+      error,
+    } = await supabase
       .from("competition_settings")
       .update({
-        entry_fee: Number(entryFee),
+        entry_fee:
+          Number(entryFee),
 
         first_prize:
           firstPrize.trim() === ""
@@ -161,10 +183,16 @@ export default function CompetitionSettingsPage() {
         updated_at:
           new Date().toISOString(),
       })
-      .eq("id", settingsId);
+      .eq(
+        "id",
+        settingsId
+      );
 
     if (error) {
-      setMessage(error.message);
+      setMessage(
+        `Unable to save settings: ${error.message}`
+      );
+
       setSaving(false);
       return;
     }
@@ -176,6 +204,84 @@ export default function CompetitionSettingsPage() {
     setSaving(false);
   }
 
+  /* =====================================================
+     SAVE REMINDER SWITCH IMMEDIATELY
+     ===================================================== */
+
+  async function togglePredictionReminders() {
+    if (
+      !settingsId ||
+      savingReminder
+    ) {
+      return;
+    }
+
+    const newValue =
+      !predictionRemindersEnabled;
+
+    setSavingReminder(true);
+    setMessage("");
+
+    const {
+      data,
+      error,
+    } = await supabase
+      .from("competition_settings")
+      .update({
+        prediction_reminders_enabled:
+          newValue,
+
+        updated_at:
+          new Date().toISOString(),
+      })
+      .eq(
+        "id",
+        settingsId
+      )
+      .select(
+        "prediction_reminders_enabled"
+      )
+      .single();
+
+    if (error) {
+      setMessage(
+        `Unable to change reminder emails: ${error.message}`
+      );
+
+      setSavingReminder(false);
+      return;
+    }
+
+    if (
+      !data ||
+      data.prediction_reminders_enabled !==
+        newValue
+    ) {
+      setMessage(
+        "The reminder setting could not be confirmed. Please try again."
+      );
+
+      setSavingReminder(false);
+      return;
+    }
+
+    setPredictionRemindersEnabled(
+      data.prediction_reminders_enabled
+    );
+
+    setMessage(
+      newValue
+        ? "Prediction reminder emails switched ON."
+        : "Prediction reminder emails switched OFF."
+    );
+
+    setSavingReminder(false);
+  }
+
+  /* =====================================================
+     FORMATTING
+     ===================================================== */
+
   function formatPreview(value) {
     if (
       value === null ||
@@ -185,17 +291,24 @@ export default function CompetitionSettingsPage() {
       return "TBC";
     }
 
-    const amount = Number(value);
+    const amount =
+      Number(value);
 
-    if (Number.isNaN(amount)) {
+    if (
+      Number.isNaN(amount)
+    ) {
       return "TBC";
     }
 
-    if (Number.isInteger(amount)) {
+    if (
+      Number.isInteger(amount)
+    ) {
       return `£${amount}`;
     }
 
-    return `£${amount.toFixed(2)}`;
+    return `£${amount.toFixed(
+      2
+    )}`;
   }
 
   function formatDatePreview(value) {
@@ -203,11 +316,16 @@ export default function CompetitionSettingsPage() {
       return "TBC";
     }
 
-    const date = new Date(
-      `${value}T12:00:00`
-    );
+    const date =
+      new Date(
+        `${value}T12:00:00`
+      );
 
-    if (Number.isNaN(date.getTime())) {
+    if (
+      Number.isNaN(
+        date.getTime()
+      )
+    ) {
       return "TBC";
     }
 
@@ -220,6 +338,10 @@ export default function CompetitionSettingsPage() {
       }
     );
   }
+
+  /* =====================================================
+     HEADER
+     ===================================================== */
 
   function Header() {
     return (
@@ -290,6 +412,10 @@ export default function CompetitionSettingsPage() {
     );
   }
 
+  /* =====================================================
+     LOADING
+     ===================================================== */
+
   if (loading) {
     return (
       <main>
@@ -310,6 +436,10 @@ export default function CompetitionSettingsPage() {
       </main>
     );
   }
+
+  /* =====================================================
+     ACCESS DENIED
+     ===================================================== */
 
   if (!authorised) {
     return (
@@ -342,6 +472,10 @@ export default function CompetitionSettingsPage() {
     );
   }
 
+  /* =====================================================
+     PAGE
+     ===================================================== */
+
   return (
     <main>
       <div
@@ -351,6 +485,8 @@ export default function CompetitionSettingsPage() {
         }}
       >
         <Header />
+
+        {/* MESSAGE */}
 
         {message && (
           <div
@@ -370,7 +506,9 @@ export default function CompetitionSettingsPage() {
           </div>
         )}
 
-        {/* CURRENT SETTINGS PREVIEW */}
+        {/* =================================================
+            CURRENT SETTINGS PREVIEW
+            ================================================= */}
 
         <div
           className="card"
@@ -415,7 +553,9 @@ export default function CompetitionSettingsPage() {
                   fontWeight: "900",
                 }}
               >
-                {formatPreview(entryFee)}
+                {formatPreview(
+                  entryFee
+                )}
               </div>
             </div>
 
@@ -448,7 +588,9 @@ export default function CompetitionSettingsPage() {
                   fontWeight: "900",
                 }}
               >
-                {formatPreview(firstPrize)}
+                {formatPreview(
+                  firstPrize
+                )}
               </div>
             </div>
 
@@ -480,7 +622,9 @@ export default function CompetitionSettingsPage() {
                   fontWeight: "900",
                 }}
               >
-                {formatPreview(secondPrize)}
+                {formatPreview(
+                  secondPrize
+                )}
               </div>
             </div>
 
@@ -521,16 +665,18 @@ export default function CompetitionSettingsPage() {
               </div>
             </div>
 
-            {/* EMAIL REMINDER STATUS */}
+            {/* EMAIL REMINDERS */}
 
             <div
               style={{
                 padding: "12px 7px",
                 borderRadius: "9px",
+
                 background:
                   predictionRemindersEnabled
                     ? "linear-gradient(135deg, #116b3d 0%, #18a15c 100%)"
                     : "linear-gradient(135deg, #59697a 0%, #7c8b99 100%)",
+
                 color: "#ffffff",
                 textAlign: "center",
               }}
@@ -540,6 +686,7 @@ export default function CompetitionSettingsPage() {
                   fontSize: "9px",
                   fontWeight: "900",
                   letterSpacing: "0.7px",
+
                   color:
                     predictionRemindersEnabled
                       ? "#d9f7e7"
@@ -564,7 +711,9 @@ export default function CompetitionSettingsPage() {
           </div>
         </div>
 
-        {/* EDIT SETTINGS */}
+        {/* =================================================
+            EDIT SETTINGS
+            ================================================= */}
 
         <div
           className="card"
@@ -635,8 +784,7 @@ export default function CompetitionSettingsPage() {
                   padding: "12px",
                   marginTop: "6px",
                   borderRadius: "8px",
-                  boxSizing:
-                    "border-box",
+                  boxSizing: "border-box",
                   fontSize: "16px",
                 }}
               />
@@ -670,8 +818,7 @@ export default function CompetitionSettingsPage() {
                   padding: "12px",
                   marginTop: "6px",
                   borderRadius: "8px",
-                  boxSizing:
-                    "border-box",
+                  boxSizing: "border-box",
                   fontSize: "16px",
                 }}
               />
@@ -705,8 +852,7 @@ export default function CompetitionSettingsPage() {
                   padding: "12px",
                   marginTop: "6px",
                   borderRadius: "8px",
-                  boxSizing:
-                    "border-box",
+                  boxSizing: "border-box",
                   fontSize: "16px",
                 }}
               />
@@ -737,8 +883,7 @@ export default function CompetitionSettingsPage() {
                   padding: "12px",
                   marginTop: "6px",
                   borderRadius: "8px",
-                  boxSizing:
-                    "border-box",
+                  boxSizing: "border-box",
                   fontSize: "16px",
                 }}
               />
@@ -757,16 +902,20 @@ export default function CompetitionSettingsPage() {
               </div>
             </label>
 
-            {/* PREDICTION REMINDER EMAILS */}
+            {/* =================================================
+                PREDICTION REMINDER EMAILS
+                ================================================= */}
 
             <div
               style={{
                 padding: "15px",
                 borderRadius: "10px",
+
                 background:
                   predictionRemindersEnabled
                     ? "#edf8f2"
                     : "#f1f4f7",
+
                 border:
                   predictionRemindersEnabled
                     ? "1px solid #acd8be"
@@ -814,33 +963,53 @@ export default function CompetitionSettingsPage() {
 
                 <button
                   type="button"
-                  onClick={() =>
-                    setPredictionRemindersEnabled(
-                      (current) => !current
-                    )
+                  disabled={
+                    savingReminder
+                  }
+                  onClick={
+                    togglePredictionReminders
                   }
                   style={{
-                    width: "74px",
-                    minWidth: "74px",
+                    width: "76px",
+                    minWidth: "76px",
+
                     padding: "11px 8px",
                     margin: 0,
+
                     borderRadius: "9px",
                     border: "none",
+
                     background:
-                      predictionRemindersEnabled
+                      savingReminder
+                        ? "#9aa6b1"
+                        : predictionRemindersEnabled
                         ? "#16884e"
                         : "#68798a",
+
                     color: "#ffffff",
+
                     fontSize: "12px",
                     fontWeight: "900",
+
                     boxShadow:
                       predictionRemindersEnabled
                         ? "0 3px 0 #0d5f35"
                         : "0 3px 0 #465565",
-                    cursor: "pointer",
+
+                    cursor:
+                      savingReminder
+                        ? "wait"
+                        : "pointer",
+
+                    opacity:
+                      savingReminder
+                        ? 0.7
+                        : 1,
                   }}
                 >
-                  {predictionRemindersEnabled
+                  {savingReminder
+                    ? "SAVING"
+                    : predictionRemindersEnabled
                     ? "ON"
                     : "OFF"}
                 </button>
@@ -863,9 +1032,26 @@ export default function CompetitionSettingsPage() {
                 later Match Weeks already open for
                 predictions are ignored.
               </div>
+
+              <div
+                style={{
+                  marginTop: "8px",
+                  color:
+                    predictionRemindersEnabled
+                      ? "#16733f"
+                      : "#71869a",
+                  fontSize: "10px",
+                  fontWeight: "900",
+                }}
+              >
+                STATUS:{" "}
+                {predictionRemindersEnabled
+                  ? "AUTOMATIC REMINDERS ENABLED"
+                  : "AUTOMATIC REMINDERS DISABLED"}
+              </div>
             </div>
 
-            {/* INFO */}
+            {/* INFORMATION */}
 
             <div
               style={{
@@ -889,15 +1075,19 @@ export default function CompetitionSettingsPage() {
               do not want to show a payment deadline.
               <br />
 
-              Prediction reminder emails can be switched
-              on or off at any time.
+              The Prediction Reminder Emails switch saves
+              immediately when changed.
             </div>
 
-            {/* SAVE */}
+            {/* SAVE MAIN SETTINGS */}
 
             <button
-              onClick={saveSettings}
-              disabled={saving}
+              onClick={
+                saveSettings
+              }
+              disabled={
+                saving
+              }
               style={{
                 opacity:
                   saving
@@ -911,6 +1101,8 @@ export default function CompetitionSettingsPage() {
             </button>
           </div>
         </div>
+
+        {/* BACK */}
 
         <a href="/admin">
           <button>
