@@ -16,6 +16,7 @@ export default function CompetitionSettingsPage() {
   const [entryFee, setEntryFee] = useState("10");
   const [firstPrize, setFirstPrize] = useState("");
   const [secondPrize, setSecondPrize] = useState("");
+  const [paymentDeadline, setPaymentDeadline] = useState("");
 
   useEffect(() => {
     async function loadSettings() {
@@ -51,7 +52,7 @@ export default function CompetitionSettingsPage() {
       const { data, error } = await supabase
         .from("competition_settings")
         .select(
-          "id, entry_fee, first_prize, second_prize"
+          "id, entry_fee, first_prize, second_prize, payment_deadline"
         )
         .limit(1)
         .single();
@@ -83,6 +84,10 @@ export default function CompetitionSettingsPage() {
           data.second_prize !== undefined
           ? String(data.second_prize)
           : ""
+      );
+
+      setPaymentDeadline(
+        data.payment_deadline || ""
       );
 
       setLoading(false);
@@ -136,6 +141,10 @@ export default function CompetitionSettingsPage() {
           secondPrize.trim() === ""
             ? null
             : Number(secondPrize),
+        payment_deadline:
+          paymentDeadline.trim() === ""
+            ? null
+            : paymentDeadline,
         updated_at:
           new Date().toISOString(),
       })
@@ -173,6 +182,29 @@ export default function CompetitionSettingsPage() {
     }
 
     return `£${amount.toFixed(2)}`;
+  }
+
+  function formatDatePreview(value) {
+    if (!value) {
+      return "TBC";
+    }
+
+    const date = new Date(
+      `${value}T12:00:00`
+    );
+
+    if (Number.isNaN(date.getTime())) {
+      return "TBC";
+    }
+
+    return date.toLocaleDateString(
+      "en-GB",
+      {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      }
+    );
   }
 
   function Header() {
@@ -336,10 +368,12 @@ export default function CompetitionSettingsPage() {
             style={{
               display: "grid",
               gridTemplateColumns:
-                "repeat(3, 1fr)",
+                "repeat(auto-fit, minmax(130px, 1fr))",
               gap: "8px",
             }}
           >
+            {/* ENTRY */}
+
             <div
               style={{
                 padding: "12px 7px",
@@ -370,6 +404,8 @@ export default function CompetitionSettingsPage() {
                 {formatPreview(entryFee)}
               </div>
             </div>
+
+            {/* 1ST PRIZE */}
 
             <div
               style={{
@@ -402,6 +438,8 @@ export default function CompetitionSettingsPage() {
               </div>
             </div>
 
+            {/* 2ND PRIZE */}
+
             <div
               style={{
                 padding: "12px 7px",
@@ -431,6 +469,43 @@ export default function CompetitionSettingsPage() {
                 {formatPreview(secondPrize)}
               </div>
             </div>
+
+            {/* PAYMENT DEADLINE */}
+
+            <div
+              style={{
+                padding: "12px 7px",
+                borderRadius: "9px",
+                background:
+                  "linear-gradient(135deg, #8f1018 0%, #d71920 100%)",
+                color: "#ffffff",
+                textAlign: "center",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "9px",
+                  fontWeight: "900",
+                  letterSpacing: "0.7px",
+                  color: "#ffd9dc",
+                }}
+              >
+                PAYMENT DEADLINE
+              </div>
+
+              <div
+                style={{
+                  marginTop: "4px",
+                  fontSize: "15px",
+                  fontWeight: "900",
+                  lineHeight: 1.2,
+                }}
+              >
+                {formatDatePreview(
+                  paymentDeadline
+                )}
+              </div>
+            </div>
           </div>
         </div>
 
@@ -456,7 +531,7 @@ export default function CompetitionSettingsPage() {
                 color: "#7c8fa2",
               }}
             >
-              COMPETITION FINANCES
+              COMPETITION SETTINGS
             </div>
 
             <div
@@ -467,7 +542,7 @@ export default function CompetitionSettingsPage() {
                 color: "#071d36",
               }}
             >
-              Entry & Prize Money
+              Entry, Prizes & Payment
             </div>
           </div>
 
@@ -478,6 +553,8 @@ export default function CompetitionSettingsPage() {
               textAlign: "left",
             }}
           >
+            {/* ENTRY FEE */}
+
             <label>
               <strong
                 style={{
@@ -509,6 +586,8 @@ export default function CompetitionSettingsPage() {
                 }}
               />
             </label>
+
+            {/* 1ST PRIZE */}
 
             <label>
               <strong
@@ -543,6 +622,8 @@ export default function CompetitionSettingsPage() {
               />
             </label>
 
+            {/* 2ND PRIZE */}
+
             <label>
               <strong
                 style={{
@@ -576,6 +657,52 @@ export default function CompetitionSettingsPage() {
               />
             </label>
 
+            {/* PAYMENT DEADLINE */}
+
+            <label>
+              <strong
+                style={{
+                  fontSize: "13px",
+                  color: "#354b61",
+                }}
+              >
+                Payment Closing Date
+              </strong>
+
+              <input
+                type="date"
+                value={paymentDeadline}
+                onChange={(e) =>
+                  setPaymentDeadline(
+                    e.target.value
+                  )
+                }
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  marginTop: "6px",
+                  borderRadius: "8px",
+                  boxSizing:
+                    "border-box",
+                  fontSize: "16px",
+                }}
+              />
+
+              <div
+                style={{
+                  marginTop: "6px",
+                  color: "#71869a",
+                  fontSize: "11px",
+                  fontWeight: "700",
+                  lineHeight: 1.4,
+                }}
+              >
+                Unpaid entrants will be reminded on the Predictor home page.
+              </div>
+            </label>
+
+            {/* INFO */}
+
             <div
               style={{
                 padding: "11px 12px",
@@ -586,11 +713,16 @@ export default function CompetitionSettingsPage() {
                 color: "#65788c",
                 fontSize: "12px",
                 fontWeight: "700",
+                lineHeight: 1.5,
               }}
             >
               Leave a prize field blank and the Rules page will show
               <strong> TBC</strong>.
+              <br />
+              Leave the payment closing date blank if you do not want to show a payment deadline.
             </div>
+
+            {/* SAVE */}
 
             <button
               onClick={saveSettings}
