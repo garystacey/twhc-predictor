@@ -44,82 +44,345 @@ export default function RulesPage() {
     return `£${amount.toFixed(2)}`;
   }
 
+  const ruleCardStyle = {
+    padding: "18px 16px",
+    marginBottom: "14px",
+  };
+
+  const bodyStyle = {
+    textAlign: "left",
+    lineHeight: "1.6",
+    color: "#42566b",
+    fontSize: "14px",
+  };
+
   return (
     <main>
-      <div className="container">
-        <img
-          src="/TWHC-badge-white.png"
-          alt="Telford & Wrekin Hockey Club"
-          className="club-logo"
-        />
+      <div
+        className="container"
+        style={{
+          maxWidth: "760px",
+        }}
+      >
+        {/* HEADER */}
 
-        <h1>THE PREDICTOR</h1>
-        <p className="subtitle">Competition Rules</p>
-
-        <div className="card">
-          <h2>Entry Fee & Prize Money</h2>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "11px",
+            marginBottom: "16px",
+          }}
+        >
+          <img
+            src="/TWHC-badge-white.png"
+            alt="Telford & Wrekin Hockey Club"
+            style={{
+              display: "block",
+              width: "58px",
+              height: "auto",
+              margin: 0,
+              filter:
+                "drop-shadow(0 4px 8px rgba(0,0,0,0.35))",
+            }}
+          />
 
           <div
             style={{
               textAlign: "left",
-              lineHeight: "1.6",
             }}
           >
+            <div
+              style={{
+                fontSize: "27px",
+                lineHeight: 0.95,
+                fontWeight: "900",
+                letterSpacing: "-1.2px",
+                color: "#ffffff",
+                whiteSpace: "nowrap",
+                textShadow:
+                  "0 2px 8px rgba(0,0,0,0.35)",
+              }}
+            >
+              THE PREDICTO
+              <span
+                style={{
+                  color: "#ed1c24",
+                  textShadow:
+                    "0 0 12px rgba(237,28,36,0.32)",
+                }}
+              >
+                R
+              </span>
+            </div>
+
+            <div
+              style={{
+                marginTop: "5px",
+                fontSize: "11px",
+                fontWeight: "900",
+                letterSpacing: "1.4px",
+                color: "#a9bfd5",
+              }}
+            >
+              COMPETITION RULES
+            </div>
+          </div>
+        </div>
+
+        {/* INTRO */}
+
+        <div
+          style={{
+            marginBottom: "15px",
+            textAlign: "center",
+            color: "#b9cee2",
+            fontSize: "12px",
+            fontWeight: "700",
+          }}
+        >
+          Everything you need to know about playing The Predictor.
+        </div>
+
+        {/* ENTRY FEE */}
+
+        <div
+          className="card"
+          style={{
+            ...ruleCardStyle,
+            border:
+              "1px solid rgba(237,28,36,0.28)",
+          }}
+        >
+          <div
+            style={{
+              marginBottom: "14px",
+              textAlign: "left",
+            }}
+          >
+            <div
+              style={{
+                fontSize: "10px",
+                fontWeight: "900",
+                letterSpacing: "1px",
+                color: "#c2171f",
+              }}
+            >
+              ENTRY & PRIZES
+            </div>
+
+            <h2
+              style={{
+                marginTop: "3px",
+                marginBottom: 0,
+              }}
+            >
+              Entry Fee & Prize Money
+            </h2>
+          </div>
+
+          <div style={bodyStyle}>
             {loadingSettings ? (
               <p>Loading competition details...</p>
             ) : (
               <>
+                <div
+                  style={{
+                    padding: "13px 14px",
+                    marginBottom: "14px",
+                    borderRadius: "10px",
+                    background:
+                      "linear-gradient(135deg, #071d36 0%, #0c2c50 100%)",
+                    color: "#ffffff",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: "10px",
+                      fontWeight: "900",
+                      letterSpacing: "0.8px",
+                      color: "#b9cee2",
+                    }}
+                  >
+                    ENTRY FEE
+                  </div>
+
+                  <div
+                    style={{
+                      marginTop: "3px",
+                      fontSize: "24px",
+                      fontWeight: "900",
+                    }}
+                  >
+                    {formatMoney(settings.entry_fee)}
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    display: "grid",
+                    gap: "10px",
+                    marginBottom: "15px",
+                  }}
+                >
+                  <div
+                    style={{
+                      padding: "12px 13px",
+                      borderRadius: "9px",
+                      background: "#f4f7fa",
+                      border: "1px solid #d7e0e9",
+                    }}
+                  >
+                    <strong
+                      style={{
+                        color: "#071d36",
+                      }}
+                    >
+                      Pay via Teamo
+                    </strong>
+
+                    <div
+                      style={{
+                        marginTop: "4px",
+                      }}
+                    >
+                      The entry fee can be paid via the{" "}
+                      <strong>
+                        Telford & Wrekin HC Teamo app
+                      </strong>
+                      .
+                    </div>
+                  </div>
+
+                  <div
+                    style={{
+                      padding: "12px 13px",
+                      borderRadius: "9px",
+                      background: "#fff6f6",
+                      border: "1px solid #f0c6c8",
+                    }}
+                  >
+                    <strong
+                      style={{
+                        color: "#b6161d",
+                      }}
+                    >
+                      Not registered on Teamo?
+                    </strong>
+
+                    <div
+                      style={{
+                        marginTop: "4px",
+                      }}
+                    >
+                      If you are not registered on the Teamo app,
+                      payment can also be made at the{" "}
+                      <strong>hockey pitch café</strong> via{" "}
+                      <strong>SumUp</strong>.
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns:
+                      "repeat(auto-fit, minmax(140px, 1fr))",
+                    gap: "8px",
+                    marginBottom: "15px",
+                  }}
+                >
+                  <div
+                    style={{
+                      padding: "12px",
+                      borderRadius: "9px",
+                      background: "#f7f2dc",
+                      border: "1px solid #e1cf86",
+                      textAlign: "center",
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: "9px",
+                        fontWeight: "900",
+                        color: "#8a6b00",
+                      }}
+                    >
+                      1ST PRIZE
+                    </div>
+
+                    <div
+                      style={{
+                        marginTop: "3px",
+                        fontSize: "18px",
+                        fontWeight: "900",
+                        color: "#6a5300",
+                      }}
+                    >
+                      {formatMoney(settings.first_prize)}
+                    </div>
+                  </div>
+
+                  <div
+                    style={{
+                      padding: "12px",
+                      borderRadius: "9px",
+                      background: "#eef1f4",
+                      border: "1px solid #cfd6dd",
+                      textAlign: "center",
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: "9px",
+                        fontWeight: "900",
+                        color: "#657382",
+                      }}
+                    >
+                      2ND PRIZE
+                    </div>
+
+                    <div
+                      style={{
+                        marginTop: "3px",
+                        fontSize: "18px",
+                        fontWeight: "900",
+                        color: "#4f5d6a",
+                      }}
+                    >
+                      {formatMoney(settings.second_prize)}
+                    </div>
+                  </div>
+                </div>
+
                 <p>
-                  <strong>
-                    Entry Fee: {formatMoney(settings.entry_fee)}
-                  </strong>
+                  Prize amounts will be confirmed once the prize fund has
+                  been finalised.
                 </p>
 
                 <p>
-                  The entry fee is to be paid via the
-                  <strong> Telford & Wrekin HC Teamo app</strong>.
+                  If two or more entrants are tied for 1st place, the 1st
+                  and 2nd prize funds will be combined and divided equally
+                  between the joint winners.
                 </p>
 
                 <p>
-                  <strong>
-                    1st Prize: {formatMoney(settings.first_prize)}
-                  </strong>
-                  <br />
-                  <strong>
-                    2nd Prize: {formatMoney(settings.second_prize)}
-                  </strong>
-                </p>
-
-                <p>
-                  Prize amounts will be confirmed once the prize fund
-                  has been finalised.
-                </p>
-
-                <p>
-                  If two or more entrants are tied for 1st place, the
-                  1st and 2nd prize funds will be combined and divided
-                  equally between the joint winners.
-                </p>
-
-                <p>
-                  If there is one outright winner and two or more
-                  entrants are tied for 2nd place, the 2nd prize will be
-                  divided equally between those entrants.
+                  If there is one outright winner and two or more entrants
+                  are tied for 2nd place, the 2nd prize will be divided
+                  equally between those entrants.
                 </p>
               </>
             )}
           </div>
         </div>
 
-        <div className="card">
+        {/* HOW TO PLAY */}
+
+        <div className="card" style={ruleCardStyle}>
           <h2>How To Play</h2>
 
-          <div
-            style={{
-              textAlign: "left",
-              lineHeight: "1.6",
-            }}
-          >
+          <div style={bodyStyle}>
             <p>
               Each Match Week you predict the result of the listed
               Telford & Wrekin Hockey Club fixtures.
@@ -127,54 +390,115 @@ export default function RulesPage() {
 
             <p>For every fixture, choose one of:</p>
 
-            <p>
-              <strong>H</strong> — Home Win
-              <br />
-              <strong>D</strong> — Draw
-              <br />
-              <strong>A</strong> — Away Win
-            </p>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns:
+                  "repeat(3, 1fr)",
+                gap: "8px",
+              }}
+            >
+              {[
+                ["H", "Home Win"],
+                ["D", "Draw"],
+                ["A", "Away Win"],
+              ].map(([letter, text]) => (
+                <div
+                  key={letter}
+                  style={{
+                    padding: "12px 8px",
+                    borderRadius: "9px",
+                    background: "#f3f6f9",
+                    border: "1px solid #d7dee7",
+                    textAlign: "center",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "34px",
+                      height: "34px",
+                      margin: "0 auto 6px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderRadius: "50%",
+                      background: "#071d36",
+                      color: "#ffffff",
+                      fontWeight: "900",
+                    }}
+                  >
+                    {letter}
+                  </div>
+
+                  <strong>{text}</strong>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
-        <div className="card">
+        {/* SCORING */}
+
+        <div className="card" style={ruleCardStyle}>
           <h2>Scoring</h2>
 
-          <div
-            style={{
-              textAlign: "left",
-              lineHeight: "1.6",
-            }}
-          >
+          <div style={bodyStyle}>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns:
+                  "repeat(2, 1fr)",
+                gap: "8px",
+                marginBottom: "12px",
+              }}
+            >
+              <div
+                style={{
+                  padding: "12px",
+                  borderRadius: "9px",
+                  background: "#e7f7ed",
+                  border: "1px solid #aad8bb",
+                  color: "#16733f",
+                  textAlign: "center",
+                  fontWeight: "900",
+                }}
+              >
+                ✓ Correct = 1 point
+              </div>
+
+              <div
+                style={{
+                  padding: "12px",
+                  borderRadius: "9px",
+                  background: "#f8ecec",
+                  border: "1px solid #e4b4b7",
+                  color: "#a51b22",
+                  textAlign: "center",
+                  fontWeight: "900",
+                }}
+              >
+                ✕ Incorrect = 0 points
+              </div>
+            </div>
+
             <p>
-              <strong>Correct prediction: 1 point</strong>
+              Points are calculated automatically once the actual fixture
+              results have been entered.
             </p>
 
             <p>
-              <strong>Incorrect prediction: 0 points</strong>
-            </p>
-
-            <p>
-              Points are calculated automatically once the actual
-              fixture results have been entered.
-            </p>
-
-            <p>
-              Cancelled fixtures do not count and no points can be won
-              or lost on them.
+              Cancelled fixtures do not count and no points can be won or
+              lost on them.
             </p>
           </div>
         </div>
 
-        <div className="card">
+        {/* PREDICTION WINDOWS */}
+
+        <div className="card" style={ruleCardStyle}>
           <h2>Prediction Windows</h2>
 
-          <div
-            style={{
-              textAlign: "left",
-              lineHeight: "1.6",
-            }}
-          >
+          <div style={bodyStyle}>
             <p>
               Each Match Week has its own opening time and prediction
               deadline.
@@ -197,15 +521,12 @@ export default function RulesPage() {
           </div>
         </div>
 
-        <div className="card">
+        {/* MISSED PREDICTIONS */}
+
+        <div className="card" style={ruleCardStyle}>
           <h2>Missed Predictions</h2>
 
-          <div
-            style={{
-              textAlign: "left",
-              lineHeight: "1.6",
-            }}
-          >
+          <div style={bodyStyle}>
             <p>You do not have to predict every fixture.</p>
 
             <p>
@@ -221,15 +542,12 @@ export default function RulesPage() {
           </div>
         </div>
 
-        <div className="card">
+        {/* POSTPONED */}
+
+        <div className="card" style={ruleCardStyle}>
           <h2>Postponed Fixtures</h2>
 
-          <div
-            style={{
-              textAlign: "left",
-              lineHeight: "1.6",
-            }}
-          >
+          <div style={bodyStyle}>
             <p>
               If a fixture is postponed, your original prediction will
               remain valid.
@@ -252,15 +570,12 @@ export default function RulesPage() {
           </div>
         </div>
 
-        <div className="card">
+        {/* CANCELLED */}
+
+        <div className="card" style={ruleCardStyle}>
           <h2>Cancelled Fixtures</h2>
 
-          <div
-            style={{
-              textAlign: "left",
-              lineHeight: "1.6",
-            }}
-          >
+          <div style={bodyStyle}>
             <p>
               If a fixture is cancelled and will not be played, it will
               be removed from the active prediction list.
@@ -284,15 +599,12 @@ export default function RulesPage() {
           </div>
         </div>
 
-        <div className="card">
+        {/* LEADERBOARDS */}
+
+        <div className="card" style={ruleCardStyle}>
           <h2>Leaderboards</h2>
 
-          <div
-            style={{
-              textAlign: "left",
-              lineHeight: "1.6",
-            }}
-          >
+          <div style={bodyStyle}>
             <p>
               <strong>Overall Leaderboard</strong>
               <br />
@@ -324,15 +636,12 @@ export default function RulesPage() {
           </div>
         </div>
 
-        <div className="card">
+        {/* TIES */}
+
+        <div className="card" style={ruleCardStyle}>
           <h2>Tied Positions</h2>
 
-          <div
-            style={{
-              textAlign: "left",
-              lineHeight: "1.6",
-            }}
-          >
+          <div style={bodyStyle}>
             <p>
               Entrants with the same number of points share the same
               leaderboard position.
@@ -340,23 +649,28 @@ export default function RulesPage() {
 
             <p>Standard competition ranking is used.</p>
 
-            <p>
-              For example:
-              <br />
-              <strong>1st, 1st, 3rd</strong>
-            </p>
+            <div
+              style={{
+                padding: "11px 12px",
+                borderRadius: "9px",
+                background: "#f3f6f9",
+                border: "1px solid #d7dee7",
+                textAlign: "center",
+                fontWeight: "900",
+                color: "#071d36",
+              }}
+            >
+              Example: 1st, 1st, 3rd
+            </div>
           </div>
         </div>
 
-        <div className="card">
+        {/* PROVISIONAL */}
+
+        <div className="card" style={ruleCardStyle}>
           <h2>Provisional Standings</h2>
 
-          <div
-            style={{
-              textAlign: "left",
-              lineHeight: "1.6",
-            }}
-          >
+          <div style={bodyStyle}>
             <p>
               Weekly standings may be shown as provisional while some
               fixture results are still outstanding.
@@ -374,15 +688,12 @@ export default function RulesPage() {
           </div>
         </div>
 
-        <div className="card">
+        {/* ACCOUNTS */}
+
+        <div className="card" style={ruleCardStyle}>
           <h2>Accounts & Team Names</h2>
 
-          <div
-            style={{
-              textAlign: "left",
-              lineHeight: "1.6",
-            }}
-          >
+          <div style={bodyStyle}>
             <p>
               Predictions are linked to your individual Predictor
               account.
@@ -400,15 +711,12 @@ export default function RulesPage() {
           </div>
         </div>
 
-        <div className="card">
+        {/* FAIR PLAY */}
+
+        <div className="card" style={ruleCardStyle}>
           <h2>Fair Play</h2>
 
-          <div
-            style={{
-              textAlign: "left",
-              lineHeight: "1.6",
-            }}
-          >
+          <div style={bodyStyle}>
             <p>
               The Predictor is intended as a fun club competition.
             </p>
@@ -422,7 +730,9 @@ export default function RulesPage() {
         </div>
 
         <a href="/predictor">
-          <button>Back to Predictor</button>
+          <button>
+            Back to Predictor
+          </button>
         </a>
 
         <p className="footer">
