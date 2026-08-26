@@ -92,17 +92,27 @@ export default function AdminDashboardPage() {
     }
 
     initialiseAdmin();
+  }, [router]);
 
+  /* =====================================================
+     CLEAN UP GENERATED IMAGE URLS
+  ===================================================== */
+
+  useEffect(() => {
     return () => {
       if (weeklyPosterUrl) {
         URL.revokeObjectURL(weeklyPosterUrl);
       }
+    };
+  }, [weeklyPosterUrl]);
 
+  useEffect(() => {
+    return () => {
       if (overallPosterUrl) {
         URL.revokeObjectURL(overallPosterUrl);
       }
     };
-  }, [router]);
+  }, [overallPosterUrl]);
 
   /* =====================================================
      SIGN OUT
@@ -150,6 +160,21 @@ export default function AdminDashboardPage() {
 
     const fixtureRows = fixtures || [];
 
+    /*
+      Cancelled fixtures are ignored.
+
+      Any other fixture without a result is considered
+      outstanding / provisional.
+    */
+
+    const outstandingFixtures = fixtureRows.filter(
+      (fixture) =>
+        fixture.status !== "cancelled" &&
+        !fixture.result
+    );
+
+    const outstandingCount = outstandingFixtures.length;
+
     const fixtureIds = fixtureRows.map(
       (fixture) => fixture.id
     );
@@ -172,45 +197,22 @@ export default function AdminDashboardPage() {
       predictions = data || [];
     }
 
-    const pendingFixtures = fixtureRows.filter(
-      (fixture) =>
-        fixture.status !== "cancelled" &&
-        !fixture.result
-    );
-
-    if (pendingFixtures.length > 0) {
-      throw new Error(
-        `${pendingFixtures.length} fixture ${
-          pendingFixtures.length === 1
-            ? "result is"
-            : "results are"
-        } still outstanding for Match Week ${selectedWeek?.week_no}. Enter all results before generating the weekly poster.`
-      );
-    }
-
     const resultByFixture = {};
     const statusByFixture = {};
 
     fixtureRows.forEach((fixture) => {
-      resultByFixture[fixture.id] =
-        fixture.result;
-
-      statusByFixture[fixture.id] =
-        fixture.status;
+      resultByFixture[fixture.id] = fixture.result;
+      statusByFixture[fixture.id] = fixture.status;
     });
 
     const pointsByUser = {};
 
     predictions.forEach((prediction) => {
       const actualResult =
-        resultByFixture[
-          prediction.fixture_id
-        ];
+        resultByFixture[prediction.fixture_id];
 
       const fixtureStatus =
-        statusByFixture[
-          prediction.fixture_id
-        ];
+        statusByFixture[prediction.fixture_id];
 
       if (
         fixtureStatus !== "cancelled" &&
@@ -236,10 +238,8 @@ export default function AdminDashboardPage() {
         id: profile.id,
         firstName: profile.first_name || "",
         surname: profile.surname || "",
-        teamName:
-          profile.team_name || "Unnamed Team",
-        points:
-          pointsByUser[profile.id] || 0,
+        teamName: profile.team_name || "Unnamed Team",
+        points: pointsByUser[profile.id] || 0,
       }))
       .sort((a, b) => {
         if (b.points !== a.points) {
@@ -251,16 +251,17 @@ export default function AdminDashboardPage() {
         );
       });
 
-    return rankRows(rows);
+    return {
+      rows: rankRows(rows),
+      outstandingCount,
+    };
   }
 
   /* =====================================================
      OVERALL LEADERBOARD THROUGH SELECTED WEEK
   ===================================================== */
 
-  async function getOverallLeaderboardThroughWeek(
-    week
-  ) {
+  async function getOverallLeaderboardThroughWeek(week) {
     if (!week) {
       throw new Error(
         "Please select a Match Week."
@@ -346,25 +347,18 @@ export default function AdminDashboardPage() {
     const statusByFixture = {};
 
     fixtureRows.forEach((fixture) => {
-      resultByFixture[fixture.id] =
-        fixture.result;
-
-      statusByFixture[fixture.id] =
-        fixture.status;
+      resultByFixture[fixture.id] = fixture.result;
+      statusByFixture[fixture.id] = fixture.status;
     });
 
     const pointsByUser = {};
 
     predictions.forEach((prediction) => {
       const actualResult =
-        resultByFixture[
-          prediction.fixture_id
-        ];
+        resultByFixture[prediction.fixture_id];
 
       const fixtureStatus =
-        statusByFixture[
-          prediction.fixture_id
-        ];
+        statusByFixture[prediction.fixture_id];
 
       if (
         fixtureStatus !== "cancelled" &&
@@ -390,10 +384,8 @@ export default function AdminDashboardPage() {
         id: profile.id,
         firstName: profile.first_name || "",
         surname: profile.surname || "",
-        teamName:
-          profile.team_name || "Unnamed Team",
-        points:
-          pointsByUser[profile.id] || 0,
+        teamName: profile.team_name || "Unnamed Team",
+        points: pointsByUser[profile.id] || 0,
       }))
       .sort((a, b) => {
         if (b.points !== a.points) {
@@ -409,7 +401,7 @@ export default function AdminDashboardPage() {
   }
 
   /* =====================================================
-     GENERATE POSTER #1
+     GENERATE WEEKLY POSTER
   ===================================================== */
 
   async function generateWeeklyPoster() {
@@ -424,10 +416,12 @@ export default function AdminDashboardPage() {
     setPosterMessage("");
 
     try {
-      const weeklyRows =
+      const weeklyData =
         await getWeeklyLeaderboard(
           selectedWeek.id
         );
+
+      const weeklyRows = weeklyData.rows;
 
       if (weeklyRows.length === 0) {
         throw new Error(
@@ -435,14 +429,11 @@ export default function AdminDashboardPage() {
         );
       }
 
-      const topScore =
-        weeklyRows[0].points;
+      const topScore = weeklyRows[0].points;
 
-      const winners =
-        weeklyRows.filter(
-          (row) =>
-            row.points === topScore
-        );
+      const leaders = weeklyRows.filter(
+        (row) => row.points === topScore
+      );
 
       const canvas =
         document.createElement("canvas");
@@ -450,14 +441,14 @@ export default function AdminDashboardPage() {
       canvas.width = POSTER_WIDTH;
       canvas.height = POSTER_HEIGHT;
 
-      const ctx =
-        canvas.getContext("2d");
+      const ctx = canvas.getContext("2d");
 
       await drawWeeklyPoster(
         ctx,
         selectedWeek,
         weeklyRows,
-        winners
+        leaders,
+        weeklyData.outstandingCount
       );
 
       const blob =
@@ -466,17 +457,17 @@ export default function AdminDashboardPage() {
       const url =
         URL.createObjectURL(blob);
 
-      if (weeklyPosterUrl) {
-        URL.revokeObjectURL(
-          weeklyPosterUrl
-        );
-      }
-
       setWeeklyPosterUrl(url);
 
-      setPosterMessage(
-        `Weekly Poster #1 created for Match Week ${selectedWeek.week_no}.`
-      );
+      if (weeklyData.outstandingCount > 0) {
+        setPosterMessage(
+          `Provisional Weekly Poster created for Match Week ${selectedWeek.week_no}. ${weeklyData.outstandingCount} result${weeklyData.outstandingCount === 1 ? "" : "s"} still to be submitted.`
+        );
+      } else {
+        setPosterMessage(
+          `Final Weekly Poster created for Match Week ${selectedWeek.week_no}.`
+        );
+      }
     } catch (error) {
       setPosterMessage(
         error.message ||
@@ -488,7 +479,7 @@ export default function AdminDashboardPage() {
   }
 
   /* =====================================================
-     GENERATE POSTER #2
+     GENERATE OVERALL POSTER
   ===================================================== */
 
   async function generateOverallPoster() {
@@ -520,8 +511,7 @@ export default function AdminDashboardPage() {
       canvas.width = POSTER_WIDTH;
       canvas.height = POSTER_HEIGHT;
 
-      const ctx =
-        canvas.getContext("2d");
+      const ctx = canvas.getContext("2d");
 
       await drawOverallPoster(
         ctx,
@@ -534,12 +524,6 @@ export default function AdminDashboardPage() {
 
       const url =
         URL.createObjectURL(blob);
-
-      if (overallPosterUrl) {
-        URL.revokeObjectURL(
-          overallPosterUrl
-        );
-      }
 
       setOverallPosterUrl(url);
 
@@ -625,10 +609,6 @@ export default function AdminDashboardPage() {
     );
   }
 
-  /* =====================================================
-     LOADING / ACCESS
-  ===================================================== */
-
   if (loading) {
     return (
       <main>
@@ -670,10 +650,6 @@ export default function AdminDashboardPage() {
     );
   }
 
-  /* =====================================================
-     PAGE
-  ===================================================== */
-
   return (
     <main>
       <div
@@ -693,7 +669,7 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* =================================================
-            EXISTING ADMIN TOOLS
+            ADMIN TOOLS
         ================================================= */}
 
         <div className="adminGrid">
@@ -769,7 +745,7 @@ export default function AdminDashboardPage() {
           <div className="weekSelectorPanel">
             <div>
               <div className="fieldEyebrow">
-                SELECT COMPLETED MATCH WEEK
+                SELECT MATCH WEEK
               </div>
 
               <div className="fieldLabel">
@@ -813,8 +789,6 @@ export default function AdminDashboardPage() {
           )}
 
           <div className="posterGeneratorGrid">
-            {/* WEEKLY POSTER */}
-
             <div className="posterGeneratorCard weekly">
               <div className="generatorTag blue">
                 WEEKLY POSTER #1
@@ -829,7 +803,7 @@ export default function AdminDashboardPage() {
               </h3>
 
               <p>
-                Match Week winner plus the weekly Top 5.
+                Weekly leader or winner plus the weekly Top 5.
               </p>
 
               <button
@@ -854,8 +828,6 @@ export default function AdminDashboardPage() {
                 />
               )}
             </div>
-
-            {/* OVERALL POSTER */}
 
             <div className="posterGeneratorCard overall">
               <div className="generatorTag red">
@@ -902,16 +874,12 @@ export default function AdminDashboardPage() {
             <span>ⓘ</span>
 
             <div>
-              Posters use your live Predictor data. Make sure all
-              Match Week results have been entered before generating
-              the images.
+              Posters use your live Predictor data. If results are
+              outstanding, the weekly poster will automatically be
+              marked as provisional.
             </div>
           </div>
         </section>
-
-        {/* =================================================
-            FOOTER BUTTONS
-        ================================================= */}
 
         <a href="/predictor">
           <button>
@@ -970,10 +938,6 @@ export default function AdminDashboardPage() {
           gap: 14px;
           margin-bottom: 24px;
         }
-
-        /* =================================================
-           SOCIAL POSTER ADMIN
-        ================================================= */
 
         .socialPosterSection {
           position: relative;
@@ -1042,8 +1006,6 @@ export default function AdminDashboardPage() {
             );
           color: #ffffff;
           font-size: 27px;
-          box-shadow:
-            0 0 24px rgba(0, 128, 255, 0.09);
         }
 
         .socialEyebrow {
@@ -1143,16 +1105,10 @@ export default function AdminDashboardPage() {
 
         .posterGeneratorCard.weekly {
           border: 1px solid rgba(35, 133, 239, 0.72);
-          box-shadow:
-            inset 0 0 30px rgba(0, 116, 255, 0.045),
-            0 0 22px rgba(0, 116, 255, 0.07);
         }
 
         .posterGeneratorCard.overall {
           border: 1px solid rgba(237, 45, 53, 0.68);
-          box-shadow:
-            inset 0 0 30px rgba(237, 28, 36, 0.04),
-            0 0 22px rgba(237, 28, 36, 0.065);
         }
 
         .generatorTag {
@@ -1189,7 +1145,6 @@ export default function AdminDashboardPage() {
           color: #ffffff;
           font-size: 21px;
           font-weight: 950;
-          letter-spacing: -0.4px;
         }
 
         .posterGeneratorCard p {
@@ -1226,9 +1181,6 @@ export default function AdminDashboardPage() {
               #2c65e9,
               #135dc3
             );
-          box-shadow:
-            0 3px 0 #0756a7,
-            0 6px 15px rgba(0, 80, 180, 0.25);
         }
 
         .overallButton {
@@ -1239,9 +1191,6 @@ export default function AdminDashboardPage() {
               #ed1c24,
               #ff3140
             );
-          box-shadow:
-            0 3px 0 #8d0911,
-            0 6px 15px rgba(160, 0, 15, 0.24);
         }
 
         .posterPreviewWrap {
@@ -1404,33 +1353,23 @@ function rankRows(rows) {
   let previousPoints = null;
   let previousPosition = 0;
 
-  return rows.map(
-    (row, index) => {
-      let position;
+  return rows.map((row, index) => {
+    let position;
 
-      if (
-        row.points ===
-        previousPoints
-      ) {
-        position =
-          previousPosition;
-      } else {
-        position =
-          index + 1;
-      }
-
-      previousPoints =
-        row.points;
-
-      previousPosition =
-        position;
-
-      return {
-        ...row,
-        position,
-      };
+    if (row.points === previousPoints) {
+      position = previousPosition;
+    } else {
+      position = index + 1;
     }
-  );
+
+    previousPoints = row.points;
+    previousPosition = position;
+
+    return {
+      ...row,
+      position,
+    };
+  });
 }
 
 /* =====================================================
@@ -1438,25 +1377,23 @@ function rankRows(rows) {
 ===================================================== */
 
 function canvasToBlob(canvas) {
-  return new Promise(
-    (resolve, reject) => {
-      canvas.toBlob(
-        (blob) => {
-          if (blob) {
-            resolve(blob);
-          } else {
-            reject(
-              new Error(
-                "Could not create PNG image."
-              )
-            );
-          }
-        },
-        "image/png",
-        1
-      );
-    }
-  );
+  return new Promise((resolve, reject) => {
+    canvas.toBlob(
+      (blob) => {
+        if (blob) {
+          resolve(blob);
+        } else {
+          reject(
+            new Error(
+              "Could not create PNG image."
+            )
+          );
+        }
+      },
+      "image/png",
+      1
+    );
+  });
 }
 
 function roundedRect(
@@ -1474,7 +1411,6 @@ function roundedRect(
   );
 
   ctx.beginPath();
-
   ctx.moveTo(x + r, y);
 
   ctx.arcTo(
@@ -1573,8 +1509,7 @@ function fitFont(
       `900 ${size}px ${fontFamily}, Arial, sans-serif`;
 
     if (
-      ctx.measureText(text).width <=
-      maxWidth
+      ctx.measureText(text).width <= maxWidth
     ) {
       break;
     }
@@ -1691,8 +1626,6 @@ function drawPosterBackground(ctx) {
     POSTER_HEIGHT
   );
 
-  /* BLUE GLOW */
-
   const blueGlow =
     ctx.createRadialGradient(
       100,
@@ -1721,8 +1654,6 @@ function drawPosterBackground(ctx) {
     POSTER_WIDTH,
     POSTER_HEIGHT
   );
-
-  /* RED GLOW */
 
   const redGlow =
     ctx.createRadialGradient(
@@ -1753,15 +1684,11 @@ function drawPosterBackground(ctx) {
     POSTER_HEIGHT
   );
 
-  /* STREAKS */
-
   ctx.save();
-
   ctx.lineCap = "round";
 
   for (let i = 0; i < 18; i += 1) {
-    const y =
-      75 + i * 66;
+    const y = 75 + i * 66;
 
     ctx.beginPath();
 
@@ -1787,8 +1714,7 @@ function drawPosterBackground(ctx) {
   }
 
   for (let i = 0; i < 17; i += 1) {
-    const y =
-      160 + i * 65;
+    const y = 160 + i * 65;
 
     ctx.beginPath();
 
@@ -1815,15 +1741,9 @@ function drawPosterBackground(ctx) {
 
   ctx.restore();
 
-  /* STARS */
-
   ctx.save();
 
-  for (
-    let i = 0;
-    i < 115;
-    i += 1
-  ) {
+  for (let i = 0; i < 115; i += 1) {
     const x =
       pseudoRandom(i * 1.73) *
       POSTER_WIDTH;
@@ -1866,28 +1786,22 @@ function pseudoRandom(seed) {
     Math.sin(seed * 999.91) *
     43758.5453;
 
-  return (
-    value -
-    Math.floor(value)
-  );
+  return value - Math.floor(value);
 }
 
 async function loadBadge() {
-  return new Promise(
-    (resolve) => {
-      const image =
-        new Image();
+  return new Promise((resolve) => {
+    const image = new Image();
 
-      image.onload = () =>
-        resolve(image);
+    image.onload = () =>
+      resolve(image);
 
-      image.onerror = () =>
-        resolve(null);
+    image.onerror = () =>
+      resolve(null);
 
-      image.src =
-        "/TWHC-badge-white.png";
-    }
-  );
+    image.src =
+      "/TWHC-badge-white.png";
+  });
 }
 
 async function drawPosterBrand(ctx) {
@@ -1925,8 +1839,6 @@ async function drawPosterBrand(ctx) {
     "Impact"
   );
 
-  ctx.save();
-
   const lineGradient =
     ctx.createLinearGradient(
       285,
@@ -1959,8 +1871,6 @@ async function drawPosterBrand(ctx) {
     630,
     5
   );
-
-  ctx.restore();
 
   ctx.textAlign = "center";
 
@@ -2028,9 +1938,7 @@ function drawMedal(
     Math.PI * 2
   );
 
-  ctx.fillStyle =
-    gradient;
-
+  ctx.fillStyle = gradient;
   ctx.fill();
 
   ctx.lineWidth = 2;
@@ -2045,8 +1953,7 @@ function drawMedal(
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
 
-  ctx.fillStyle =
-    "#ffffff";
+  ctx.fillStyle = "#ffffff";
 
   ctx.font =
     `900 ${Math.round(
@@ -2059,25 +1966,38 @@ function drawMedal(
     y + 1
   );
 
-  ctx.textBaseline =
-    "alphabetic";
+  ctx.textBaseline = "alphabetic";
 }
 
 /* =====================================================
    WEEKLY POSTER
+
+   FINAL:
+   WEEKLY WINNER!
+
+   OUTSTANDING RESULT(S):
+   WEEKLY LEADER!
+   + PROVISIONAL RIDER
 ===================================================== */
 
 async function drawWeeklyPoster(
   ctx,
   week,
   rows,
-  winners
+  leaders,
+  outstandingCount
 ) {
   drawPosterBackground(ctx);
 
   await drawPosterBrand(ctx);
 
-  /* WEEK BANNER */
+  const isProvisional =
+    outstandingCount > 0;
+
+  const joint =
+    leaders.length > 1;
+
+  /* MATCH WEEK */
 
   fillRoundedRect(
     ctx,
@@ -2112,14 +2032,25 @@ async function drawWeeklyPoster(
     "Impact"
   );
 
-  const joint =
-    winners.length > 1;
+  /* WINNER / LEADER HEADING */
+
+  let mainHeading;
+
+  if (isProvisional) {
+    mainHeading =
+      joint
+        ? "JOINT WEEKLY LEADERS!"
+        : "WEEKLY LEADER!";
+  } else {
+    mainHeading =
+      joint
+        ? "JOINT WEEKLY WINNERS!"
+        : "WEEKLY WINNER!";
+  }
 
   drawCenteredText(
     ctx,
-    joint
-      ? "JOINT WEEKLY WINNERS!"
-      : "WEEKLY WINNER!",
+    mainHeading,
     540,
     362,
     900,
@@ -2129,7 +2060,7 @@ async function drawWeeklyPoster(
     "Impact"
   );
 
-  /* HERO WINNER */
+  /* HERO */
 
   const heroGradient =
     ctx.createLinearGradient(
@@ -2175,8 +2106,6 @@ async function drawWeeklyPoster(
     3
   );
 
-  /* TROPHY */
-
   ctx.save();
 
   ctx.shadowColor =
@@ -2190,25 +2119,25 @@ async function drawWeeklyPoster(
   ctx.textAlign = "center";
 
   ctx.fillText(
-    "🏆",
+    isProvisional ? "👑" : "🏆",
     218,
     555
   );
 
   ctx.restore();
 
-  const winnerText =
-    winners
+  const leaderText =
+    leaders
       .slice(0, 2)
       .map(
-        (winner) =>
-          winner.teamName
+        (leader) =>
+          leader.teamName
       )
       .join(" / ");
 
   drawCenteredText(
     ctx,
-    winnerText.toUpperCase(),
+    leaderText.toUpperCase(),
     655,
     485,
     590,
@@ -2219,11 +2148,11 @@ async function drawWeeklyPoster(
   );
 
   const playerText =
-    winners
+    leaders
       .slice(0, 2)
       .map(
-        (winner) =>
-          `${winner.firstName} ${winner.surname}`.trim()
+        (leader) =>
+          `${leader.firstName} ${leader.surname}`.trim()
       )
       .join(" / ");
 
@@ -2276,14 +2205,16 @@ async function drawWeeklyPoster(
     "Impact"
   );
 
-  /* TOP 5 */
+  /* TOP FIVE */
 
   drawCenteredText(
     ctx,
-    "WEEKLY TOP 5",
+    isProvisional
+      ? "CURRENT WEEKLY TOP 5"
+      : "WEEKLY TOP 5",
     540,
     710,
-    520,
+    600,
     45,
     32,
     "#f5f6f8",
@@ -2297,34 +2228,114 @@ async function drawWeeklyPoster(
       x: 80,
       y: 745,
       width: 920,
-      rowHeight: 84,
+      rowHeight: 78,
       showPlayer: true,
     }
   );
 
-  drawCenteredText(
-    ctx,
-    "GREAT PREDICTIONS THIS WEEK!",
-    540,
-    1225,
-    820,
-    39,
-    28,
-    "#168eff",
-    "Impact"
-  );
+  /*
+    PROVISIONAL RIDER
+  */
 
-  drawCenteredText(
-    ctx,
-    "WELL DONE EVERYONE.",
-    540,
-    1272,
-    780,
-    35,
-    26,
-    "#ffffff",
-    "Impact"
-  );
+  if (isProvisional) {
+    const riderY = 1200;
+
+    const riderGradient =
+      ctx.createLinearGradient(
+        80,
+        0,
+        1000,
+        0
+      );
+
+    riderGradient.addColorStop(
+      0,
+      "rgba(151,86,0,0.92)"
+    );
+
+    riderGradient.addColorStop(
+      0.5,
+      "rgba(119,62,0,0.96)"
+    );
+
+    riderGradient.addColorStop(
+      1,
+      "rgba(151,86,0,0.92)"
+    );
+
+    fillRoundedRect(
+      ctx,
+      80,
+      riderY,
+      920,
+      78,
+      15,
+      riderGradient
+    );
+
+    strokeRoundedRect(
+      ctx,
+      80,
+      riderY,
+      920,
+      78,
+      15,
+      "#ffb31c",
+      3
+    );
+
+    drawCenteredText(
+      ctx,
+      "PROVISIONAL STANDINGS",
+      540,
+      riderY + 31,
+      800,
+      25,
+      20,
+      "#ffd45a",
+      "Arial Black"
+    );
+
+    drawCenteredText(
+      ctx,
+      `${outstandingCount} RESULT${
+        outstandingCount === 1
+          ? ""
+          : "S"
+      } STILL TO BE SUBMITTED`,
+      540,
+      riderY + 61,
+      800,
+      22,
+      17,
+      "#ffffff",
+      "Arial Black"
+    );
+  } else {
+    drawCenteredText(
+      ctx,
+      "GREAT PREDICTIONS THIS WEEK!",
+      540,
+      1225,
+      820,
+      39,
+      28,
+      "#168eff",
+      "Impact"
+    );
+
+    drawCenteredText(
+      ctx,
+      "WELL DONE EVERYONE.",
+      540,
+      1272,
+      780,
+      35,
+      26,
+      "#ffffff",
+      "Impact"
+    );
+  }
 
   drawPosterFooter(ctx);
 }
@@ -2387,10 +2398,7 @@ async function drawOverallPoster(
     "Impact"
   );
 
-  /* LEADER HERO */
-
-  const leader =
-    rows[0];
+  const leader = rows[0];
 
   const heroGradient =
     ctx.createLinearGradient(
@@ -2439,8 +2447,7 @@ async function drawOverallPoster(
   ctx.font =
     "74px Arial";
 
-  ctx.textAlign =
-    "center";
+  ctx.textAlign = "center";
 
   ctx.fillText(
     "🏆",
@@ -2474,9 +2481,7 @@ async function drawOverallPoster(
 
   drawCenteredText(
     ctx,
-    String(
-      leader.points
-    ),
+    String(leader.points),
     894,
     507,
     135,
@@ -2499,8 +2504,6 @@ async function drawOverallPoster(
     "#c8a746",
     "Arial Black"
   );
-
-  /* TOP 10 TABLE */
 
   drawLeaderboardTable(
     ctx,
@@ -2583,8 +2586,6 @@ function drawLeaderboardTable(
     2
   );
 
-  /* HEAD */
-
   ctx.fillStyle =
     "rgba(10,45,79,0.86)";
 
@@ -2605,11 +2606,9 @@ function drawLeaderboardTable(
   ctx.font =
     "900 15px Arial Black, Arial, sans-serif";
 
-  ctx.textBaseline =
-    "middle";
+  ctx.textBaseline = "middle";
 
-  ctx.textAlign =
-    "center";
+  ctx.textAlign = "center";
 
   ctx.fillText(
     "POS",
@@ -2617,8 +2616,7 @@ function drawLeaderboardTable(
     y + 24
   );
 
-  ctx.textAlign =
-    "left";
+  ctx.textAlign = "left";
 
   ctx.fillText(
     "TEAM",
@@ -2634,8 +2632,7 @@ function drawLeaderboardTable(
     y + 24
   );
 
-  ctx.textAlign =
-    "right";
+  ctx.textAlign = "right";
 
   ctx.fillText(
     "POINTS",
@@ -2711,11 +2708,8 @@ function drawLeaderboardTable(
           "Impact"
         );
 
-      ctx.textAlign =
-        "left";
-
-      ctx.textBaseline =
-        "middle";
+      ctx.textAlign = "left";
+      ctx.textBaseline = "middle";
 
       ctx.font =
         `900 ${teamSize}px Impact, Arial Black, Arial`;
@@ -2728,8 +2722,7 @@ function drawLeaderboardTable(
       ctx.fillText(
         row.teamName.toUpperCase(),
         x + 108,
-        top +
-          rowHeight / 2
+        top + rowHeight / 2
       );
 
       const player =
@@ -2756,12 +2749,10 @@ function drawLeaderboardTable(
         x +
           width -
           (compact ? 355 : 390),
-        top +
-          rowHeight / 2
+        top + rowHeight / 2
       );
 
-      ctx.textAlign =
-        "right";
+      ctx.textAlign = "right";
 
       ctx.font =
         `900 ${
@@ -2776,14 +2767,12 @@ function drawLeaderboardTable(
       ctx.fillText(
         String(row.points),
         x + width - 28,
-        top +
-          rowHeight / 2
+        top + rowHeight / 2
       );
     }
   );
 
-  ctx.textBaseline =
-    "alphabetic";
+  ctx.textBaseline = "alphabetic";
 }
 
 /* =====================================================
@@ -2793,8 +2782,7 @@ function drawLeaderboardTable(
 function drawPosterFooter(ctx) {
   ctx.save();
 
-  ctx.textAlign =
-    "center";
+  ctx.textAlign = "center";
 
   ctx.fillStyle =
     "rgba(255,255,255,0.62)";
