@@ -62,17 +62,12 @@ export default function PredictionsPage() {
         return;
       }
 
-      const fixtureIds = (fixtureData || []).map(
-        (fixture) => fixture.id
-      );
+      const fixtureIds = (fixtureData || []).map((fixture) => fixture.id);
 
       let savedChoices = {};
 
       if (fixtureIds.length > 0) {
-        const {
-          data: predictionData,
-          error: predictionError,
-        } = await supabase
+        const { data: predictionData, error: predictionError } = await supabase
           .from("predictions")
           .select("fixture_id, prediction")
           .eq("user_id", user.id)
@@ -143,19 +138,17 @@ export default function PredictionsPage() {
       return;
     }
 
-    const { error } = await supabase
-      .from("predictions")
-      .upsert(
-        {
-          user_id: user.id,
-          fixture_id: fixtureId,
-          prediction: resultMap[result],
-          updated_at: new Date().toISOString(),
-        },
-        {
-          onConflict: "user_id,fixture_id",
-        }
-      );
+    const { error } = await supabase.from("predictions").upsert(
+      {
+        user_id: user.id,
+        fixture_id: fixtureId,
+        prediction: resultMap[result],
+        updated_at: new Date().toISOString(),
+      },
+      {
+        onConflict: "user_id,fixture_id",
+      }
+    );
 
     if (error) {
       setMessage(error.message);
@@ -168,13 +161,15 @@ export default function PredictionsPage() {
     }));
 
     setMessage("Prediction saved");
+
+    window.setTimeout(() => {
+      setMessage((current) =>
+        current === "Prediction saved" ? "" : current
+      );
+    }, 1200);
   }
 
-  async function clearAllPredictions(
-    weekFixtures,
-    weekNo,
-    isOpen
-  ) {
+  async function clearAllPredictions(weekFixtures, weekNo, isOpen) {
     if (!isOpen) return;
 
     const confirmed = window.confirm(
@@ -226,17 +221,12 @@ export default function PredictionsPage() {
       return updatedChoices;
     });
 
-    setMessage(
-      `All predictions cleared for Match Week ${weekNo}.`
-    );
-
+    setMessage(`All predictions cleared for Match Week ${weekNo}.`);
     setClearingAll(false);
   }
 
   function formatDate(dateString) {
-    return new Date(
-      `${dateString}T12:00:00`
-    ).toLocaleDateString("en-GB", {
+    return new Date(`${dateString}T12:00:00`).toLocaleDateString("en-GB", {
       weekday: "short",
       day: "numeric",
       month: "short",
@@ -256,63 +246,19 @@ export default function PredictionsPage() {
 
   if (loading) {
     return (
-      <main>
-        <div
-          className="container"
-          style={{ maxWidth: "760px" }}
-        >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "10px",
-              marginBottom: "18px",
-            }}
-          >
-            <img
-              src="/TWHC-badge-white.png"
-              alt="Telford & Wrekin Hockey Club"
-              style={{
-                width: "54px",
-                height: "auto",
-                margin: 0,
-              }}
-            />
+      <main className="wowPage">
+        <BackgroundFX />
 
-            <div style={{ textAlign: "left" }}>
-              <div
-                style={{
-                  fontSize: "24px",
-                  lineHeight: 1,
-                  fontWeight: "900",
-                  letterSpacing: "-1px",
-                }}
-              >
-                THE PREDICTO
-                <span style={{ color: "#ed1c24" }}>
-                  R
-                </span>
-              </div>
+        <div className="pageShell">
+          <BrandHeader />
 
-              <div
-                style={{
-                  marginTop: "4px",
-                  fontSize: "11px",
-                  fontWeight: "800",
-                  letterSpacing: "1.2px",
-                  color: "#9eb5cc",
-                }}
-              >
-                MAKE YOUR PREDICTIONS
-              </div>
-            </div>
-          </div>
-
-          <div className="card">
-            <p>Loading fixtures...</p>
+          <div className="loadingCard">
+            <div className="loadingDot" />
+            Loading fixtures...
           </div>
         </div>
+
+        <Styles />
       </main>
     );
   }
@@ -332,668 +278,1325 @@ export default function PredictionsPage() {
   );
 
   return (
-    <main>
-      <div
-        className="container"
-        style={{ maxWidth: "760px" }}
-      >
-        {/* COMPACT INTERNAL HEADER */}
+    <main className="wowPage">
+      <BackgroundFX />
 
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "11px",
-            marginBottom: "16px",
-          }}
-        >
-          <img
-            src="/TWHC-badge-white.png"
-            alt="Telford & Wrekin Hockey Club"
-            style={{
-              display: "block",
-              width: "58px",
-              height: "auto",
-              margin: 0,
-              filter:
-                "drop-shadow(0 4px 8px rgba(0,0,0,0.35))",
-            }}
-          />
-
-          <div
-            style={{
-              textAlign: "left",
-            }}
-          >
-            <div
-              style={{
-                fontSize: "27px",
-                lineHeight: 0.95,
-                fontWeight: "900",
-                letterSpacing: "-1.2px",
-                color: "#ffffff",
-                textShadow:
-                  "0 2px 8px rgba(0,0,0,0.35)",
-                whiteSpace: "nowrap",
-              }}
-            >
-              THE PREDICTO
-              <span
-                style={{
-                  color: "#ed1c24",
-                  textShadow:
-                    "0 0 12px rgba(237,28,36,0.32)",
-                }}
-              >
-                R
-              </span>
-            </div>
-
-            <div
-              style={{
-                marginTop: "5px",
-                fontSize: "11px",
-                fontWeight: "900",
-                letterSpacing: "1.4px",
-                color: "#a9bfd5",
-              }}
-            >
-              MAKE YOUR PREDICTIONS
-            </div>
-          </div>
-        </div>
-
-        {/* MESSAGE */}
+      <div className="pageShell">
+        <BrandHeader />
 
         {message && (
           <div
-            className="card"
-            style={{
-              padding: "13px 16px",
-            }}
+            className={`messageBar ${
+              message === "Prediction saved" ? "success" : ""
+            }`}
           >
-            <p
-              style={{
-                margin: 0,
-                fontWeight: "700",
-              }}
-            >
-              {message}
-            </p>
+            {message === "Prediction saved" ? "✓ Prediction saved" : message}
           </div>
         )}
 
-        {/* COMPACT MATCH WEEK SELECTOR */}
+        {/* MATCH WEEK SELECTOR */}
 
-        <div
-          className="card"
-          style={{
-            padding: "16px",
-          }}
-        >
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "110px 1fr",
-              alignItems: "center",
-              gap: "12px",
-            }}
-          >
-            <div
-              style={{
-                textAlign: "left",
-                fontSize: "15px",
-                fontWeight: "900",
-                color: "#071d36",
-                letterSpacing: "0.2px",
-              }}
-            >
-              MATCH WEEK
+        <section className="glassCard selectorCard">
+          <div className="dualTop" />
+
+          <div className="selectorGrid">
+            <div>
+              <div className="eyebrow blue">SELECT</div>
+              <div className="selectorLabel">MATCH WEEK</div>
             </div>
 
-            <select
-              value={selectedWeekId || ""}
-              onChange={(e) =>
-                setSelectedWeekId(
-                  Number(e.target.value)
-                )
-              }
-              style={{
-                width: "100%",
-                padding: "11px 12px",
-                borderRadius: "8px",
-                fontSize: "15px",
-                fontWeight: "800",
-              }}
-            >
-              {currentAndFutureWeeks.length > 0 && (
-                <optgroup label="Current / Upcoming">
-                  {currentAndFutureWeeks.map(
-                    (week) => (
-                      <option
-                        key={week.id}
-                        value={week.id}
-                      >
+            <div className="selectWrap">
+              <select
+                value={selectedWeekId || ""}
+                onChange={(e) => setSelectedWeekId(Number(e.target.value))}
+              >
+                {currentAndFutureWeeks.length > 0 && (
+                  <optgroup label="Current / Upcoming">
+                    {currentAndFutureWeeks.map((week) => (
+                      <option key={week.id} value={week.id}>
                         Match Week {week.week_no}
                       </option>
-                    )
-                  )}
-                </optgroup>
-              )}
+                    ))}
+                  </optgroup>
+                )}
 
-              {previousWeeks.length > 0 && (
-                <optgroup label="Previous Weeks">
-                  {previousWeeks.map((week) => (
-                    <option
-                      key={week.id}
-                      value={week.id}
-                    >
-                      Match Week {week.week_no} — Locked
-                    </option>
-                  ))}
-                </optgroup>
-              )}
-            </select>
+                {previousWeeks.length > 0 && (
+                  <optgroup label="Previous Weeks">
+                    {previousWeeks.map((week) => (
+                      <option key={week.id} value={week.id}>
+                        Match Week {week.week_no} — Locked
+                      </option>
+                    ))}
+                  </optgroup>
+                )}
+              </select>
+            </div>
           </div>
-        </div>
+        </section>
 
         {/* FIXTURES */}
 
         {selectedWeek &&
           (() => {
-            const opensAt = new Date(
-              selectedWeek.opens_at
-            );
+            const opensAt = new Date(selectedWeek.opens_at);
+            const deadline = new Date(selectedWeek.deadline);
 
-            const deadline = new Date(
-              selectedWeek.deadline
-            );
-
-            const isOpen =
-              now >= opensAt && now < deadline;
-
+            const isOpen = now >= opensAt && now < deadline;
             const notOpenYet = now < opensAt;
-
             const isLocked = now >= deadline;
 
             const weekFixtures = fixtures.filter(
               (fixture) =>
-                fixture.match_week_id ===
-                  selectedWeek.id &&
-                (isLocked ||
-                  fixture.status !== "cancelled")
+                fixture.match_week_id === selectedWeek.id &&
+                (isLocked || fixture.status !== "cancelled")
             );
 
-            const hasAnyPredictions = weekFixtures.some(
-              (fixture) =>
-                Boolean(choices[fixture.id])
+            const activeFixtures = weekFixtures.filter(
+              (fixture) => fixture.status !== "cancelled"
             );
 
-            const activeFixtures =
-              weekFixtures.filter(
-                (fixture) =>
-                  fixture.status !== "cancelled"
-              );
+            const hasAnyPredictions = activeFixtures.some((fixture) =>
+              Boolean(choices[fixture.id])
+            );
 
-            const completedPredictionCount =
-              activeFixtures.filter(
-                (fixture) =>
-                  Boolean(choices[fixture.id])
-              ).length;
+            const completedPredictionCount = activeFixtures.filter((fixture) =>
+              Boolean(choices[fixture.id])
+            ).length;
+
+            const allComplete =
+              activeFixtures.length > 0 &&
+              completedPredictionCount === activeFixtures.length;
 
             return (
-              <div
-                className="card"
-                style={{
-                  padding: "16px 12px",
-                }}
-              >
-                {/* COMPACT WEEK HEADING */}
+              <section className="glassCard fixturesCard">
+                <div className="dualTop" />
 
-                <div
-                  style={{
-                    marginBottom: "12px",
-                    padding: "0 4px",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: "22px",
-                      lineHeight: 1.1,
-                      fontWeight: "900",
-                      color: "#071d36",
-                    }}
-                  >
-                    MATCH WEEK{" "}
-                    {selectedWeek.week_no}
-                  </div>
+                {/* WEEK HEADER */}
 
-                  <div
-                    style={{
-                      marginTop: "5px",
-                      fontSize: "13px",
-                      fontWeight: "700",
-                      color: "#65788c",
-                    }}
-                  >
-                    {formatDate(
-                      selectedWeek.match_date
-                    )}
-                  </div>
-                </div>
+                <div className="weekTop">
+                  <div>
+                    <div className="eyebrow blue">THE PREDICTOR</div>
 
-                {/* STATUS BAR */}
+                    <h1>MATCH WEEK {selectedWeek.week_no}</h1>
 
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    gap: "8px",
-                    marginBottom: "13px",
-                    padding: "10px 12px",
-                    borderRadius: "9px",
-                    background: isOpen
-                      ? "#edf7ff"
-                      : isLocked
-                      ? "#f1f3f5"
-                      : "#fff7e8",
-                    border: isOpen
-                      ? "1px solid #b8ddfa"
-                      : isLocked
-                      ? "1px solid #d4d9df"
-                      : "1px solid #f1d49d",
-                  }}
-                >
-                  <div
-                    style={{
-                      textAlign: "left",
-                      minWidth: 0,
-                    }}
-                  >
-                    <div
-                      style={{
-                        fontSize: "12px",
-                        fontWeight: "900",
-                        color: isOpen
-                          ? "#0867aa"
-                          : isLocked
-                          ? "#586675"
-                          : "#966714",
-                      }}
-                    >
-                      {notOpenYet
-                        ? "NOT OPEN YET"
-                        : isOpen
-                        ? "PREDICTIONS OPEN"
-                        : "🔒 PREDICTIONS LOCKED"}
-                    </div>
-
-                    <div
-                      style={{
-                        marginTop: "2px",
-                        fontSize: "11px",
-                        fontWeight: "700",
-                        color: "#71869a",
-                      }}
-                    >
-                      {notOpenYet
-                        ? `Opens ${formatDeadline(
-                            selectedWeek.opens_at
-                          )}`
-                        : isOpen
-                        ? `Closes ${formatDeadline(
-                            selectedWeek.deadline
-                          )}`
-                        : "Selections can no longer be changed"}
+                    <div className="weekDate">
+                      {formatDate(selectedWeek.match_date)}
                     </div>
                   </div>
 
                   {!isLocked && (
                     <div
-                      style={{
-                        flexShrink: 0,
-                        minWidth: "58px",
-                        padding: "7px 8px",
-                        borderRadius: "8px",
-                        background: "#071d36",
-                        color: "#ffffff",
-                        textAlign: "center",
-                      }}
+                      className={`selectedCounter ${
+                        allComplete ? "complete" : ""
+                      }`}
                     >
-                      <div
-                        style={{
-                          fontSize: "16px",
-                          lineHeight: 1,
-                          fontWeight: "900",
-                        }}
-                      >
-                        {completedPredictionCount}/
-                        {activeFixtures.length}
-                      </div>
+                      <strong>
+                        {completedPredictionCount}/{activeFixtures.length}
+                      </strong>
 
-                      <div
-                        style={{
-                          marginTop: "3px",
-                          fontSize: "8px",
-                          fontWeight: "900",
-                          letterSpacing: "0.7px",
-                          color: "#b9cee2",
-                        }}
-                      >
-                        SELECTED
-                      </div>
+                      <span>SELECTED</span>
                     </div>
                   )}
                 </div>
 
-                {/* HOME DRAW AWAY KEY */}
+                {/* STATUS */}
 
                 <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns:
-                      "minmax(0, 1fr) 146px",
-                    alignItems: "center",
-                    gap: "8px",
-                    padding: "0 3px 7px",
-                    fontSize: "9px",
-                    fontWeight: "900",
-                    letterSpacing: "0.4px",
-                    color: "#8a9aaa",
-                  }}
+                  className={`statusBar ${
+                    isOpen
+                      ? allComplete
+                        ? "statusComplete"
+                        : "statusOpen"
+                      : isLocked
+                      ? "statusLocked"
+                      : "statusWaiting"
+                  }`}
                 >
-                  <div
-                    style={{
-                      textAlign: "left",
-                    }}
-                  >
-                    FIXTURE
+                  <div>
+                    <strong>
+                      {notOpenYet
+                        ? "NOT OPEN YET"
+                        : isOpen
+                        ? allComplete
+                          ? "✓ ALL PREDICTIONS COMPLETE"
+                          : "PREDICTIONS OPEN"
+                        : "🔒 PREDICTIONS LOCKED"}
+                    </strong>
+
+                    <span>
+                      {notOpenYet
+                        ? `Opens ${formatDeadline(selectedWeek.opens_at)}`
+                        : isOpen
+                        ? `Closes ${formatDeadline(selectedWeek.deadline)}`
+                        : "Selections can no longer be changed"}
+                    </span>
                   </div>
 
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns:
-                        "repeat(3, 1fr)",
-                      gap: "5px",
-                      textAlign: "center",
-                    }}
-                  >
-                    <span>Home</span>
-                    <span>Draw</span>
-                    <span>Away</span>
+                  {isOpen && !allComplete && (
+                    <div className="remainingText">
+                      {activeFixtures.length - completedPredictionCount} TO GO
+                    </div>
+                  )}
+                </div>
+
+                {/* KEY */}
+
+                <div className="fixtureKey">
+                  <div>FIXTURE</div>
+
+                  <div className="resultKey">
+                    <span>HOME</span>
+                    <span>DRAW</span>
+                    <span>AWAY</span>
                   </div>
                 </div>
 
-                {/* FIXTURE ROWS */}
+                {/* ROWS */}
 
-                <div
-                  style={{
-                    borderTop:
-                      "1px solid #d9e0e7",
-                  }}
-                >
-                  {weekFixtures.map(
-                    (fixture) => {
-                      const selected =
-                        choices[fixture.id];
+                <div className="fixtureList">
+                  {weekFixtures.map((fixture, index) => {
+                    const selected = choices[fixture.id];
+                    const cancelled = fixture.status === "cancelled";
 
-                      const cancelled =
-                        fixture.status ===
-                        "cancelled";
-
-                      if (
-                        cancelled &&
-                        isLocked
-                      ) {
-                        return (
-                          <div
-                            key={fixture.id}
-                            style={{
-                              padding: "12px 3px",
-                              borderBottom:
-                                "1px solid #d9e0e7",
-                            }}
-                          >
-                            <div
-                              style={{
-                                fontWeight: "800",
-                                fontSize: "13px",
-                                textAlign: "left",
-                                marginBottom: "8px",
-                                color: "#354b61",
-                              }}
-                            >
-                              {fixture.home_team} v{" "}
-                              {fixture.away_team}
-                            </div>
-
-                            <div
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "7px",
-                                fontSize: "11px",
-                                fontWeight: "800",
-                                color: "#6e7e8e",
-                              }}
-                            >
-                              <span>
-                                Prediction
-                              </span>
-
-                              <span
-                                style={{
-                                  width: "32px",
-                                  minWidth: "32px",
-                                  height: "32px",
-                                  borderRadius: "50%",
-                                  background:
-                                    selected
-                                      ? "#e31b23"
-                                      : "#9ca3af",
-                                  color: "#ffffff",
-                                  display:
-                                    "inline-flex",
-                                  alignItems:
-                                    "center",
-                                  justifyContent:
-                                    "center",
-                                  fontWeight: "900",
-                                }}
-                              >
-                                {selected || "-"}
-                              </span>
-
-                              <span
-                                style={{
-                                  color: "#c5161d",
-                                }}
-                              >
-                                CANCELLED — no points
-                              </span>
-                            </div>
-                          </div>
-                        );
-                      }
-
+                    if (cancelled && isLocked) {
                       return (
                         <div
                           key={fixture.id}
-                          style={{
-                            display: "grid",
-                            gridTemplateColumns:
-                              "minmax(0, 1fr) 146px",
-                            alignItems: "center",
-                            gap: "8px",
-                            padding: "11px 3px",
-                            borderBottom:
-                              "1px solid #d9e0e7",
-                          }}
+                          className="cancelledFixture"
                         >
-                          <div
-                            title={`${fixture.home_team} v ${fixture.away_team}`}
-                            style={{
-                              minWidth: 0,
-                              whiteSpace: "nowrap",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              textAlign: "left",
-                              fontWeight: "800",
-                              fontSize: "13px",
-                              color: "#23394f",
-                            }}
-                          >
-                            {fixture.home_team} v{" "}
+                          <div className="cancelledName">
+                            {fixture.home_team} <span>v</span>{" "}
                             {fixture.away_team}
                           </div>
 
-                          <div
-                            style={{
-                              display: "flex",
-                              flexWrap: "nowrap",
-                              gap: "5px",
-                              justifyContent: "flex-end",
-                            }}
-                          >
-                            {["H", "D", "A"].map(
-                              (result) => {
-                                const isSelected =
-                                  selected ===
-                                  result;
+                          <div className="cancelledInfo">
+                            <span>Prediction</span>
 
-                                return (
-                                  <button
-                                    key={result}
-                                    onClick={() =>
-                                      chooseResult(
-                                        fixture.id,
-                                        result,
-                                        isOpen
-                                      )
-                                    }
-                                    disabled={!isOpen}
-                                    style={{
-                                      width: "44px",
-                                      minWidth: "44px",
-                                      height: "44px",
-                                      padding: 0,
-                                      borderRadius: "50%",
-                                      border:
-                                        isSelected
-                                          ? "2px solid #ffffff"
-                                          : "0",
-                                      outline:
-                                        isSelected
-                                          ? "2px solid #e31b23"
-                                          : "none",
-                                      fontSize: "13px",
-                                      fontWeight: "900",
-                                      boxShadow:
-                                        isSelected
-                                          ? "0 2px 7px rgba(227,27,35,0.3)"
-                                          : "0 2px 4px rgba(0,0,0,0.15)",
-                                      opacity:
-                                        !isOpen &&
-                                        !isSelected
-                                          ? 0.3
-                                          : 1,
-                                      cursor:
-                                        !isOpen
-                                          ? "not-allowed"
-                                          : "pointer",
-                                      background:
-                                        isSelected
-                                          ? "#e31b23"
-                                          : !isOpen
-                                          ? "#9ca3af"
-                                          : "#0877c9",
-                                    }}
-                                  >
-                                    {result}
-                                  </button>
-                                );
-                              }
-                            )}
+                            <strong className="cancelledChoice">
+                              {selected || "-"}
+                            </strong>
+
+                            <b>CANCELLED — no points</b>
                           </div>
                         </div>
                       );
                     }
-                  )}
+
+                    return (
+                      <div
+                        key={fixture.id}
+                        className={`fixtureRow ${
+                          selected ? "hasSelection" : ""
+                        } ${index % 2 ? "alternate" : ""}`}
+                      >
+                        <div
+                          className="fixtureName"
+                          title={`${fixture.home_team} v ${fixture.away_team}`}
+                        >
+                          <span className="homeTeam">
+                            {fixture.home_team}
+                          </span>
+
+                          <span className="versus">v</span>
+
+                          <span className="awayTeam">
+                            {fixture.away_team}
+                          </span>
+                        </div>
+
+                        <div className="choiceButtons">
+                          {["H", "D", "A"].map((result) => {
+                            const isSelected = selected === result;
+
+                            return (
+                              <button
+                                key={result}
+                                type="button"
+                                aria-label={
+                                  result === "H"
+                                    ? "Home win"
+                                    : result === "D"
+                                    ? "Draw"
+                                    : "Away win"
+                                }
+                                onClick={() =>
+                                  chooseResult(fixture.id, result, isOpen)
+                                }
+                                disabled={!isOpen}
+                                className={`choiceButton ${
+                                  isSelected ? "selected" : ""
+                                } ${!isOpen ? "locked" : ""}`}
+                              >
+                                {result}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
 
-                {/* COMPLETION MESSAGE */}
+                {/* COMPLETE */}
 
-                {isOpen &&
-                  completedPredictionCount ===
-                    activeFixtures.length &&
-                  activeFixtures.length > 0 && (
-                    <div
-                      style={{
-                        marginTop: "15px",
-                        padding: "10px 12px",
-                        borderRadius: "9px",
-                        background: "#e7f7ed",
-                        border:
-                          "1px solid #aad8bb",
-                        color: "#16733f",
-                        fontSize: "12px",
-                        fontWeight: "900",
-                      }}
-                    >
-                      ✓ All predictions completed
+                {isOpen && allComplete && (
+                  <div className="completeBanner">
+                    <div className="completeTick">✓</div>
+
+                    <div>
+                      <strong>ALL PREDICTIONS COMPLETED</strong>
+                      <span>
+                        You're all set for Match Week {selectedWeek.week_no}.
+                      </span>
                     </div>
+                  </div>
+                )}
+
+                {/* ACTIONS */}
+
+                <div className="bottomActions">
+                  {isOpen && (
+                    <button
+                      type="button"
+                      className="clearButton"
+                      onClick={() =>
+                        clearAllPredictions(
+                          weekFixtures,
+                          selectedWeek.week_no,
+                          isOpen
+                        )
+                      }
+                      disabled={clearingAll || !hasAnyPredictions}
+                    >
+                      {clearingAll
+                        ? "CLEARING..."
+                        : "CLEAR ALL PREDICTIONS"}
+                    </button>
                   )}
 
-                {/* CLEAR ALL */}
-
-                {isOpen && (
-                  <button
-                    onClick={() =>
-                      clearAllPredictions(
-                        weekFixtures,
-                        selectedWeek.week_no,
-                        isOpen
-                      )
-                    }
-                    disabled={
-                      clearingAll ||
-                      !hasAnyPredictions
-                    }
-                    style={{
-                      marginTop: "16px",
-                      background: "#e31b23",
-                      color: "#ffffff",
-                      opacity:
-                        clearingAll ||
-                        !hasAnyPredictions
-                          ? 0.45
-                          : 1,
-                      boxShadow:
-                        "0 3px 0 #a20d13, 0 6px 12px rgba(0,0,0,0.16)",
-                    }}
-                  >
-                    {clearingAll
-                      ? "Clearing..."
-                      : "Clear All Predictions"}
-                  </button>
-                )}
-              </div>
+                  <a href="/predictor" className="backButton">
+                    ← BACK TO THE PREDICTOR
+                  </a>
+                </div>
+              </section>
             );
           })()}
 
-        <a href="/predictor">
-          <button>
-            Back to Predictor
-          </button>
-        </a>
+        {!selectedWeek && (
+          <section className="glassCard emptyCard">
+            No Match Weeks are currently available.
+          </section>
+        )}
 
-        <p className="footer">
-          Telford & Wrekin Hockey Club
-        </p>
+        <div className="footer">Telford & Wrekin Hockey Club</div>
       </div>
+
+      <Styles />
     </main>
+  );
+}
+
+function BrandHeader() {
+  return (
+    <header className="brandHeader">
+      <img
+        src="/TWHC-badge-white.png"
+        alt="Telford & Wrekin Hockey Club"
+        className="brandBadge"
+      />
+
+      <div>
+        <div className="brandTitle">
+          THE PREDICTO<span>R</span>
+        </div>
+
+        <div className="brandLine" />
+
+        <div className="brandTag">
+          <span className="blueWord">PREDICT</span>
+          <b>•</b>
+          <span>COMPETE</span>
+          <b>•</b>
+          <span className="redWord">WIN</span>
+        </div>
+
+        <div className="pageTag">MAKE YOUR PREDICTIONS</div>
+      </div>
+    </header>
+  );
+}
+
+function BackgroundFX() {
+  return (
+    <>
+      <div className="blueGlow" />
+      <div className="redGlow" />
+      <div className="blueSlash slashOne" />
+      <div className="blueSlash slashTwo" />
+      <div className="redSlash redOne" />
+      <div className="redSlash redTwo" />
+    </>
+  );
+}
+
+function Styles() {
+  return (
+    <style jsx global>{`
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: #020c19;
+      }
+
+      body {
+        overflow-x: hidden;
+      }
+
+      button,
+      select {
+        font: inherit;
+      }
+
+      button,
+      a {
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+      .wowPage {
+        position: relative;
+        min-height: 100vh;
+        overflow: hidden;
+        color: #ffffff;
+        font-family: Arial, Helvetica, sans-serif;
+        background:
+          radial-gradient(
+            circle at 8% 18%,
+            rgba(0, 116, 255, 0.17),
+            transparent 31%
+          ),
+          radial-gradient(
+            circle at 92% 40%,
+            rgba(237, 28, 36, 0.11),
+            transparent 34%
+          ),
+          linear-gradient(
+            135deg,
+            #061b35 0%,
+            #031428 38%,
+            #050e1c 67%,
+            #160c18 100%
+          );
+      }
+
+      .pageShell {
+        position: relative;
+        z-index: 5;
+        width: min(860px, calc(100% - 30px));
+        margin: 0 auto;
+        padding: 27px 0 30px;
+      }
+
+      /* BACKGROUND */
+
+      .blueGlow,
+      .redGlow {
+        position: fixed;
+        width: 480px;
+        height: 480px;
+        border-radius: 50%;
+        filter: blur(120px);
+        opacity: 0.17;
+        pointer-events: none;
+      }
+
+      .blueGlow {
+        top: 70px;
+        left: -220px;
+        background: #087eff;
+      }
+
+      .redGlow {
+        top: 170px;
+        right: -220px;
+        background: #ed1c24;
+      }
+
+      .blueSlash,
+      .redSlash {
+        position: fixed;
+        width: 280px;
+        height: 55px;
+        transform: skewX(-35deg);
+        pointer-events: none;
+        opacity: 0.11;
+      }
+
+      .blueSlash {
+        left: -125px;
+        background: linear-gradient(90deg, transparent, #087eff);
+      }
+
+      .redSlash {
+        right: -125px;
+        background: linear-gradient(90deg, #ed1c24, transparent);
+      }
+
+      .slashOne {
+        top: 19%;
+      }
+
+      .slashTwo {
+        bottom: 10%;
+      }
+
+      .redOne {
+        top: 28%;
+      }
+
+      .redTwo {
+        bottom: 8%;
+      }
+
+      /* BRAND */
+
+      .brandHeader {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 13px;
+        margin-bottom: 22px;
+      }
+
+      .brandBadge {
+        display: block;
+        width: 62px;
+        height: auto;
+        filter: drop-shadow(0 5px 12px rgba(0, 0, 0, 0.42));
+      }
+
+      .brandTitle {
+        color: #ffffff;
+        font-size: 30px;
+        line-height: 0.95;
+        font-weight: 950;
+        letter-spacing: -1.6px;
+        white-space: nowrap;
+        text-shadow: 0 3px 10px rgba(0, 0, 0, 0.45);
+      }
+
+      .brandTitle span {
+        color: #ed1c24;
+        text-shadow: 0 0 15px rgba(237, 28, 36, 0.42);
+      }
+
+      .brandLine {
+        height: 2px;
+        margin-top: 7px;
+        background: linear-gradient(
+          90deg,
+          #087eff,
+          transparent 48%,
+          #ed1c24
+        );
+      }
+
+      .brandTag {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 7px;
+        color: #edf4fb;
+        font-size: 9px;
+        font-weight: 900;
+        letter-spacing: 1.7px;
+      }
+
+      .brandTag b {
+        color: #647b92;
+      }
+
+      .blueWord {
+        color: #2b9cff;
+      }
+
+      .redWord {
+        color: #ff3040;
+      }
+
+      .pageTag {
+        margin-top: 5px;
+        color: #93a9be;
+        font-size: 9px;
+        font-weight: 900;
+        letter-spacing: 1.3px;
+      }
+
+      /* CARDS */
+
+      .glassCard,
+      .loadingCard {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(104, 150, 196, 0.38);
+        background: linear-gradient(
+          155deg,
+          rgba(12, 35, 64, 0.96),
+          rgba(4, 17, 33, 0.96)
+        );
+        box-shadow:
+          0 17px 42px rgba(0, 0, 0, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.035);
+        backdrop-filter: blur(15px);
+      }
+
+      .glassCard {
+        border-radius: 14px;
+      }
+
+      .dualTop {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        height: 3px;
+        background: linear-gradient(
+          90deg,
+          #087eff 0%,
+          #087eff 40%,
+          #ed1c24 68%,
+          #ed1c24 100%
+        );
+      }
+
+      /* MESSAGE */
+
+      .messageBar {
+        margin-bottom: 12px;
+        padding: 10px 14px;
+        border: 1px solid rgba(255, 175, 34, 0.42);
+        border-radius: 9px;
+        background: rgba(116, 67, 0, 0.31);
+        color: #ffc45c;
+        text-align: center;
+        font-size: 11px;
+        font-weight: 900;
+      }
+
+      .messageBar.success {
+        border-color: rgba(46, 199, 116, 0.4);
+        background: rgba(15, 105, 57, 0.28);
+        color: #67e09b;
+      }
+
+      /* SELECTOR */
+
+      .selectorCard {
+        margin-bottom: 15px;
+        padding: 17px 19px;
+      }
+
+      .selectorGrid {
+        display: grid;
+        grid-template-columns: 125px 1fr;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .eyebrow {
+        font-size: 9px;
+        font-weight: 950;
+        letter-spacing: 1.3px;
+      }
+
+      .eyebrow.blue {
+        color: #2b9cff;
+      }
+
+      .selectorLabel {
+        margin-top: 3px;
+        color: #ffffff;
+        font-size: 15px;
+        font-weight: 950;
+        letter-spacing: 0.2px;
+      }
+
+      .selectWrap {
+        position: relative;
+      }
+
+      .selectWrap select {
+        width: 100%;
+        min-height: 45px;
+        padding: 10px 42px 10px 14px;
+        border: 1px solid rgba(102, 157, 211, 0.48);
+        border-radius: 9px;
+        outline: none;
+        background: #071b34;
+        color: #ffffff;
+        font-size: 14px;
+        font-weight: 850;
+        cursor: pointer;
+      }
+
+      .selectWrap select:focus {
+        border-color: #168eff;
+        box-shadow: 0 0 0 3px rgba(22, 142, 255, 0.12);
+      }
+
+      .selectWrap option,
+      .selectWrap optgroup {
+        background: #071b34;
+        color: #ffffff;
+      }
+
+      /* FIXTURE CARD */
+
+      .fixturesCard {
+        padding: 20px 14px 16px;
+      }
+
+      .weekTop {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        padding: 0 5px 14px;
+      }
+
+      .weekTop h1 {
+        margin: 4px 0 0;
+        color: #ffffff;
+        font-size: 25px;
+        line-height: 1;
+        font-weight: 950;
+        letter-spacing: -0.7px;
+      }
+
+      .weekDate {
+        margin-top: 7px;
+        color: #91a9c0;
+        font-size: 12px;
+        font-weight: 750;
+      }
+
+      .selectedCounter {
+        flex-shrink: 0;
+        min-width: 78px;
+        padding: 10px 11px;
+        border: 1px solid rgba(57, 136, 215, 0.5);
+        border-radius: 11px;
+        background: rgba(3, 15, 31, 0.92);
+        text-align: center;
+        box-shadow:
+          inset 0 0 18px rgba(0, 119, 255, 0.08),
+          0 6px 18px rgba(0, 0, 0, 0.18);
+      }
+
+      .selectedCounter strong {
+        display: block;
+        color: #ffffff;
+        font-size: 19px;
+        line-height: 1;
+      }
+
+      .selectedCounter span {
+        display: block;
+        margin-top: 4px;
+        color: #9ebad4;
+        font-size: 7px;
+        font-weight: 950;
+        letter-spacing: 0.8px;
+      }
+
+      .selectedCounter.complete {
+        border-color: rgba(49, 207, 119, 0.55);
+        background: rgba(10, 89, 48, 0.42);
+        box-shadow: 0 0 22px rgba(39, 202, 111, 0.1);
+      }
+
+      /* STATUS */
+
+      .statusBar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 12px;
+        padding: 11px 13px;
+        border-radius: 9px;
+      }
+
+      .statusBar strong {
+        display: block;
+        font-size: 11px;
+        font-weight: 950;
+        letter-spacing: 0.3px;
+      }
+
+      .statusBar span {
+        display: block;
+        margin-top: 3px;
+        color: #9eb3c8;
+        font-size: 10px;
+        font-weight: 700;
+      }
+
+      .statusOpen {
+        border: 1px solid rgba(32, 151, 255, 0.4);
+        background: rgba(0, 90, 169, 0.18);
+      }
+
+      .statusOpen strong {
+        color: #37aaff;
+      }
+
+      .statusComplete {
+        border: 1px solid rgba(44, 205, 116, 0.43);
+        background: rgba(13, 103, 56, 0.25);
+      }
+
+      .statusComplete strong {
+        color: #62df99;
+      }
+
+      .statusWaiting {
+        border: 1px solid rgba(242, 170, 44, 0.4);
+        background: rgba(113, 69, 0, 0.22);
+      }
+
+      .statusWaiting strong {
+        color: #ffc04b;
+      }
+
+      .statusLocked {
+        border: 1px solid rgba(132, 153, 174, 0.32);
+        background: rgba(68, 82, 97, 0.18);
+      }
+
+      .statusLocked strong {
+        color: #aebdcc;
+      }
+
+      .remainingText {
+        flex-shrink: 0;
+        color: #ffb337;
+        font-size: 10px;
+        font-weight: 950;
+        letter-spacing: 0.5px;
+      }
+
+      /* KEY */
+
+      .fixtureKey {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 174px;
+        align-items: center;
+        gap: 10px;
+        padding: 2px 7px 8px;
+        color: #718ba4;
+        font-size: 8px;
+        font-weight: 950;
+        letter-spacing: 0.7px;
+      }
+
+      .resultKey {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 7px;
+        text-align: center;
+      }
+
+      /* FIXTURE ROWS */
+
+      .fixtureList {
+        overflow: hidden;
+        border-top: 1px solid rgba(103, 139, 174, 0.24);
+        border-radius: 3px;
+      }
+
+      .fixtureRow {
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 174px;
+        align-items: center;
+        gap: 10px;
+        min-height: 62px;
+        padding: 8px 7px;
+        border-bottom: 1px solid rgba(103, 139, 174, 0.19);
+        transition:
+          background 0.18s ease,
+          border-color 0.18s ease;
+      }
+
+      .fixtureRow.alternate {
+        background: rgba(255, 255, 255, 0.012);
+      }
+
+      .fixtureRow.hasSelection {
+        background: linear-gradient(
+          90deg,
+          rgba(0, 111, 230, 0.045),
+          rgba(237, 28, 36, 0.025)
+        );
+      }
+
+      .fixtureName {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: #eaf2fa;
+        font-size: 13px;
+        font-weight: 850;
+      }
+
+      .homeTeam,
+      .awayTeam {
+        color: #eaf2fa;
+      }
+
+      .versus {
+        margin: 0 5px;
+        color: #64819e;
+        font-size: 11px;
+        font-weight: 800;
+      }
+
+      .choiceButtons {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: flex-end;
+        gap: 9px;
+      }
+
+      .choiceButton {
+        position: relative;
+        width: 50px;
+        min-width: 50px;
+        height: 44px;
+        margin: 0;
+        padding: 0;
+        border: 1px solid rgba(37, 139, 232, 0.52);
+        border-radius: 10px;
+        outline: none;
+        background: linear-gradient(145deg, #0a3158, #07233f);
+        color: #9dd1ff;
+        font-size: 13px;
+        font-weight: 950;
+        cursor: pointer;
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.04),
+          0 3px 8px rgba(0, 0, 0, 0.18);
+        transition:
+          transform 0.13s ease,
+          filter 0.13s ease,
+          box-shadow 0.13s ease;
+      }
+
+      .choiceButton:hover:not(:disabled) {
+        transform: translateY(-1px);
+        border-color: #42aaff;
+        filter: brightness(1.12);
+      }
+
+      .choiceButton.selected {
+        border: 1px solid rgba(255, 255, 255, 0.92);
+        background: linear-gradient(
+          120deg,
+          #087eff 0%,
+          #405eea 40%,
+          #bd286b 70%,
+          #ed1c24 100%
+        );
+        color: #ffffff;
+        transform: scale(1.06);
+        box-shadow:
+          0 0 0 2px rgba(19, 133, 255, 0.25),
+          0 0 18px rgba(237, 28, 36, 0.19),
+          0 6px 13px rgba(0, 0, 0, 0.3);
+      }
+
+      .choiceButton.locked {
+        cursor: not-allowed;
+        opacity: 0.25;
+      }
+
+      .choiceButton.locked.selected {
+        opacity: 0.85;
+      }
+
+      /* CANCELLED */
+
+      .cancelledFixture {
+        padding: 12px 7px;
+        border-bottom: 1px solid rgba(103, 139, 174, 0.19);
+      }
+
+      .cancelledName {
+        color: #b4c3d1;
+        font-size: 13px;
+        font-weight: 850;
+      }
+
+      .cancelledName span {
+        color: #617b94;
+      }
+
+      .cancelledInfo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 8px;
+        color: #778da2;
+        font-size: 10px;
+        font-weight: 800;
+      }
+
+      .cancelledInfo b {
+        color: #ff5962;
+      }
+
+      .cancelledChoice {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 29px;
+        height: 29px;
+        border-radius: 50%;
+        background: #a31d25;
+        color: #ffffff;
+      }
+
+      /* COMPLETE */
+
+      .completeBanner {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 11px;
+        margin-top: 15px;
+        padding: 13px;
+        border: 1px solid rgba(48, 204, 118, 0.44);
+        border-radius: 10px;
+        background: rgba(12, 101, 54, 0.27);
+      }
+
+      .completeTick {
+        display: grid;
+        place-items: center;
+        width: 31px;
+        height: 31px;
+        border-radius: 50%;
+        background: #1cb866;
+        color: #ffffff;
+        font-size: 18px;
+        font-weight: 950;
+        box-shadow: 0 0 18px rgba(28, 184, 102, 0.2);
+      }
+
+      .completeBanner strong {
+        display: block;
+        color: #62df99;
+        font-size: 11px;
+        font-weight: 950;
+      }
+
+      .completeBanner span {
+        display: block;
+        margin-top: 2px;
+        color: #9dc9b0;
+        font-size: 9px;
+        font-weight: 700;
+      }
+
+      /* ACTIONS */
+
+      .bottomActions {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        margin-top: 16px;
+      }
+
+      .clearButton,
+      .backButton {
+        min-height: 43px;
+        border-radius: 9px;
+        font-size: 10px;
+        font-weight: 950;
+        letter-spacing: 0.3px;
+      }
+
+      .clearButton {
+        flex: 0 0 44%;
+        margin: 0;
+        border: 1px solid rgba(237, 28, 36, 0.64);
+        background: rgba(130, 18, 25, 0.3);
+        color: #ff626a;
+        cursor: pointer;
+      }
+
+      .clearButton:hover:not(:disabled) {
+        background: rgba(184, 22, 31, 0.45);
+        color: #ffffff;
+      }
+
+      .clearButton:disabled {
+        opacity: 0.28;
+        cursor: not-allowed;
+      }
+
+      .backButton {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(75, 150, 221, 0.43);
+        background: linear-gradient(
+          110deg,
+          rgba(7, 87, 171, 0.52),
+          rgba(8, 38, 69, 0.62)
+        );
+        color: #d9efff;
+      }
+
+      .backButton:hover {
+        border-color: #168eff;
+        color: #ffffff;
+      }
+
+      /* MISC */
+
+      .footer {
+        margin-top: 22px;
+        text-align: center;
+        color: #647b91;
+        font-size: 9px;
+      }
+
+      .emptyCard {
+        padding: 25px;
+        text-align: center;
+        color: #a7bacd;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .loadingCard {
+        width: min(460px, 100%);
+        margin: 55px auto;
+        padding: 28px;
+        border-radius: 14px;
+        text-align: center;
+        color: #afc4d7;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .loadingDot {
+        width: 11px;
+        height: 11px;
+        margin: 0 auto 12px;
+        border-radius: 50%;
+        background: #168eff;
+        box-shadow: 0 0 18px #168eff;
+        animation: pulse 1.1s infinite ease-in-out;
+      }
+
+      @keyframes pulse {
+        50% {
+          opacity: 0.35;
+          transform: scale(0.72);
+        }
+      }
+
+      /* MOBILE */
+
+      @media (max-width: 620px) {
+        .pageShell {
+          width: calc(100% - 16px);
+          padding-top: 16px;
+        }
+
+        .brandHeader {
+          margin-bottom: 17px;
+          gap: 10px;
+        }
+
+        .brandBadge {
+          width: 50px;
+        }
+
+        .brandTitle {
+          font-size: 24px;
+          letter-spacing: -1.2px;
+        }
+
+        .brandTag {
+          gap: 6px;
+          font-size: 7px;
+          letter-spacing: 1.15px;
+        }
+
+        .pageTag {
+          font-size: 7px;
+        }
+
+        .selectorCard {
+          padding: 14px 12px;
+        }
+
+        .selectorGrid {
+          grid-template-columns: 92px 1fr;
+          gap: 9px;
+        }
+
+        .selectorLabel {
+          font-size: 12px;
+        }
+
+        .selectWrap select {
+          min-height: 42px;
+          padding-left: 10px;
+          font-size: 12px;
+        }
+
+        .fixturesCard {
+          padding: 17px 7px 12px;
+        }
+
+        .weekTop {
+          padding: 0 5px 12px;
+        }
+
+        .weekTop h1 {
+          font-size: 21px;
+        }
+
+        .weekDate {
+          font-size: 10px;
+        }
+
+        .selectedCounter {
+          min-width: 67px;
+          padding: 8px;
+        }
+
+        .selectedCounter strong {
+          font-size: 16px;
+        }
+
+        .statusBar {
+          margin-right: 2px;
+          margin-left: 2px;
+          padding: 9px 10px;
+        }
+
+        .statusBar strong {
+          font-size: 9px;
+        }
+
+        .statusBar span {
+          font-size: 8px;
+        }
+
+        .remainingText {
+          font-size: 8px;
+        }
+
+        .fixtureKey {
+          grid-template-columns: minmax(0, 1fr) 132px;
+          gap: 5px;
+          padding-right: 4px;
+          padding-left: 4px;
+          font-size: 6px;
+        }
+
+        .fixtureRow {
+          grid-template-columns: minmax(0, 1fr) 132px;
+          gap: 5px;
+          min-height: 57px;
+          padding: 7px 4px;
+        }
+
+        .fixtureName {
+          padding-right: 3px;
+          font-size: 11px;
+        }
+
+        .versus {
+          margin: 0 2px;
+          font-size: 9px;
+        }
+
+        .choiceButtons {
+          gap: 5px;
+        }
+
+        .choiceButton {
+          width: 40px;
+          min-width: 40px;
+          height: 40px;
+          border-radius: 9px;
+          font-size: 11px;
+        }
+
+        .bottomActions {
+          flex-direction: column;
+          gap: 8px;
+          margin: 13px 2px 0;
+        }
+
+        .clearButton,
+        .backButton {
+          width: 100%;
+          min-height: 41px;
+          flex: none;
+        }
+
+        .completeBanner {
+          margin-right: 2px;
+          margin-left: 2px;
+        }
+      }
+
+      @media (max-width: 390px) {
+        .brandTitle {
+          font-size: 22px;
+        }
+
+        .brandBadge {
+          width: 46px;
+        }
+
+        .fixtureKey,
+        .fixtureRow {
+          grid-template-columns: minmax(0, 1fr) 120px;
+        }
+
+        .choiceButtons {
+          gap: 4px;
+        }
+
+        .choiceButton {
+          width: 37px;
+          min-width: 37px;
+          height: 38px;
+        }
+
+        .fixtureName {
+          font-size: 10px;
+        }
+      }
+    `}</style>
   );
 }
