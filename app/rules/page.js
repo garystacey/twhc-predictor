@@ -55,6 +55,10 @@ export default function RulesPage() {
           Everything you need to know about playing The Predictor.
         </div>
 
+        {/* =====================================================
+            ENTRY & PRIZES
+        ===================================================== */}
+
         <RuleCard
           eyebrow="ENTRY & PRIZES"
           title="Entry Fee & Prize Money"
@@ -82,7 +86,7 @@ export default function RulesPage() {
 
               <div className="paymentGrid">
                 <InfoPanel
-                  icon="📱"
+                  icon="▣"
                   title="Pay via Teamo"
                   type="blue"
                 >
@@ -91,7 +95,7 @@ export default function RulesPage() {
                 </InfoPanel>
 
                 <InfoPanel
-                  icon="💳"
+                  icon="£"
                   title="Not registered on Teamo?"
                   type="red"
                 >
@@ -109,7 +113,7 @@ export default function RulesPage() {
                 />
 
                 <PrizeCard
-                  icon="🥈"
+                  icon="2"
                   label="2ND PRIZE"
                   amount={formatMoney(settings.second_prize)}
                   type="silver"
@@ -136,6 +140,10 @@ export default function RulesPage() {
           )}
         </RuleCard>
 
+        {/* =====================================================
+            HOW TO PLAY
+        ===================================================== */}
+
         <RuleCard
           eyebrow="THE BASICS"
           title="How To Play"
@@ -157,10 +165,14 @@ export default function RulesPage() {
           </div>
         </RuleCard>
 
+        {/* =====================================================
+            SCORING
+        ===================================================== */}
+
         <RuleCard
           eyebrow="POINTS"
           title="Scoring"
-          icon="🎯"
+          icon="◎"
         >
           <div className="scoreGrid">
             <ScoreBox
@@ -189,10 +201,14 @@ export default function RulesPage() {
           </p>
         </RuleCard>
 
+        {/* =====================================================
+            PREDICTION WINDOWS
+        ===================================================== */}
+
         <RuleCard
           eyebrow="DEADLINES"
           title="Prediction Windows"
-          icon="⏱"
+          icon="⌚"
         >
           <p>
             Each Match Week has its own opening time and prediction deadline.
@@ -217,6 +233,10 @@ export default function RulesPage() {
           </p>
         </RuleCard>
 
+        {/* =====================================================
+            MISSED PREDICTIONS
+        ===================================================== */}
+
         <RuleCard
           eyebrow="DON'T MISS OUT"
           title="Missed Predictions"
@@ -240,6 +260,10 @@ export default function RulesPage() {
             predictions cannot be added after the deadline.
           </p>
         </RuleCard>
+
+        {/* =====================================================
+            POSTPONED
+        ===================================================== */}
 
         <RuleCard
           eyebrow="FIXTURE CHANGES"
@@ -271,6 +295,10 @@ export default function RulesPage() {
           </p>
         </RuleCard>
 
+        {/* =====================================================
+            CANCELLED
+        ===================================================== */}
+
         <RuleCard
           eyebrow="FIXTURE CHANGES"
           title="Cancelled Fixtures"
@@ -301,6 +329,10 @@ export default function RulesPage() {
           </p>
         </RuleCard>
 
+        {/* =====================================================
+            LEADERBOARDS
+        ===================================================== */}
+
         <RuleCard
           eyebrow="STANDINGS"
           title="Leaderboards"
@@ -315,7 +347,7 @@ export default function RulesPage() {
             </LeaderboardInfo>
 
             <LeaderboardInfo
-              icon="📊"
+              icon="▥"
               title="Weekly Leaderboards"
             >
               Shows the points scored in each completed Match Week.
@@ -339,6 +371,10 @@ export default function RulesPage() {
           </p>
         </RuleCard>
 
+        {/* =====================================================
+            TIED POSITIONS
+        ===================================================== */}
+
         <RuleCard
           eyebrow="RANKINGS"
           title="Tied Positions"
@@ -360,10 +396,14 @@ export default function RulesPage() {
           </div>
         </RuleCard>
 
+        {/* =====================================================
+            PROVISIONAL
+        ===================================================== */}
+
         <RuleCard
           eyebrow="LIVE SCORING"
           title="Provisional Standings"
-          icon="📊"
+          icon="▥"
         >
           <p>
             Weekly standings may be shown as provisional while some fixture
@@ -385,10 +425,14 @@ export default function RulesPage() {
           </p>
         </RuleCard>
 
+        {/* =====================================================
+            ACCOUNTS
+        ===================================================== */}
+
         <RuleCard
           eyebrow="YOUR ENTRY"
           title="Accounts & Team Names"
-          icon="👤"
+          icon="●"
         >
           <p>
             Predictions are linked to your individual Predictor account.
@@ -408,10 +452,14 @@ export default function RulesPage() {
           </Highlight>
         </RuleCard>
 
+        {/* =====================================================
+            FAIR PLAY
+        ===================================================== */}
+
         <RuleCard
           eyebrow="THE PREDICTOR"
           title="Fair Play"
-          icon="🤝"
+          icon="✓"
         >
           <p>
             The Predictor is intended as a fun club competition.
@@ -526,14 +574,12 @@ function InfoPanel({
   type,
 }) {
   return (
-    <div
-      className={`infoPanel ${type}Panel`}
-    >
+    <div className={`infoPanel ${type}Panel`}>
       <div className="infoIcon">
         {icon}
       </div>
 
-      <div>
+      <div className="infoPanelCopy">
         <strong>
           {title}
         </strong>
@@ -620,9 +666,7 @@ function Highlight({
   children,
 }) {
   return (
-    <div
-      className={`highlight ${type}Highlight`}
-    >
+    <div className={`highlight ${type}Highlight`}>
       <span className="highlightIcon">
         {icon}
       </span>
@@ -668,9 +712,7 @@ function RankBubble({
   gold = false,
 }) {
   return (
-    <div
-      className={`rankBubble ${gold ? "goldRank" : ""}`}
-    >
+    <div className={`rankBubble ${gold ? "goldRank" : ""}`}>
       <span>
         {number}
       </span>
@@ -758,7 +800,7 @@ function Styles() {
         padding: 28px 0 34px;
       }
 
-      /* BACKGROUND */
+      /* BACKGROUND FX */
 
       .blueGlow,
       .redGlow {
@@ -819,7 +861,9 @@ function Styles() {
         bottom: 8%;
       }
 
-      /* BRAND */
+      /* =====================================================
+         DESKTOP HEADER
+      ===================================================== */
 
       .brandHeader {
         display: flex;
@@ -896,10 +940,13 @@ function Styles() {
         color: #a8bdd1;
         text-align: center;
         font-size: 14px;
+        line-height: 1.45;
         font-weight: 750;
       }
 
-      /* CARD */
+      /* =====================================================
+         DESKTOP CARDS
+      ===================================================== */
 
       .ruleCard {
         position: relative;
@@ -946,7 +993,7 @@ function Styles() {
         );
       }
 
-      /* HEADER */
+      /* RULE HEADER */
 
       .ruleHeader {
         display: flex;
@@ -995,7 +1042,7 @@ function Styles() {
         font-weight: 950;
       }
 
-      /* TYPOGRAPHY SYSTEM */
+      /* BODY */
 
       .ruleBody {
         color: #c2d0dd;
@@ -1022,7 +1069,7 @@ function Styles() {
         font-weight: 850;
       }
 
-      /* ENTRY */
+      /* ENTRY HERO */
 
       .entryFeeHero {
         display: flex;
@@ -1093,6 +1140,10 @@ function Styles() {
         border-radius: 11px;
       }
 
+      .infoPanelCopy {
+        min-width: 0;
+      }
+
       .infoPanel strong {
         display: block;
         margin-bottom: 4px;
@@ -1121,7 +1172,16 @@ function Styles() {
       }
 
       .infoIcon {
-        font-size: 22px;
+        display: grid;
+        place-items: center;
+        flex: 0 0 32px;
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: rgba(255,255,255,0.045);
+        color: #ffffff;
+        font-size: 15px;
+        font-weight: 950;
       }
 
       /* PRIZES */
@@ -1152,7 +1212,20 @@ function Styles() {
       }
 
       .medal {
-        font-size: 29px;
+        display: grid;
+        place-items: center;
+        width: 38px;
+        height: 38px;
+        flex-shrink: 0;
+        font-size: 24px;
+        font-weight: 950;
+      }
+
+      .silver .medal {
+        border-radius: 50%;
+        background: #8697a7;
+        color: #ffffff;
+        font-size: 16px;
       }
 
       .prizeLabel {
@@ -1174,7 +1247,7 @@ function Styles() {
         font-weight: 950;
       }
 
-      /* HDA */
+      /* PREDICTION OPTIONS */
 
       .predictionOptions {
         display: grid;
@@ -1218,7 +1291,7 @@ function Styles() {
         font-weight: 850;
       }
 
-      /* SCORING */
+      /* SCORE */
 
       .scoreGrid {
         display: grid;
@@ -1276,6 +1349,7 @@ function Styles() {
       .scoreBox span {
         display: block;
         margin-top: 3px;
+        color: #9eb3c8;
         font-size: 10px;
         line-height: 1.2;
         font-weight: 950;
@@ -1367,7 +1441,9 @@ function Styles() {
 
       .lbIcon {
         margin-bottom: 7px;
-        font-size: 27px;
+        color: #ffffff;
+        font-size: 25px;
+        font-weight: 950;
       }
 
       .leaderboardInfo strong {
@@ -1449,10 +1525,6 @@ function Styles() {
 
       .fairPlayPanel p {
         margin: 0;
-        color: #c2d0dd;
-        font-size: 15px;
-        line-height: 1.58;
-        font-weight: 600;
       }
 
       .fairIcon {
@@ -1505,230 +1577,435 @@ function Styles() {
       }
 
       /* =====================================================
-         MOBILE TYPOGRAPHY LOCK
-         No random inherited giant paragraph text
+         MOBILE — PURPOSE BUILT, NOT SHRUNK DESKTOP
       ===================================================== */
 
       @media (max-width: 620px) {
+
         .pageShell {
-          width: calc(100% - 16px);
-          padding-top: 17px;
+          width: calc(100% - 20px);
+          padding: 17px 0 24px;
         }
 
+        /* HEADER */
+
         .brandHeader {
-          gap: 10px;
-          margin-bottom: 13px;
+          gap: 9px;
+          margin-bottom: 11px;
         }
 
         .brandBadge {
-          width: 52px;
+          width: 45px;
         }
 
         .brandTitle {
-          font-size: 25px;
-          letter-spacing: -1.25px;
+          font-size: 22px;
+          line-height: 1;
+          letter-spacing: -1px;
+        }
+
+        .brandLine {
+          margin-top: 5px;
         }
 
         .brandTag {
-          gap: 6px;
-          font-size: 7px;
-          letter-spacing: 1.15px;
+          gap: 5px;
+          margin-top: 5px;
+          font-size: 6.5px;
+          letter-spacing: 1px;
         }
 
         .pageTag {
-          font-size: 8px;
+          margin-top: 4px;
+          font-size: 7px;
+          letter-spacing: 1.2px;
         }
 
         .intro {
-          margin-bottom: 17px;
-          font-size: 13px !important;
-          line-height: 1.45 !important;
+          max-width: 330px;
+          margin: 0 auto 14px;
+          padding: 0 6px;
+          color: #9db2c6;
+          font-size: 12px !important;
+          line-height: 1.4 !important;
+          font-weight: 700 !important;
         }
 
+        /* CARDS */
+
         .ruleCard {
-          margin-bottom: 12px;
-          padding: 19px 15px 17px;
-          border-radius: 13px;
+          margin-bottom: 10px;
+          padding: 15px 13px 14px;
+          border-radius: 12px;
+        }
+
+        .dualTop {
+          height: 2px;
         }
 
         .ruleHeader {
-          margin-bottom: 14px;
-        }
-
-        .ruleHeader h2 {
-          font-size: 23px !important;
-          line-height: 1.08 !important;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 11px;
         }
 
         .eyebrow {
-          font-size: 8px !important;
+          margin-bottom: 3px;
+          font-size: 7px !important;
+          letter-spacing: 1px;
+        }
+
+        .ruleHeader h2 {
+          font-size: 19px !important;
+          line-height: 1.08 !important;
+          letter-spacing: -0.3px !important;
         }
 
         .ruleIcon {
+          width: 38px;
+          height: 38px;
+          border-radius: 9px;
+          font-size: 18px;
+        }
+
+        /* NORMAL MOBILE BODY COPY */
+
+        .ruleCard .ruleBody,
+        .ruleCard .ruleBody p,
+        .ruleCard .fairPlayPanel p {
+          color: #c1cedb !important;
+          font-size: 13.5px !important;
+          line-height: 1.48 !important;
+          font-weight: 600 !important;
+          letter-spacing: 0 !important;
+        }
+
+        .ruleCard .ruleBody p {
+          margin: 0 0 10px !important;
+        }
+
+        .ruleCard .ruleBody p:last-child {
+          margin-bottom: 0 !important;
+        }
+
+        /* ENTRY HERO */
+
+        .entryFeeHero {
+          gap: 10px;
+          margin-bottom: 10px;
+          padding: 12px 13px;
+          border-radius: 10px;
+        }
+
+        .miniLabel {
+          font-size: 7px;
+          letter-spacing: 1px;
+        }
+
+        .entryAmount {
+          margin-top: 2px;
+          font-size: 29px !important;
+        }
+
+        .entrySub {
+          max-width: 230px;
+          margin-top: 4px;
+          font-size: 10px !important;
+          line-height: 1.35 !important;
+        }
+
+        .entryIcon {
           width: 46px;
           height: 46px;
           border-radius: 11px;
           font-size: 22px;
         }
 
-        /* ABSOLUTE CONSISTENCY */
+        /* PAYMENT — COMPACT */
 
-        .ruleCard .ruleBody,
-        .ruleCard .ruleBody p,
-        .ruleCard .fairPlayPanel p {
-          font-size: 15px !important;
-          line-height: 1.55 !important;
-          font-weight: 600 !important;
-          letter-spacing: 0 !important;
-        }
-
-        .ruleCard .ruleBody p {
-          margin-bottom: 13px !important;
-        }
-
-        .ruleCard .ruleBody p strong,
-        .ruleCard .ruleBody p b {
-          font-size: inherit !important;
-          line-height: inherit !important;
-        }
-
-        .entryFeeHero {
-          padding: 15px 14px;
-        }
-
-        .entryAmount {
-          font-size: 32px !important;
-        }
-
-        .entrySub {
-          font-size: 11px !important;
-          line-height: 1.45 !important;
-        }
-
-        .entryIcon {
-          width: 54px;
-          height: 54px;
-          font-size: 25px;
-        }
-
-        .paymentGrid,
-        .prizeGrid,
-        .scoreGrid,
-        .leaderboardInfoGrid {
+        .paymentGrid {
           grid-template-columns: 1fr;
+          gap: 7px;
+          margin-bottom: 10px;
         }
 
-        .ruleCard .infoPanel strong,
-        .ruleCard .highlightTitle,
-        .ruleCard .leaderboardInfo strong,
-        .ruleCard .scoreBox strong {
-          font-size: 14px !important;
-          line-height: 1.3 !important;
+        .infoPanel {
+          align-items: center;
+          gap: 9px;
+          padding: 10px;
+          border-radius: 9px;
+        }
+
+        .infoIcon {
+          flex: 0 0 29px;
+          width: 29px;
+          height: 29px;
+          border-radius: 7px;
+          font-size: 12px;
+        }
+
+        .ruleCard .infoPanel strong {
+          margin-bottom: 2px;
+          font-size: 12.5px !important;
+          line-height: 1.25 !important;
           font-weight: 850 !important;
         }
 
-        .ruleCard .infoPanel p,
-        .ruleCard .highlightText,
-        .ruleCard .leaderboardInfo span {
-          font-size: 13px !important;
-          line-height: 1.5 !important;
+        .ruleCard .infoPanel p {
+          font-size: 11px !important;
+          line-height: 1.38 !important;
           font-weight: 600 !important;
         }
 
-        .predictionOptions {
+        /* KEEP PRIZES SIDE BY SIDE */
+
+        .prizeGrid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
           gap: 7px;
+          margin-bottom: 11px;
+        }
+
+        .prizeCard {
+          gap: 7px;
+          min-width: 0;
+          padding: 10px;
+          border-radius: 9px;
+        }
+
+        .medal {
+          width: 30px;
+          height: 30px;
+          flex: 0 0 30px;
+          font-size: 19px;
+        }
+
+        .silver .medal {
+          font-size: 13px;
+        }
+
+        .prizeLabel {
+          font-size: 7px;
+          letter-spacing: 0.7px;
+        }
+
+        .prizeAmount {
+          margin-top: 2px;
+          font-size: 19px;
+        }
+
+        /* H D A */
+
+        .predictionOptions {
+          gap: 6px;
+          margin-top: 9px;
         }
 
         .predictionOption {
-          padding: 13px 5px;
+          padding: 10px 4px;
+          border-radius: 9px;
         }
 
         .predictionLetter {
-          width: 42px;
-          height: 42px;
-          font-size: 15px;
+          width: 37px;
+          height: 37px;
+          margin-bottom: 6px;
+          border-radius: 8px;
+          font-size: 13px;
         }
 
         .predictionOption strong {
+          font-size: 10.5px !important;
+          line-height: 1.2 !important;
+        }
+
+        /* SCORE — SIDE BY SIDE */
+
+        .scoreGrid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 7px;
+          margin-bottom: 11px;
+        }
+
+        .scoreBox {
+          gap: 7px;
+          min-width: 0;
+          padding: 10px;
+          border-radius: 9px;
+        }
+
+        .scoreIcon {
+          width: 31px;
+          height: 31px;
+          flex: 0 0 31px;
+          font-size: 14px;
+        }
+
+        .ruleCard .scoreBox strong {
+          font-size: 11px !important;
+          line-height: 1.2 !important;
+        }
+
+        .ruleCard .scoreBox span {
+          margin-top: 2px;
+          font-size: 7.5px !important;
+          line-height: 1.15 !important;
+        }
+
+        /* CALLOUTS */
+
+        .highlight {
+          align-items: center;
+          gap: 8px;
+          margin: 10px 0;
+          padding: 9px 10px;
+          border-radius: 9px;
+        }
+
+        .highlightIcon {
+          width: 29px;
+          height: 29px;
+          flex: 0 0 29px;
+          font-size: 12px;
+        }
+
+        .ruleCard .highlightTitle {
+          margin-bottom: 2px;
           font-size: 12px !important;
           line-height: 1.25 !important;
         }
 
-        .scoreBox span {
-          font-size: 10px !important;
+        .ruleCard .highlightText {
+          font-size: 10.5px !important;
+          line-height: 1.4 !important;
+        }
+
+        /* LEADERBOARD CARDS */
+
+        .leaderboardInfoGrid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 7px;
+          margin-bottom: 11px;
+        }
+
+        .leaderboardInfo {
+          padding: 10px 8px;
+          border-radius: 9px;
+        }
+
+        .lbIcon {
+          margin-bottom: 4px;
+          font-size: 18px;
+        }
+
+        .ruleCard .leaderboardInfo strong {
+          font-size: 11px !important;
           line-height: 1.2 !important;
         }
 
-        .highlight {
-          padding: 12px 11px;
-          gap: 10px;
+        .ruleCard .leaderboardInfo span {
+          margin-top: 3px;
+          font-size: 9.5px !important;
+          line-height: 1.35 !important;
         }
 
-        .highlightIcon {
-          width: 34px;
-          height: 34px;
-          font-size: 14px;
-        }
+        /* RANKING */
 
         .rankingExample {
-          gap: 10px;
+          gap: 8px;
+          margin-top: 9px;
+          padding: 10px;
+          border-radius: 9px;
         }
 
         .rankBubble {
-          width: 54px;
-          height: 54px;
+          width: 44px;
+          height: 44px;
         }
 
         .rankBubble span {
-          font-size: 18px !important;
+          font-size: 15px !important;
         }
 
         .rankBubble small {
-          font-size: 8px !important;
+          margin-top: 2px;
+          font-size: 6.5px !important;
         }
+
+        /* FAIR PLAY */
 
         .fairPlayPanel {
           align-items: flex-start;
-          padding: 13px;
+          gap: 9px;
+          padding: 10px;
+          border-radius: 9px;
         }
 
         .fairIcon {
-          width: 42px;
-          height: 42px;
-          font-size: 19px;
+          width: 34px;
+          height: 34px;
+          flex: 0 0 34px;
+          font-size: 15px;
         }
 
+        .ruleCard .fairPlayPanel p {
+          font-size: 12px !important;
+          line-height: 1.42 !important;
+        }
+
+        /* BACK */
+
         .backButton {
-          min-height: 48px;
-          font-size: 11px;
+          min-height: 43px;
+          margin-top: 2px;
+          border-radius: 9px;
+          font-size: 10px;
+        }
+
+        .footer {
+          margin-top: 15px;
+          font-size: 8px;
         }
       }
 
+      /* VERY SMALL PHONES */
+
       @media (max-width: 390px) {
+
+        .pageShell {
+          width: calc(100% - 14px);
+        }
+
         .brandBadge {
-          width: 47px;
+          width: 42px;
         }
 
         .brandTitle {
-          font-size: 22px;
+          font-size: 20px;
         }
 
         .ruleHeader h2 {
-          font-size: 21px !important;
+          font-size: 18px !important;
         }
 
-        /* STILL KEEP BODY CONSISTENT */
         .ruleCard .ruleBody,
-        .ruleCard .ruleBody p,
-        .ruleCard .fairPlayPanel p {
-          font-size: 14.5px !important;
-          line-height: 1.55 !important;
+        .ruleCard .ruleBody p {
+          font-size: 13px !important;
         }
 
-        .ruleCard .infoPanel p,
-        .ruleCard .highlightText,
-        .ruleCard .leaderboardInfo span {
-          font-size: 12.5px !important;
+        .scoreGrid {
+          grid-template-columns: 1fr;
+        }
+
+        .scoreBox {
+          min-height: 49px;
+        }
+
+        .prizeAmount {
+          font-size: 18px;
+        }
+
+        .predictionOption strong {
+          font-size: 10px !important;
         }
       }
     `}</style>
