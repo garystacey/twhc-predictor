@@ -55,10 +55,6 @@ export default function RulesPage() {
           Everything you need to know about playing The Predictor.
         </div>
 
-        {/* =====================================================
-            ENTRY & PRIZES
-        ===================================================== */}
-
         <RuleCard
           eyebrow="ENTRY & PRIZES"
           title="Entry Fee & Prize Money"
@@ -85,57 +81,39 @@ export default function RulesPage() {
               </div>
 
               <div className="paymentGrid">
-                <div className="infoPanel bluePanel">
-                  <div className="infoIcon">📱</div>
+                <InfoPanel
+                  icon="📱"
+                  title="Pay via Teamo"
+                  type="blue"
+                >
+                  The entry fee can be paid via the{" "}
+                  <b>Telford & Wrekin HC Teamo app</b>.
+                </InfoPanel>
 
-                  <div>
-                    <strong>Pay via Teamo</strong>
-
-                    <p>
-                      The entry fee can be paid via the{" "}
-                      <b>Telford & Wrekin HC Teamo app</b>.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="infoPanel redPanel">
-                  <div className="infoIcon">💳</div>
-
-                  <div>
-                    <strong>Not registered on Teamo?</strong>
-
-                    <p>
-                      Payment can also be made at the{" "}
-                      <b>hockey pitch café</b> via <b>SumUp</b>.
-                    </p>
-                  </div>
-                </div>
+                <InfoPanel
+                  icon="💳"
+                  title="Not registered on Teamo?"
+                  type="red"
+                >
+                  Payment can also be made at the{" "}
+                  <b>hockey pitch café</b> via <b>SumUp</b>.
+                </InfoPanel>
               </div>
 
               <div className="prizeGrid">
-                <div className="prizeCard gold">
-                  <div className="medal">🏆</div>
+                <PrizeCard
+                  icon="🏆"
+                  label="1ST PRIZE"
+                  amount={formatMoney(settings.first_prize)}
+                  type="gold"
+                />
 
-                  <div>
-                    <div className="prizeLabel">1ST PRIZE</div>
-
-                    <div className="prizeAmount">
-                      {formatMoney(settings.first_prize)}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="prizeCard silver">
-                  <div className="medal">🥈</div>
-
-                  <div>
-                    <div className="prizeLabel">2ND PRIZE</div>
-
-                    <div className="prizeAmount">
-                      {formatMoney(settings.second_prize)}
-                    </div>
-                  </div>
-                </div>
+                <PrizeCard
+                  icon="🥈"
+                  label="2ND PRIZE"
+                  amount={formatMoney(settings.second_prize)}
+                  type="silver"
+                />
               </div>
 
               <p>
@@ -158,10 +136,6 @@ export default function RulesPage() {
           )}
         </RuleCard>
 
-        {/* =====================================================
-            HOW TO PLAY
-        ===================================================== */}
-
         <RuleCard
           eyebrow="THE BASICS"
           title="How To Play"
@@ -183,33 +157,25 @@ export default function RulesPage() {
           </div>
         </RuleCard>
 
-        {/* =====================================================
-            SCORING
-        ===================================================== */}
-
         <RuleCard
           eyebrow="POINTS"
           title="Scoring"
           icon="🎯"
         >
           <div className="scoreGrid">
-            <div className="scoreBox correct">
-              <div className="scoreIcon">✓</div>
+            <ScoreBox
+              icon="✓"
+              title="Correct Prediction"
+              points="1 POINT"
+              type="correct"
+            />
 
-              <div>
-                <strong>Correct Prediction</strong>
-                <span>1 POINT</span>
-              </div>
-            </div>
-
-            <div className="scoreBox incorrect">
-              <div className="scoreIcon">✕</div>
-
-              <div>
-                <strong>Incorrect Prediction</strong>
-                <span>0 POINTS</span>
-              </div>
-            </div>
+            <ScoreBox
+              icon="✕"
+              title="Incorrect Prediction"
+              points="0 POINTS"
+              type="incorrect"
+            />
           </div>
 
           <p>
@@ -222,10 +188,6 @@ export default function RulesPage() {
             on them.
           </p>
         </RuleCard>
-
-        {/* =====================================================
-            PREDICTION WINDOWS
-        ===================================================== */}
 
         <RuleCard
           eyebrow="DEADLINES"
@@ -255,10 +217,6 @@ export default function RulesPage() {
           </p>
         </RuleCard>
 
-        {/* =====================================================
-            MISSED PREDICTIONS
-        ===================================================== */}
-
         <RuleCard
           eyebrow="DON'T MISS OUT"
           title="Missed Predictions"
@@ -282,10 +240,6 @@ export default function RulesPage() {
             predictions cannot be added after the deadline.
           </p>
         </RuleCard>
-
-        {/* =====================================================
-            POSTPONED
-        ===================================================== */}
 
         <RuleCard
           eyebrow="FIXTURE CHANGES"
@@ -317,10 +271,6 @@ export default function RulesPage() {
           </p>
         </RuleCard>
 
-        {/* =====================================================
-            CANCELLED
-        ===================================================== */}
-
         <RuleCard
           eyebrow="FIXTURE CHANGES"
           title="Cancelled Fixtures"
@@ -351,35 +301,25 @@ export default function RulesPage() {
           </p>
         </RuleCard>
 
-        {/* =====================================================
-            LEADERBOARDS
-        ===================================================== */}
-
         <RuleCard
           eyebrow="STANDINGS"
           title="Leaderboards"
           icon="🏆"
         >
           <div className="leaderboardInfoGrid">
-            <div className="leaderboardInfo">
-              <div className="lbIcon">🏆</div>
+            <LeaderboardInfo
+              icon="🏆"
+              title="Overall Leaderboard"
+            >
+              Shows each entrant&apos;s total points across the competition.
+            </LeaderboardInfo>
 
-              <strong>Overall Leaderboard</strong>
-
-              <span>
-                Shows each entrant&apos;s total points across the competition.
-              </span>
-            </div>
-
-            <div className="leaderboardInfo">
-              <div className="lbIcon">📊</div>
-
-              <strong>Weekly Leaderboards</strong>
-
-              <span>
-                Shows the points scored in each completed Match Week.
-              </span>
-            </div>
+            <LeaderboardInfo
+              icon="📊"
+              title="Weekly Leaderboards"
+            >
+              Shows the points scored in each completed Match Week.
+            </LeaderboardInfo>
           </div>
 
           <p>
@@ -398,10 +338,6 @@ export default function RulesPage() {
             one relevant prediction.
           </p>
         </RuleCard>
-
-        {/* =====================================================
-            TIES
-        ===================================================== */}
 
         <RuleCard
           eyebrow="RANKINGS"
@@ -423,10 +359,6 @@ export default function RulesPage() {
             <RankBubble number="3" label="3RD" />
           </div>
         </RuleCard>
-
-        {/* =====================================================
-            PROVISIONAL
-        ===================================================== */}
 
         <RuleCard
           eyebrow="LIVE SCORING"
@@ -453,10 +385,6 @@ export default function RulesPage() {
           </p>
         </RuleCard>
 
-        {/* =====================================================
-            ACCOUNTS
-        ===================================================== */}
-
         <RuleCard
           eyebrow="YOUR ENTRY"
           title="Accounts & Team Names"
@@ -479,10 +407,6 @@ export default function RulesPage() {
             will count.
           </Highlight>
         </RuleCard>
-
-        {/* =====================================================
-            FAIR PLAY
-        ===================================================== */}
 
         <RuleCard
           eyebrow="THE PREDICTOR"
@@ -521,9 +445,9 @@ export default function RulesPage() {
   );
 }
 
-/* =========================================================
+/* =====================================================
    COMPONENTS
-========================================================= */
+===================================================== */
 
 function BrandHeader() {
   return (
@@ -595,6 +519,58 @@ function RuleCard({
   );
 }
 
+function InfoPanel({
+  icon,
+  title,
+  children,
+  type,
+}) {
+  return (
+    <div
+      className={`infoPanel ${type}Panel`}
+    >
+      <div className="infoIcon">
+        {icon}
+      </div>
+
+      <div>
+        <strong>
+          {title}
+        </strong>
+
+        <p>
+          {children}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function PrizeCard({
+  icon,
+  label,
+  amount,
+  type,
+}) {
+  return (
+    <div className={`prizeCard ${type}`}>
+      <div className="medal">
+        {icon}
+      </div>
+
+      <div>
+        <div className="prizeLabel">
+          {label}
+        </div>
+
+        <div className="prizeAmount">
+          {amount}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PredictionOption({
   letter,
   text,
@@ -608,6 +584,31 @@ function PredictionOption({
       <strong>
         {text}
       </strong>
+    </div>
+  );
+}
+
+function ScoreBox({
+  icon,
+  title,
+  points,
+  type,
+}) {
+  return (
+    <div className={`scoreBox ${type}`}>
+      <div className="scoreIcon">
+        {icon}
+      </div>
+
+      <div>
+        <strong>
+          {title}
+        </strong>
+
+        <span>
+          {points}
+        </span>
+      </div>
     </div>
   );
 }
@@ -627,7 +628,7 @@ function Highlight({
       </span>
 
       <div>
-        <strong>
+        <strong className="highlightTitle">
           {title}
         </strong>
 
@@ -635,6 +636,28 @@ function Highlight({
           {children}
         </span>
       </div>
+    </div>
+  );
+}
+
+function LeaderboardInfo({
+  icon,
+  title,
+  children,
+}) {
+  return (
+    <div className="leaderboardInfo">
+      <div className="lbIcon">
+        {icon}
+      </div>
+
+      <strong>
+        {title}
+      </strong>
+
+      <span>
+        {children}
+      </span>
     </div>
   );
 }
@@ -674,14 +697,13 @@ function BackgroundFX() {
   );
 }
 
-/* =========================================================
+/* =====================================================
    STYLES
-========================================================= */
+===================================================== */
 
 function Styles() {
   return (
     <style jsx global>{`
-
       * {
         box-sizing: border-box;
       }
@@ -702,20 +724,12 @@ function Styles() {
         -webkit-tap-highlight-color: transparent;
       }
 
-      /* PAGE */
-
       .wowPage {
         position: relative;
         min-height: 100vh;
         overflow: hidden;
-
         color: #ffffff;
-
-        font-family:
-          Arial,
-          Helvetica,
-          sans-serif;
-
+        font-family: Arial, Helvetica, sans-serif;
         background:
           radial-gradient(
             circle at 8% 18%,
@@ -739,86 +753,54 @@ function Styles() {
       .pageShell {
         position: relative;
         z-index: 5;
-
-        width:
-          min(
-            900px,
-            calc(100% - 30px)
-          );
-
+        width: min(900px, calc(100% - 30px));
         margin: 0 auto;
-
-        padding:
-          28px 0 34px;
+        padding: 28px 0 34px;
       }
 
-      /* BACKGROUND FX */
+      /* BACKGROUND */
 
       .blueGlow,
       .redGlow {
         position: fixed;
-
         width: 480px;
         height: 480px;
-
         border-radius: 50%;
-
         filter: blur(120px);
-
         opacity: 0.17;
-
         pointer-events: none;
       }
 
       .blueGlow {
         top: 70px;
         left: -220px;
-
         background: #087eff;
       }
 
       .redGlow {
         top: 170px;
         right: -220px;
-
         background: #ed1c24;
       }
 
       .blueSlash,
       .redSlash {
         position: fixed;
-
         width: 280px;
         height: 55px;
-
-        transform:
-          skewX(-35deg);
-
+        transform: skewX(-35deg);
         pointer-events: none;
-
         opacity: 0.11;
       }
 
       .blueSlash {
         left: -125px;
-
-        background:
-          linear-gradient(
-            90deg,
-            transparent,
-            #087eff
-          );
+        background: linear-gradient(90deg, transparent, #087eff);
       }
 
       .redSlash {
         right: -125px;
-
-        background:
-          linear-gradient(
-            90deg,
-            #ed1c24,
-            transparent
-          );
+        background: linear-gradient(90deg, #ed1c24, transparent);
       }
 
       .slashOne {
@@ -837,92 +819,55 @@ function Styles() {
         bottom: 8%;
       }
 
-      /* HEADER */
+      /* BRAND */
 
       .brandHeader {
         display: flex;
-
         align-items: center;
         justify-content: center;
-
         gap: 14px;
-
         margin-bottom: 16px;
       }
 
       .brandBadge {
         display: block;
-
         width: 68px;
-
         height: auto;
-
-        filter:
-          drop-shadow(
-            0 5px 12px
-            rgba(0,0,0,0.42)
-          );
-      }
-
-      .brandText {
-        text-align: left;
+        filter: drop-shadow(0 5px 12px rgba(0, 0, 0, 0.42));
       }
 
       .brandTitle {
         color: #ffffff;
-
         font-size: 34px;
-
         line-height: 0.95;
-
         font-weight: 950;
-
         letter-spacing: -1.7px;
-
         white-space: nowrap;
-
-        text-shadow:
-          0 3px 10px
-          rgba(0,0,0,0.45);
       }
 
       .brandTitle span {
         color: #ed1c24;
-
-        text-shadow:
-          0 0 15px
-          rgba(237,28,36,0.42);
       }
 
       .brandLine {
         height: 2px;
-
         margin-top: 8px;
-
-        background:
-          linear-gradient(
-            90deg,
-            #087eff,
-            transparent 48%,
-            #ed1c24
-          );
+        background: linear-gradient(
+          90deg,
+          #087eff,
+          transparent 48%,
+          #ed1c24
+        );
       }
 
       .brandTag {
         display: flex;
-
         align-items: center;
-
         gap: 8px;
-
         margin-top: 7px;
-
         color: #edf4fb;
-
         font-size: 9px;
-
         font-weight: 900;
-
         letter-spacing: 1.7px;
       }
 
@@ -940,120 +885,82 @@ function Styles() {
 
       .pageTag {
         margin-top: 6px;
-
         color: #9eb3c8;
-
         font-size: 10px;
-
         font-weight: 950;
-
         letter-spacing: 1.4px;
       }
 
       .intro {
-        margin:
-          0 auto 22px;
-
+        margin: 0 auto 22px;
         color: #a8bdd1;
-
         text-align: center;
-
         font-size: 14px;
-
         font-weight: 750;
       }
 
-      /* RULE CARDS */
+      /* CARD */
 
       .ruleCard {
         position: relative;
-
         overflow: hidden;
-
         margin-bottom: 17px;
-
-        padding:
-          24px 24px 22px;
-
-        border:
-          1px solid
-          rgba(104,150,196,0.38);
-
+        padding: 24px 24px 22px;
+        border: 1px solid rgba(104, 150, 196, 0.38);
         border-radius: 15px;
-
-        background:
-          linear-gradient(
-            155deg,
-            rgba(12,35,64,0.97),
-            rgba(4,17,33,0.97)
-          );
-
+        background: linear-gradient(
+          155deg,
+          rgba(12, 35, 64, 0.97),
+          rgba(4, 17, 33, 0.97)
+        );
         box-shadow:
-          0 17px 42px
-          rgba(0,0,0,0.30),
-          inset 0 1px 0
-          rgba(255,255,255,0.035);
-
-        backdrop-filter:
-          blur(15px);
+          0 17px 42px rgba(0, 0, 0, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.035);
       }
 
       .dualTop {
         position: absolute;
-
         top: 0;
         right: 0;
         left: 0;
-
         height: 3px;
-
-        background:
-          linear-gradient(
-            90deg,
-            #087eff 0%,
-            #087eff 40%,
-            #ed1c24 68%,
-            #ed1c24 100%
-          );
+        background: linear-gradient(
+          90deg,
+          #087eff 0%,
+          #087eff 40%,
+          #ed1c24 68%,
+          #ed1c24 100%
+        );
       }
 
       .featuredCard {
-        border-color:
-          rgba(230,163,25,0.38);
+        border-color: rgba(230, 163, 25, 0.38);
       }
 
       .featuredCard .dualTop {
-        background:
-          linear-gradient(
-            90deg,
-            #d98c00,
-            #ffb51c 35%,
-            #ed1c24 100%
-          );
+        background: linear-gradient(
+          90deg,
+          #d98c00,
+          #ffb51c 35%,
+          #ed1c24 100%
+        );
       }
 
-      /* RULE HEADERS */
+      /* HEADER */
 
       .ruleHeader {
         display: flex;
-
         align-items: flex-start;
         justify-content: space-between;
-
         gap: 18px;
-
         margin-bottom: 17px;
       }
 
       .eyebrow {
         margin-bottom: 5px;
-
         color: #2b9cff;
-
         font-size: 10px;
-
         font-weight: 950;
-
         letter-spacing: 1.35px;
       }
 
@@ -1063,63 +970,46 @@ function Styles() {
 
       .ruleHeader h2 {
         margin: 0;
-
         color: #ffffff;
-
         font-size: 25px;
-
         line-height: 1.05;
-
         font-weight: 950;
-
         letter-spacing: -0.5px;
       }
 
       .ruleIcon {
         display: grid;
-
         place-items: center;
-
         flex-shrink: 0;
-
         width: 54px;
         height: 54px;
-
-        border:
-          1px solid
-          rgba(41,144,237,0.48);
-
+        border: 1px solid rgba(41, 144, 237, 0.48);
         border-radius: 14px;
-
-        background:
-          linear-gradient(
-            145deg,
-            rgba(9,52,91,0.95),
-            rgba(3,24,45,0.95)
-          );
-
+        background: linear-gradient(
+          145deg,
+          rgba(9, 52, 91, 0.95),
+          rgba(3, 24, 45, 0.95)
+        );
         color: #ffffff;
-
         font-size: 27px;
-
         font-weight: 950;
       }
 
-      /* BODY */
+      /* TYPOGRAPHY SYSTEM */
 
       .ruleBody {
         color: #c2d0dd;
-
         font-size: 15px;
-
-        line-height: 1.65;
-
-        font-weight: 650;
+        line-height: 1.58;
+        font-weight: 600;
       }
 
       .ruleBody p {
-        margin:
-          0 0 14px;
+        margin: 0 0 13px;
+        color: #c2d0dd;
+        font-size: 15px;
+        line-height: 1.58;
+        font-weight: 600;
       }
 
       .ruleBody p:last-child {
@@ -1129,94 +1019,60 @@ function Styles() {
       .ruleBody strong,
       .ruleBody b {
         color: #ffffff;
-
-        font-weight: 900;
+        font-weight: 850;
       }
 
-      /* ENTRY FEE */
+      /* ENTRY */
 
       .entryFeeHero {
         display: flex;
-
         align-items: center;
         justify-content: space-between;
-
         gap: 20px;
-
         margin-bottom: 16px;
-
-        padding:
-          18px 20px;
-
-        border:
-          1px solid
-          rgba(255,181,28,0.42);
-
+        padding: 18px 20px;
+        border: 1px solid rgba(255, 181, 28, 0.42);
         border-radius: 12px;
-
-        background:
-          linear-gradient(
-            120deg,
-            rgba(100,62,0,0.35),
-            rgba(14,32,51,0.78)
-          );
+        background: linear-gradient(
+          120deg,
+          rgba(100, 62, 0, 0.35),
+          rgba(14, 32, 51, 0.78)
+        );
       }
 
       .miniLabel {
         color: #ffbd3d;
-
         font-size: 10px;
-
         font-weight: 950;
-
         letter-spacing: 1.2px;
       }
 
       .entryAmount {
         margin-top: 3px;
-
         color: #ffffff;
-
         font-size: 37px;
-
         line-height: 1;
-
         font-weight: 950;
       }
 
       .entrySub {
         margin-top: 7px;
-
         color: #c3ad7b;
-
         font-size: 11px;
-
-        font-weight: 750;
+        line-height: 1.45;
+        font-weight: 700;
       }
 
       .entryIcon {
         display: grid;
-
         place-items: center;
-
         width: 64px;
         height: 64px;
-
         flex-shrink: 0;
-
         border-radius: 15px;
-
-        background:
-          linear-gradient(
-            145deg,
-            #c37a00,
-            #f1a000
-          );
-
+        background: linear-gradient(145deg, #c37a00, #f1a000);
         color: #ffffff;
-
         font-size: 30px;
-
         font-weight: 950;
       }
 
@@ -1224,59 +1080,44 @@ function Styles() {
 
       .paymentGrid {
         display: grid;
-
-        grid-template-columns:
-          repeat(2,1fr);
-
+        grid-template-columns: repeat(2, 1fr);
         gap: 11px;
-
         margin-bottom: 16px;
       }
 
       .infoPanel {
         display: flex;
-
         align-items: flex-start;
-
         gap: 11px;
-
         padding: 14px;
-
         border-radius: 11px;
       }
 
       .infoPanel strong {
         display: block;
-
         margin-bottom: 4px;
-
+        color: #ffffff;
         font-size: 14px;
+        line-height: 1.3;
+        font-weight: 850;
       }
 
       .infoPanel p {
         margin: 0;
-
+        color: #b8c8d7;
         font-size: 12px;
-
         line-height: 1.5;
+        font-weight: 600;
       }
 
       .bluePanel {
-        border:
-          1px solid
-          rgba(38,149,248,0.37);
-
-        background:
-          rgba(0,96,183,0.15);
+        border: 1px solid rgba(38, 149, 248, 0.37);
+        background: rgba(0, 96, 183, 0.15);
       }
 
       .redPanel {
-        border:
-          1px solid
-          rgba(237,28,36,0.33);
-
-        background:
-          rgba(142,19,27,0.14);
+        border: 1px solid rgba(237, 28, 36, 0.33);
+        background: rgba(142, 19, 27, 0.14);
       }
 
       .infoIcon {
@@ -1287,43 +1128,27 @@ function Styles() {
 
       .prizeGrid {
         display: grid;
-
-        grid-template-columns:
-          repeat(2,1fr);
-
+        grid-template-columns: repeat(2, 1fr);
         gap: 11px;
-
         margin-bottom: 17px;
       }
 
       .prizeCard {
         display: flex;
-
         align-items: center;
-
         gap: 13px;
-
         padding: 15px;
-
         border-radius: 11px;
       }
 
       .prizeCard.gold {
-        border:
-          1px solid
-          rgba(239,178,23,0.43);
-
-        background:
-          rgba(112,75,0,0.26);
+        border: 1px solid rgba(239, 178, 23, 0.43);
+        background: rgba(112, 75, 0, 0.26);
       }
 
       .prizeCard.silver {
-        border:
-          1px solid
-          rgba(176,195,214,0.34);
-
-        background:
-          rgba(108,127,146,0.15);
+        border: 1px solid rgba(176, 195, 214, 0.34);
+        background: rgba(108, 127, 146, 0.15);
       }
 
       .medal {
@@ -1332,11 +1157,8 @@ function Styles() {
 
       .prizeLabel {
         color: #9eb3c8;
-
         font-size: 9px;
-
         font-weight: 950;
-
         letter-spacing: 1px;
       }
 
@@ -1346,141 +1168,92 @@ function Styles() {
 
       .prizeAmount {
         margin-top: 3px;
-
         color: #ffffff;
-
         font-size: 25px;
-
         line-height: 1;
-
         font-weight: 950;
       }
 
-      /* H D A */
+      /* HDA */
 
       .predictionOptions {
         display: grid;
-
-        grid-template-columns:
-          repeat(3,1fr);
-
+        grid-template-columns: repeat(3, 1fr);
         gap: 11px;
-
         margin-top: 13px;
       }
 
       .predictionOption {
-        padding:
-          15px 10px;
-
-        border:
-          1px solid
-          rgba(41,144,237,0.38);
-
+        padding: 15px 10px;
+        border: 1px solid rgba(41, 144, 237, 0.38);
         border-radius: 11px;
-
-        background:
-          rgba(5,39,70,0.65);
-
+        background: rgba(5, 39, 70, 0.65);
         text-align: center;
       }
 
       .predictionLetter {
         display: grid;
-
         place-items: center;
-
         width: 47px;
         height: 47px;
-
-        margin:
-          0 auto 9px;
-
-        border:
-          1px solid
-          rgba(255,255,255,0.78);
-
+        margin: 0 auto 9px;
+        border: 1px solid rgba(255, 255, 255, 0.78);
         border-radius: 10px;
-
-        background:
-          linear-gradient(
-            120deg,
-            #087eff,
-            #405eea 40%,
-            #bd286b 70%,
-            #ed1c24
-          );
-
+        background: linear-gradient(
+          120deg,
+          #087eff,
+          #405eea 40%,
+          #bd286b 70%,
+          #ed1c24
+        );
         color: #ffffff;
-
         font-size: 17px;
-
         font-weight: 950;
       }
 
       .predictionOption strong {
+        color: #ffffff;
         font-size: 13px;
+        line-height: 1.25;
+        font-weight: 850;
       }
 
       /* SCORING */
 
       .scoreGrid {
         display: grid;
-
-        grid-template-columns:
-          repeat(2,1fr);
-
+        grid-template-columns: repeat(2, 1fr);
         gap: 11px;
-
         margin-bottom: 16px;
       }
 
       .scoreBox {
         display: flex;
-
         align-items: center;
-
         gap: 12px;
-
         padding: 15px;
-
         border-radius: 11px;
       }
 
       .scoreBox.correct {
-        border:
-          1px solid
-          rgba(42,205,116,0.40);
-
-        background:
-          rgba(12,104,56,0.20);
+        border: 1px solid rgba(42, 205, 116, 0.4);
+        background: rgba(12, 104, 56, 0.2);
       }
 
       .scoreBox.incorrect {
-        border:
-          1px solid
-          rgba(237,67,75,0.36);
-
-        background:
-          rgba(135,21,28,0.18);
+        border: 1px solid rgba(237, 67, 75, 0.36);
+        background: rgba(135, 21, 28, 0.18);
       }
 
       .scoreIcon {
         display: grid;
-
         place-items: center;
-
         width: 42px;
         height: 42px;
-
         flex-shrink: 0;
-
         border-radius: 50%;
-
         color: #ffffff;
-
         font-size: 20px;
-
         font-weight: 950;
       }
 
@@ -1494,80 +1267,63 @@ function Styles() {
 
       .scoreBox strong {
         display: block;
-
-        font-size: 13px;
+        color: #ffffff;
+        font-size: 14px;
+        line-height: 1.3;
+        font-weight: 850;
       }
 
       .scoreBox span {
         display: block;
-
         margin-top: 3px;
-
         font-size: 10px;
-
+        line-height: 1.2;
         font-weight: 950;
       }
 
-      /* HIGHLIGHTS */
+      /* HIGHLIGHT */
 
       .highlight {
         display: flex;
-
         align-items: center;
-
         gap: 13px;
-
-        margin:
-          15px 0;
-
-        padding:
-          14px 15px;
-
+        margin: 15px 0;
+        padding: 14px 15px;
         border-radius: 11px;
       }
 
       .highlightIcon {
         display: grid;
-
         place-items: center;
-
         width: 38px;
         height: 38px;
-
         flex-shrink: 0;
-
         border-radius: 50%;
-
         color: #ffffff;
-
         font-size: 16px;
-
         font-weight: 950;
       }
 
-      .highlight strong {
+      .highlightTitle {
         display: block;
-
         margin-bottom: 3px;
-
-        font-size: 13px;
+        color: #ffffff;
+        font-size: 14px;
+        line-height: 1.3;
+        font-weight: 850;
       }
 
       .highlightText {
         display: block;
-
+        color: #b7c9d9;
         font-size: 12px;
-
         line-height: 1.5;
+        font-weight: 600;
       }
 
       .blueHighlight {
-        border:
-          1px solid
-          rgba(39,146,242,0.36);
-
-        background:
-          rgba(0,91,174,0.15);
+        border: 1px solid rgba(39, 146, 242, 0.36);
+        background: rgba(0, 91, 174, 0.15);
       }
 
       .blueHighlight .highlightIcon {
@@ -1575,12 +1331,8 @@ function Styles() {
       }
 
       .amberHighlight {
-        border:
-          1px solid
-          rgba(242,170,44,0.40);
-
-        background:
-          rgba(119,72,0,0.20);
+        border: 1px solid rgba(242, 170, 44, 0.4);
+        background: rgba(119, 72, 0, 0.2);
       }
 
       .amberHighlight .highlightIcon {
@@ -1588,147 +1340,94 @@ function Styles() {
       }
 
       .redHighlight {
-        border:
-          1px solid
-          rgba(237,54,63,0.36);
-
-        background:
-          rgba(132,18,25,0.18);
+        border: 1px solid rgba(237, 54, 63, 0.36);
+        background: rgba(132, 18, 25, 0.18);
       }
 
       .redHighlight .highlightIcon {
         background: #c4242d;
       }
 
-      /* LEADERBOARDS */
+      /* LEADERBOARD INFO */
 
       .leaderboardInfoGrid {
         display: grid;
-
-        grid-template-columns:
-          repeat(2,1fr);
-
+        grid-template-columns: repeat(2, 1fr);
         gap: 11px;
-
         margin-bottom: 16px;
       }
 
       .leaderboardInfo {
         padding: 16px;
-
-        border:
-          1px solid
-          rgba(43,144,235,0.35);
-
+        border: 1px solid rgba(43, 144, 235, 0.35);
         border-radius: 11px;
-
-        background:
-          rgba(5,39,70,0.55);
-
+        background: rgba(5, 39, 70, 0.55);
         text-align: center;
       }
 
       .lbIcon {
         margin-bottom: 7px;
-
         font-size: 27px;
       }
 
       .leaderboardInfo strong {
         display: block;
-
+        color: #ffffff;
         font-size: 14px;
+        line-height: 1.3;
+        font-weight: 850;
       }
 
       .leaderboardInfo span {
         display: block;
-
         margin-top: 5px;
-
         color: #9eb3c8;
-
         font-size: 12px;
-
         line-height: 1.45;
+        font-weight: 600;
       }
 
-      /* RANKING */
+      /* RANK */
 
       .rankingExample {
         display: flex;
-
         justify-content: center;
-
         gap: 14px;
-
         margin-top: 14px;
-
         padding: 16px;
-
-        border:
-          1px solid
-          rgba(62,139,213,0.30);
-
+        border: 1px solid rgba(62, 139, 213, 0.3);
         border-radius: 11px;
-
-        background:
-          rgba(3,24,45,0.62);
+        background: rgba(3, 24, 45, 0.62);
       }
 
       .rankBubble {
         display: flex;
-
         flex-direction: column;
-
         align-items: center;
         justify-content: center;
-
         width: 59px;
         height: 59px;
-
-        border:
-          1px solid
-          rgba(40,145,239,0.42);
-
+        border: 1px solid rgba(40, 145, 239, 0.42);
         border-radius: 50%;
-
-        background:
-          linear-gradient(
-            145deg,
-            #0b365f,
-            #061e38
-          );
+        background: linear-gradient(145deg, #0b365f, #061e38);
       }
 
       .goldRank {
-        border-color:
-          rgba(255,201,54,0.58);
-
-        background:
-          linear-gradient(
-            145deg,
-            #926100,
-            #3a2a06
-          );
+        border-color: rgba(255, 201, 54, 0.58);
+        background: linear-gradient(145deg, #926100, #3a2a06);
       }
 
       .rankBubble span {
         color: #ffffff;
-
         font-size: 19px;
-
         line-height: 1;
-
         font-weight: 950;
       }
 
       .rankBubble small {
         margin-top: 4px;
-
         color: #6ebaff;
-
         font-size: 8px;
-
         font-weight: 950;
       }
 
@@ -1740,52 +1439,38 @@ function Styles() {
 
       .fairPlayPanel {
         display: flex;
-
         align-items: center;
-
         gap: 15px;
-
         padding: 16px;
-
-        border:
-          1px solid
-          rgba(98,148,197,0.34);
-
+        border: 1px solid rgba(98, 148, 197, 0.34);
         border-radius: 11px;
-
-        background:
-          rgba(5,31,56,0.56);
+        background: rgba(5, 31, 56, 0.56);
       }
 
       .fairPlayPanel p {
         margin: 0;
+        color: #c2d0dd;
+        font-size: 15px;
+        line-height: 1.58;
+        font-weight: 600;
       }
 
       .fairIcon {
         display: grid;
-
         place-items: center;
-
         width: 50px;
         height: 50px;
-
         flex-shrink: 0;
-
         border-radius: 50%;
-
-        background:
-          linear-gradient(
-            120deg,
-            #087eff,
-            #405eea 40%,
-            #bd286b 70%,
-            #ed1c24
-          );
-
+        background: linear-gradient(
+          120deg,
+          #087eff,
+          #405eea 40%,
+          #bd286b 70%,
+          #ed1c24
+        );
         color: #ffffff;
-
         font-size: 23px;
-
         font-weight: 950;
       }
 
@@ -1793,63 +1478,45 @@ function Styles() {
 
       .backButton {
         display: flex;
-
         align-items: center;
         justify-content: center;
-
         width: 100%;
-
         min-height: 52px;
-
         margin-top: 4px;
-
         border-radius: 10px;
-
-        background:
-          linear-gradient(
-            105deg,
-            #087eff 0%,
-            #405eea 40%,
-            #bd286b 70%,
-            #ed1c24 100%
-          );
-
+        background: linear-gradient(
+          105deg,
+          #087eff 0%,
+          #405eea 40%,
+          #bd286b 70%,
+          #ed1c24 100%
+        );
         color: #ffffff;
-
         font-size: 13px;
-
         font-weight: 950;
-
         letter-spacing: 0.35px;
       }
 
       .footer {
         margin-top: 24px;
-
         color: #647b91;
-
         text-align: center;
-
         font-size: 10px;
       }
 
       /* =====================================================
-         MOBILE
-         THIS IS THE IMPORTANT SIZE FIX
+         MOBILE TYPOGRAPHY LOCK
+         No random inherited giant paragraph text
       ===================================================== */
 
       @media (max-width: 620px) {
-
         .pageShell {
-          width:
-            calc(100% - 16px);
-
+          width: calc(100% - 16px);
           padding-top: 17px;
         }
 
         .brandHeader {
           gap: 10px;
-
           margin-bottom: 13px;
         }
 
@@ -1859,15 +1526,12 @@ function Styles() {
 
         .brandTitle {
           font-size: 25px;
-
           letter-spacing: -1.25px;
         }
 
         .brandTag {
           gap: 6px;
-
           font-size: 7px;
-
           letter-spacing: 1.15px;
         }
 
@@ -1877,16 +1541,13 @@ function Styles() {
 
         .intro {
           margin-bottom: 17px;
-
-          font-size: 13px;
+          font-size: 13px !important;
+          line-height: 1.45 !important;
         }
 
         .ruleCard {
           margin-bottom: 12px;
-
-          padding:
-            19px 15px 17px;
-
+          padding: 19px 15px 17px;
           border-radius: 13px;
         }
 
@@ -1895,55 +1556,59 @@ function Styles() {
         }
 
         .ruleHeader h2 {
-          font-size: 23px;
+          font-size: 23px !important;
+          line-height: 1.08 !important;
         }
 
         .eyebrow {
-          font-size: 8px;
+          font-size: 8px !important;
         }
 
         .ruleIcon {
           width: 46px;
           height: 46px;
-
           border-radius: 11px;
-
           font-size: 22px;
         }
 
-        /* KEY FIX:
-           NORMAL, READABLE MOBILE BODY COPY */
+        /* ABSOLUTE CONSISTENCY */
 
-        .ruleBody {
-          font-size: 15px;
-
-          line-height: 1.6;
-
-          font-weight: 650;
+        .ruleCard .ruleBody,
+        .ruleCard .ruleBody p,
+        .ruleCard .fairPlayPanel p {
+          font-size: 15px !important;
+          line-height: 1.55 !important;
+          font-weight: 600 !important;
+          letter-spacing: 0 !important;
         }
 
-        .ruleBody p {
-          margin-bottom: 13px;
+        .ruleCard .ruleBody p {
+          margin-bottom: 13px !important;
+        }
+
+        .ruleCard .ruleBody p strong,
+        .ruleCard .ruleBody p b {
+          font-size: inherit !important;
+          line-height: inherit !important;
         }
 
         .entryFeeHero {
-          padding:
-            15px 14px;
+          padding: 15px 14px;
         }
 
         .entryAmount {
-          font-size: 32px;
+          font-size: 32px !important;
+        }
+
+        .entrySub {
+          font-size: 11px !important;
+          line-height: 1.45 !important;
         }
 
         .entryIcon {
           width: 54px;
           height: 54px;
-
           font-size: 25px;
-        }
-
-        .entrySub {
-          font-size: 11px;
         }
 
         .paymentGrid,
@@ -1953,14 +1618,21 @@ function Styles() {
           grid-template-columns: 1fr;
         }
 
-        .infoPanel strong {
-          font-size: 14px;
+        .ruleCard .infoPanel strong,
+        .ruleCard .highlightTitle,
+        .ruleCard .leaderboardInfo strong,
+        .ruleCard .scoreBox strong {
+          font-size: 14px !important;
+          line-height: 1.3 !important;
+          font-weight: 850 !important;
         }
 
-        .infoPanel p {
-          font-size: 12px;
-
-          line-height: 1.5;
+        .ruleCard .infoPanel p,
+        .ruleCard .highlightText,
+        .ruleCard .leaderboardInfo span {
+          font-size: 13px !important;
+          line-height: 1.5 !important;
+          font-weight: 600 !important;
         }
 
         .predictionOptions {
@@ -1968,51 +1640,34 @@ function Styles() {
         }
 
         .predictionOption {
-          padding:
-            13px 5px;
+          padding: 13px 5px;
         }
 
         .predictionLetter {
           width: 42px;
           height: 42px;
-
           font-size: 15px;
         }
 
         .predictionOption strong {
-          font-size: 11px;
+          font-size: 12px !important;
+          line-height: 1.25 !important;
+        }
+
+        .scoreBox span {
+          font-size: 10px !important;
+          line-height: 1.2 !important;
         }
 
         .highlight {
-          padding:
-            12px 11px;
-
+          padding: 12px 11px;
           gap: 10px;
         }
 
         .highlightIcon {
           width: 34px;
           height: 34px;
-
           font-size: 14px;
-        }
-
-        .highlight strong {
-          font-size: 13px;
-        }
-
-        .highlightText {
-          font-size: 12px;
-
-          line-height: 1.5;
-        }
-
-        .leaderboardInfo strong {
-          font-size: 14px;
-        }
-
-        .leaderboardInfo span {
-          font-size: 12px;
         }
 
         .rankingExample {
@@ -2024,28 +1679,32 @@ function Styles() {
           height: 54px;
         }
 
+        .rankBubble span {
+          font-size: 18px !important;
+        }
+
+        .rankBubble small {
+          font-size: 8px !important;
+        }
+
         .fairPlayPanel {
           align-items: flex-start;
-
           padding: 13px;
         }
 
         .fairIcon {
           width: 42px;
           height: 42px;
-
           font-size: 19px;
         }
 
         .backButton {
           min-height: 48px;
-
           font-size: 11px;
         }
       }
 
       @media (max-width: 390px) {
-
         .brandBadge {
           width: 47px;
         }
@@ -2055,20 +1714,23 @@ function Styles() {
         }
 
         .ruleHeader h2 {
-          font-size: 21px;
+          font-size: 21px !important;
         }
 
-        .ruleBody {
-          font-size: 14.5px;
-
-          line-height: 1.6;
+        /* STILL KEEP BODY CONSISTENT */
+        .ruleCard .ruleBody,
+        .ruleCard .ruleBody p,
+        .ruleCard .fairPlayPanel p {
+          font-size: 14.5px !important;
+          line-height: 1.55 !important;
         }
 
-        .predictionOption strong {
-          font-size: 10px;
+        .ruleCard .infoPanel p,
+        .ruleCard .highlightText,
+        .ruleCard .leaderboardInfo span {
+          font-size: 12.5px !important;
         }
       }
-
     `}</style>
   );
 }
