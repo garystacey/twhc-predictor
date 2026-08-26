@@ -97,9 +97,7 @@ export default function WeeklyLeaderboardsPage() {
         return;
       }
 
-      setWeekNo(
-        selectedWeek.week_no
-      );
+      setWeekNo(selectedWeek.week_no);
 
       const {
         data: profiles,
@@ -111,9 +109,7 @@ export default function WeeklyLeaderboardsPage() {
         );
 
       if (profileError) {
-        setMessage(
-          profileError.message
-        );
+        setMessage(profileError.message);
         setLoading(false);
         return;
       }
@@ -136,9 +132,7 @@ export default function WeeklyLeaderboardsPage() {
         );
 
       if (fixtureError) {
-        setMessage(
-          fixtureError.message
-        );
+        setMessage(fixtureError.message);
         setLoading(false);
         return;
       }
@@ -151,9 +145,7 @@ export default function WeeklyLeaderboardsPage() {
 
       let predictionData = [];
 
-      if (
-        fixtureIds.length > 0
-      ) {
+      if (fixtureIds.length > 0) {
         const {
           data,
           error: predictionError,
@@ -209,11 +201,9 @@ export default function WeeklyLeaderboardsPage() {
             ];
 
           if (
-            fixtureStatus !==
-              "cancelled" &&
+            fixtureStatus !== "cancelled" &&
             actualResult &&
-            prediction.prediction ===
-              actualResult
+            prediction.prediction === actualResult
           ) {
             pointsByUser[
               prediction.user_id
@@ -243,21 +233,13 @@ export default function WeeklyLeaderboardsPage() {
             )
           )
           .map((profile) => ({
-            id:
-              profile.id,
-
+            id: profile.id,
             firstName:
-              profile.first_name ||
-              "",
-
+              profile.first_name || "",
             surname:
-              profile.surname ||
-              "",
-
+              profile.surname || "",
             teamName:
-              profile.team_name ||
-              "",
-
+              profile.team_name || "",
             points:
               pointsByUser[
                 profile.id
@@ -357,8 +339,7 @@ export default function WeeklyLeaderboardsPage() {
       predictions.find(
         (item) =>
           item.user_id === userId &&
-          item.fixture_id ===
-            fixtureId
+          item.fixture_id === fixtureId
       );
 
     return (
@@ -473,7 +454,7 @@ export default function WeeklyLeaderboardsPage() {
           </section>
         ) : (
           <>
-            {/* SELECTOR */}
+            {/* MATCH WEEK SELECTOR */}
 
             <section className="glassCard selectorCard">
               <div className="dualTop" />
@@ -523,7 +504,7 @@ export default function WeeklyLeaderboardsPage() {
               </div>
             </section>
 
-            {/* WEEKLY LEADERBOARD */}
+            {/* LEADERBOARD */}
 
             <section className="glassCard leaderboardCard">
               <div className="dualTop" />
@@ -540,7 +521,7 @@ export default function WeeklyLeaderboardsPage() {
                   </h1>
 
                   <p>
-                    Tap a player to view
+                    Tap a team to view
                     their predictions.
                   </p>
                 </div>
@@ -550,7 +531,7 @@ export default function WeeklyLeaderboardsPage() {
                 </div>
               </div>
 
-              {/* WARNINGS */}
+              {/* STATUS */}
 
               {pendingResults > 0 &&
                 !loading && (
@@ -607,8 +588,15 @@ export default function WeeklyLeaderboardsPage() {
                 </div>
               ) : (
                 <>
+                  <div className="columnHeadings">
+                    <span>POS</span>
+                    <span>TEAM / PLAYER</span>
+                    <span>POINTS</span>
+                    <span />
+                  </div>
+
                   <div className="tapHint">
-                    TAP A PLAYER TO VIEW
+                    TAP A TEAM TO VIEW
                     THEIR PREDICTIONS
                   </div>
 
@@ -658,7 +646,12 @@ export default function WeeklyLeaderboardsPage() {
                               </div>
 
                               <div className="playerInfo">
-                                <div className="playerName">
+                                <div className="teamNameMain">
+                                  {row.teamName ||
+                                    "Unnamed Team"}
+                                </div>
+
+                                <div className="playerNameSub">
                                   {
                                     row.firstName
                                   }{" "}
@@ -666,14 +659,6 @@ export default function WeeklyLeaderboardsPage() {
                                     row.surname
                                   }
                                 </div>
-
-                                {row.teamName && (
-                                  <div className="teamName">
-                                    {
-                                      row.teamName
-                                    }
-                                  </div>
-                                )}
                               </div>
 
                               <div className="pointsBox">
@@ -706,6 +691,7 @@ export default function WeeklyLeaderboardsPage() {
 
                             {expanded && (
                               <div className="expandedPanel">
+
                                 <div className="scoreSummary">
                                   <div>
                                     <div className="scoreLabel">
@@ -847,8 +833,8 @@ export default function WeeklyLeaderboardsPage() {
 
                                               <div className="cancelledText">
                                                 CANCELLED
-                                                — no
-                                                points
+                                                — NO
+                                                POINTS
                                               </div>
                                             </div>
                                           ) : (
@@ -1093,7 +1079,7 @@ function Styles() {
         padding: 27px 0 30px;
       }
 
-      /* BACKGROUND */
+      /* BACKGROUND FX */
 
       .blueGlow,
       .redGlow {
@@ -1247,7 +1233,7 @@ function Styles() {
         letter-spacing: 1.3px;
       }
 
-      /* GLASS */
+      /* CARDS */
 
       .glassCard,
       .loadingCard {
@@ -1292,7 +1278,8 @@ function Styles() {
               255,
               0.035
             );
-        backdrop-filter: blur(15px);
+        backdrop-filter:
+          blur(15px);
       }
 
       .glassCard {
@@ -1319,21 +1306,21 @@ function Styles() {
 
       .selectorCard {
         margin-bottom: 14px;
-        padding: 16px 18px;
+        padding: 17px 19px;
       }
 
       .selectorGrid {
         display: grid;
         grid-template-columns:
-          125px 1fr;
+          130px 1fr;
         align-items: center;
-        gap: 15px;
+        gap: 16px;
       }
 
       .eyebrow {
-        font-size: 9px;
+        font-size: 10px;
         font-weight: 950;
-        letter-spacing: 1.3px;
+        letter-spacing: 1.4px;
       }
 
       .eyebrow.blue {
@@ -1341,16 +1328,16 @@ function Styles() {
       }
 
       .selectorLabel {
-        margin-top: 3px;
+        margin-top: 4px;
         color: #ffffff;
-        font-size: 15px;
+        font-size: 17px;
         font-weight: 950;
       }
 
       .selectorCard select {
         width: 100%;
-        min-height: 44px;
-        padding: 10px 13px;
+        min-height: 48px;
+        padding: 11px 14px;
         border:
           1px solid
           rgba(
@@ -1363,13 +1350,14 @@ function Styles() {
         outline: none;
         background: #071b34;
         color: #ffffff;
-        font-size: 14px;
+        font-size: 16px;
         font-weight: 850;
         cursor: pointer;
       }
 
       .selectorCard select:focus {
-        border-color: #168eff;
+        border-color:
+          #168eff;
         box-shadow:
           0 0 0 3px
           rgba(
@@ -1388,7 +1376,8 @@ function Styles() {
       /* LEADER HEADER */
 
       .leaderboardCard {
-        padding: 20px 15px 14px;
+        padding:
+          22px 15px 15px;
       }
 
       .leaderHeader {
@@ -1396,33 +1385,34 @@ function Styles() {
         align-items: center;
         justify-content:
           space-between;
-        gap: 16px;
+        gap: 18px;
         padding:
-          2px 5px 15px;
+          4px 6px 18px;
       }
 
       .leaderHeader h1 {
-        margin: 4px 0 0;
+        margin: 5px 0 0;
         color: #ffffff;
-        font-size: 26px;
+        font-size: 31px;
         line-height: 1;
         font-weight: 950;
-        letter-spacing: -0.8px;
+        letter-spacing:
+          -0.9px;
       }
 
       .leaderHeader p {
-        margin: 7px 0 0;
-        color: #91a9c0;
-        font-size: 10px;
+        margin: 9px 0 0;
+        color: #a2b7ca;
+        font-size: 13px;
         font-weight: 700;
       }
 
       .weekIcon {
         display: grid;
         place-items: center;
-        width: 58px;
-        height: 58px;
-        flex: 0 0 58px;
+        width: 65px;
+        height: 65px;
+        flex: 0 0 65px;
         border:
           1px solid
           rgba(
@@ -1431,7 +1421,7 @@ function Styles() {
             246,
             0.42
           );
-        border-radius: 14px;
+        border-radius: 15px;
         background:
           rgba(
             5,
@@ -1439,7 +1429,7 @@ function Styles() {
             48,
             0.8
           );
-        font-size: 29px;
+        font-size: 32px;
         box-shadow:
           inset 0 0 18px
           rgba(
@@ -1450,12 +1440,12 @@ function Styles() {
           );
       }
 
-      /* WARNINGS */
+      /* STATUS */
 
       .warningBar,
       .cancelledNote {
-        margin-bottom: 12px;
-        padding: 10px 12px;
+        margin-bottom: 13px;
+        padding: 11px 13px;
         border-radius: 9px;
       }
 
@@ -1480,16 +1470,16 @@ function Styles() {
       .warningBar strong {
         display: block;
         color: #ffc04c;
-        font-size: 9px;
+        font-size: 10px;
         font-weight: 950;
         letter-spacing: 0.7px;
       }
 
       .warningBar span {
         display: block;
-        margin-top: 3px;
+        margin-top: 4px;
         color: #d1af75;
-        font-size: 9px;
+        font-size: 10px;
         font-weight: 700;
       }
 
@@ -1510,18 +1500,37 @@ function Styles() {
             0.14
           );
         color: #9eb2c4;
-        font-size: 9px;
+        font-size: 10px;
         font-weight: 850;
       }
 
-      /* TAP HINT */
+      /* COLUMN HEADINGS */
+
+      .columnHeadings {
+        display: grid;
+        grid-template-columns:
+          62px
+          minmax(0, 1fr)
+          82px
+          25px;
+        gap: 8px;
+        padding: 8px 9px;
+        color: #7893ad;
+        font-size: 8px;
+        font-weight: 950;
+        letter-spacing: 0.9px;
+      }
+
+      .columnHeadings span:nth-child(3) {
+        text-align: right;
+      }
 
       .tapHint {
-        padding: 7px 8px;
-        color: #5f7b95;
-        font-size: 7px;
+        padding: 5px 9px 9px;
+        color: #66819a;
+        font-size: 9px;
         font-weight: 950;
-        letter-spacing: 1px;
+        letter-spacing: 0.9px;
       }
 
       /* TABLE */
@@ -1551,17 +1560,17 @@ function Styles() {
 
       .playerWrap.expanded {
         margin:
-          6px 0 9px;
+          7px 0 10px;
+        overflow: hidden;
         border:
           1px solid
           rgba(
             42,
             135,
             222,
-            0.38
+            0.42
           );
         border-radius: 12px;
-        overflow: hidden;
         background:
           rgba(
             5,
@@ -1581,20 +1590,19 @@ function Styles() {
 
       .playerRow {
         width: 100%;
-        min-height: 65px;
+        min-height: 78px;
         margin: 0;
-        padding: 8px;
+        padding: 10px 9px;
         border: 0;
         display: grid;
         grid-template-columns:
-          52px
+          62px
           minmax(0, 1fr)
-          70px
-          24px;
+          82px
+          25px;
         align-items: center;
         gap: 8px;
-        background:
-          transparent;
+        background: transparent;
         color: #ffffff;
         text-align: left;
         cursor: pointer;
@@ -1612,6 +1620,7 @@ function Styles() {
       }
 
       .playerRow.gold {
+        min-height: 94px;
         background:
           linear-gradient(
             90deg,
@@ -1619,10 +1628,32 @@ function Styles() {
               164,
               111,
               0,
-              0.16
+              0.18
             ),
             transparent
               70%
+          );
+      }
+
+      .playerRow.silver {
+        border-left:
+          3px solid
+          rgba(
+            194,
+            211,
+            225,
+            0.7
+          );
+      }
+
+      .playerRow.bronze {
+        border-left:
+          3px solid
+          rgba(
+            209,
+            128,
+            67,
+            0.72
           );
       }
 
@@ -1641,23 +1672,23 @@ function Styles() {
       .positionBadge {
         display: grid;
         place-items: center;
-        width: 38px;
-        height: 38px;
+        width: 46px;
+        height: 46px;
         border-radius: 50%;
-        font-size: 12px;
+        font-size: 15px;
         font-weight: 950;
       }
 
       .positionBadge.gold {
-        width: 44px;
-        height: 44px;
+        width: 54px;
+        height: 54px;
         border:
           1px solid
           rgba(
             255,
             224,
             108,
-            0.85
+            0.88
           );
         background:
           linear-gradient(
@@ -1665,14 +1696,14 @@ function Styles() {
             #ffc927,
             #a96900
           );
-        font-size: 20px;
+        font-size: 24px;
         box-shadow:
-          0 0 16px
+          0 0 18px
           rgba(
             255,
             184,
             0,
-            0.16
+            0.17
           );
       }
 
@@ -1711,36 +1742,35 @@ function Styles() {
           );
         background:
           #071d36;
-        color: #8ecbff;
+        color:
+          #8ecbff;
       }
 
-      /* PLAYER */
+      /* TEAM MAIN / PLAYER SUB */
 
       .playerInfo {
         min-width: 0;
       }
 
-      .playerName {
+      .teamNameMain {
         overflow: hidden;
-        color: #edf5fc;
-        font-size: 13px;
+        color: #ffffff;
+        font-size: 19px;
+        line-height: 1.1;
         font-weight: 950;
+        letter-spacing:
+          -0.35px;
         text-overflow:
           ellipsis;
         white-space: nowrap;
       }
 
-      .playerRow.gold
-        .playerName {
-        color: #fff4cb;
-        font-size: 14px;
-      }
-
-      .teamName {
-        margin-top: 3px;
+      .playerNameSub {
+        margin-top: 6px;
         overflow: hidden;
-        color: #7894ad;
-        font-size: 9px;
+        color: #91a9c0;
+        font-size: 13px;
+        line-height: 1.1;
         font-weight: 750;
         text-overflow:
           ellipsis;
@@ -1748,8 +1778,34 @@ function Styles() {
       }
 
       .playerRow.gold
-        .teamName {
-        color: #cdb46d;
+        .teamNameMain {
+        color: #fff3bf;
+        font-size: 21px;
+        text-shadow:
+          0 0 13px
+          rgba(
+            255,
+            191,
+            31,
+            0.14
+          );
+      }
+
+      .playerRow.gold
+        .playerNameSub {
+        color: #d7bc73;
+      }
+
+      .playerRow.silver
+        .teamNameMain {
+        color: #f1f7fc;
+        font-size: 20px;
+      }
+
+      .playerRow.bronze
+        .teamNameMain {
+        color: #efb084;
+        font-size: 20px;
       }
 
       /* POINTS */
@@ -1761,24 +1817,33 @@ function Styles() {
       .pointsBox strong {
         display: block;
         color: #ffffff;
-        font-size: 18px;
+        font-size: 26px;
         line-height: 1;
         font-weight: 950;
       }
 
       .pointsBox span {
         display: block;
-        margin-top: 3px;
-        color: #68839c;
-        font-size: 6px;
+        margin-top: 5px;
+        color: #7e98b0;
+        font-size: 8px;
         font-weight: 950;
-        letter-spacing: 0.8px;
+        letter-spacing:
+          0.9px;
       }
 
       .playerRow.gold
         .pointsBox strong {
         color: #ffc83d;
-        font-size: 21px;
+        font-size: 31px;
+        text-shadow:
+          0 0 13px
+          rgba(
+            255,
+            191,
+            31,
+            0.2
+          );
       }
 
       .playerRow.silver
@@ -1795,7 +1860,7 @@ function Styles() {
 
       .chevron {
         color: #66829d;
-        font-size: 10px;
+        font-size: 12px;
         text-align: center;
         transition:
           transform
@@ -1812,7 +1877,7 @@ function Styles() {
 
       .expandedPanel {
         padding:
-          13px 12px 12px;
+          15px 13px 13px;
         border-top:
           1px solid
           rgba(
@@ -1836,8 +1901,8 @@ function Styles() {
         justify-content:
           space-between;
         gap: 12px;
-        margin-bottom: 10px;
-        padding: 11px 12px;
+        margin-bottom: 11px;
+        padding: 12px 13px;
         border:
           1px solid
           rgba(
@@ -1858,20 +1923,21 @@ function Styles() {
 
       .scoreLabel {
         color: #2c9cff;
-        font-size: 7px;
+        font-size: 9px;
         font-weight: 950;
-        letter-spacing: 0.9px;
+        letter-spacing:
+          0.9px;
       }
 
       .scoreValue {
-        margin-top: 3px;
+        margin-top: 4px;
         color: #ffffff;
-        font-size: 12px;
+        font-size: 15px;
         font-weight: 900;
       }
 
       .scoreBadge {
-        padding: 7px 9px;
+        padding: 8px 10px;
         border:
           1px solid
           rgba(
@@ -1889,14 +1955,14 @@ function Styles() {
             0.36
           );
         color: #64b8ff;
-        font-size: 10px;
+        font-size: 12px;
         font-weight: 950;
       }
 
       .extraSummary {
-        margin-bottom: 9px;
+        margin-bottom: 10px;
         color: #8ca4ba;
-        font-size: 8px;
+        font-size: 10px;
         font-weight: 750;
       }
 
@@ -1915,7 +1981,7 @@ function Styles() {
 
       .fixtureDetail {
         padding:
-          10px 4px;
+          11px 4px;
         border-bottom:
           1px solid
           rgba(
@@ -1927,10 +1993,10 @@ function Styles() {
       }
 
       .fixtureName {
-        margin-bottom: 7px;
+        margin-bottom: 8px;
         overflow: hidden;
         color: #dce8f3;
-        font-size: 10px;
+        font-size: 12px;
         font-weight: 850;
         text-overflow:
           ellipsis;
@@ -1945,32 +2011,33 @@ function Styles() {
       .cancelledRow {
         display: flex;
         align-items: center;
-        gap: 13px;
+        gap: 14px;
       }
 
       .resultBlock {
         display: flex;
         align-items: center;
-        gap: 6px;
+        gap: 7px;
       }
 
       .resultLabel {
         color: #708aa2;
-        font-size: 7px;
+        font-size: 8px;
         font-weight: 900;
-        letter-spacing: 0.4px;
+        letter-spacing:
+          0.4px;
       }
 
       .resultCircle {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 31px;
-        min-width: 31px;
-        height: 31px;
+        width: 35px;
+        min-width: 35px;
+        height: 35px;
         border-radius: 50%;
         color: #ffffff;
-        font-size: 10px;
+        font-size: 12px;
         font-weight: 950;
       }
 
@@ -2011,17 +2078,18 @@ function Styles() {
           );
         background:
           #35495d;
-        color: #8396a9;
+        color:
+          #8396a9;
       }
 
       .outcome {
         display: grid;
         place-items: center;
         margin-left: auto;
-        width: 31px;
-        height: 31px;
+        width: 35px;
+        height: 35px;
         border-radius: 50%;
-        font-size: 15px;
+        font-size: 16px;
         font-weight: 950;
       }
 
@@ -2084,18 +2152,18 @@ function Styles() {
 
       .cancelledText {
         color: #ff6570;
-        font-size: 8px;
+        font-size: 9px;
         font-weight: 900;
       }
 
-      /* BACK */
+      /* BACK BUTTON */
 
       .backButton {
         display: flex;
         align-items: center;
         justify-content: center;
         width: 100%;
-        min-height: 47px;
+        min-height: 49px;
         margin-top: 14px;
         border:
           1px solid
@@ -2115,9 +2183,10 @@ function Styles() {
             #ed1c24 100%
           );
         color: #ffffff;
-        font-size: 11px;
+        font-size: 12px;
         font-weight: 950;
-        letter-spacing: 0.45px;
+        letter-spacing:
+          0.45px;
         box-shadow:
           0 8px 20px
           rgba(
@@ -2156,41 +2225,41 @@ function Styles() {
           );
         color: #ff7c83;
         text-align: center;
-        font-size: 11px;
+        font-size: 12px;
         font-weight: 850;
       }
 
       .emptyCard {
-        padding: 31px 20px;
+        padding: 32px 20px;
         text-align: center;
       }
 
       .emptyIcon {
-        margin-bottom: 8px;
-        font-size: 31px;
+        margin-bottom: 9px;
+        font-size: 33px;
       }
 
       .emptyCard h2 {
         margin: 0;
         color: #ffffff;
-        font-size: 20px;
+        font-size: 22px;
         font-weight: 950;
       }
 
       .emptyCard p {
         margin:
-          9px 0 0;
+          10px 0 0;
         color: #91a8bd;
-        font-size: 11px;
+        font-size: 12px;
         line-height: 1.5;
       }
 
       .noPlayers,
       .inlineLoading {
-        padding: 29px 12px;
+        padding: 30px 12px;
         color: #91a8bd;
         text-align: center;
-        font-size: 11px;
+        font-size: 12px;
         font-weight: 750;
       }
 
@@ -2198,7 +2267,7 @@ function Styles() {
         margin-top: 20px;
         color: #647b91;
         text-align: center;
-        font-size: 9px;
+        font-size: 10px;
       }
 
       .loadingCard {
@@ -2213,7 +2282,7 @@ function Styles() {
         border-radius: 14px;
         color: #afc4d7;
         text-align: center;
-        font-size: 12px;
+        font-size: 13px;
         font-weight: 800;
       }
 
@@ -2223,7 +2292,8 @@ function Styles() {
         margin:
           0 auto 12px;
         border-radius: 50%;
-        background: #168eff;
+        background:
+          #168eff;
         box-shadow:
           0 0 18px
           #168eff;
@@ -2288,111 +2358,160 @@ function Styles() {
 
         .selectorGrid {
           grid-template-columns:
-            94px 1fr;
+            96px 1fr;
           gap: 9px;
         }
 
         .selectorLabel {
-          font-size: 12px;
+          font-size: 14px;
         }
 
         .selectorCard select {
-          min-height: 42px;
+          min-height: 43px;
           padding-left: 10px;
-          font-size: 12px;
+          font-size: 14px;
         }
 
         .leaderboardCard {
           padding:
-            17px 7px 10px;
+            18px 7px 11px;
         }
 
         .leaderHeader {
           padding:
-            2px 5px 12px;
+            3px 5px 14px;
         }
 
         .leaderHeader h1 {
-          font-size: 22px;
+          font-size: 25px;
         }
 
         .leaderHeader p {
-          font-size: 9px;
-        }
-
-        .weekIcon {
-          width: 50px;
-          height: 50px;
-          flex-basis: 50px;
-          font-size: 24px;
-        }
-
-        .playerRow {
-          grid-template-columns:
-            45px
-            minmax(0, 1fr)
-            56px
-            19px;
-          gap: 5px;
-          min-height: 59px;
-          padding: 6px;
-        }
-
-        .positionBadge {
-          width: 33px;
-          height: 33px;
           font-size: 10px;
         }
 
-        .positionBadge.gold {
-          width: 38px;
-          height: 38px;
-          font-size: 17px;
+        .eyebrow {
+          font-size: 8px;
         }
 
-        .playerName {
+        .weekIcon {
+          width: 53px;
+          height: 53px;
+          flex-basis: 53px;
+          font-size: 26px;
+        }
+
+        .columnHeadings,
+        .playerRow {
+          grid-template-columns:
+            48px
+            minmax(0, 1fr)
+            60px
+            18px;
+          gap: 5px;
+        }
+
+        .columnHeadings {
+          padding:
+            7px 6px;
+          font-size: 6px;
+        }
+
+        .tapHint {
+          padding:
+            4px 6px 8px;
+          font-size: 7px;
+        }
+
+        .playerRow {
+          min-height: 70px;
+          padding:
+            7px 6px;
+        }
+
+        .playerRow.gold {
+          min-height: 82px;
+        }
+
+        .positionBadge {
+          width: 38px;
+          height: 38px;
+          font-size: 13px;
+        }
+
+        .positionBadge.gold {
+          width: 44px;
+          height: 44px;
+          font-size: 20px;
+        }
+
+        .teamNameMain {
+          font-size: 15px;
+        }
+
+        .playerNameSub {
+          margin-top: 4px;
           font-size: 11px;
         }
 
         .playerRow.gold
-          .playerName {
-          font-size: 12px;
+          .teamNameMain {
+          font-size: 17px;
         }
 
-        .teamName {
-          font-size: 8px;
+        .playerRow.silver
+          .teamNameMain,
+        .playerRow.bronze
+          .teamNameMain {
+          font-size: 16px;
         }
 
         .pointsBox strong {
-          font-size: 16px;
+          font-size: 21px;
         }
 
         .playerRow.gold
           .pointsBox strong {
-          font-size: 18px;
+          font-size: 25px;
+        }
+
+        .pointsBox span {
+          font-size: 7px;
         }
 
         .chevron {
-          font-size: 8px;
+          font-size: 9px;
         }
 
         .expandedPanel {
           padding:
-            10px 7px;
+            11px 8px;
         }
 
         .scoreSummary {
           padding:
-            9px 10px;
+            10px;
+        }
+
+        .scoreLabel {
+          font-size: 7px;
+        }
+
+        .scoreValue {
+          font-size: 13px;
+        }
+
+        .scoreBadge {
+          font-size: 10px;
         }
 
         .fixtureDetail {
           padding:
-            9px 2px;
+            10px 2px;
         }
 
         .fixtureName {
-          font-size: 9px;
+          font-size: 10.5px;
         }
 
         .resultRow,
@@ -2409,22 +2528,26 @@ function Styles() {
         }
 
         .resultCircle {
-          width: 28px;
-          min-width: 28px;
-          height: 28px;
-          font-size: 9px;
+          width: 30px;
+          min-width: 30px;
+          height: 30px;
+          font-size: 10px;
         }
 
         .outcome {
-          width: 28px;
-          height: 28px;
-          font-size: 13px;
+          width: 30px;
+          height: 30px;
+          font-size: 14px;
+        }
+
+        .cancelledText {
+          font-size: 7px;
         }
 
         .backButton {
-          min-height: 44px;
+          min-height: 46px;
           margin-top: 10px;
-          font-size: 9px;
+          font-size: 10px;
         }
       }
 
@@ -2439,20 +2562,34 @@ function Styles() {
           width: 46px;
         }
 
-        .playerRow {
-          grid-template-columns:
-            42px
-            minmax(0, 1fr)
-            50px
-            17px;
+        .leaderHeader h1 {
+          font-size: 23px;
         }
 
-        .playerName {
+        .columnHeadings,
+        .playerRow {
+          grid-template-columns:
+            44px
+            minmax(0, 1fr)
+            55px
+            16px;
+        }
+
+        .teamNameMain {
+          font-size: 14px;
+        }
+
+        .playerRow.gold
+          .teamNameMain {
+          font-size: 16px;
+        }
+
+        .playerNameSub {
           font-size: 10px;
         }
 
-        .teamName {
-          font-size: 7px;
+        .pointsBox strong {
+          font-size: 19px;
         }
       }
     `}</style>
