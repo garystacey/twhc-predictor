@@ -148,6 +148,7 @@ export default function RulesPage() {
           eyebrow="THE BASICS"
           title="How To Play"
           icon="✓"
+          compactMobileBody
         >
           <p>
             Each Match Week you predict the result of the listed Telford &
@@ -173,6 +174,7 @@ export default function RulesPage() {
           eyebrow="POINTS"
           title="Scoring"
           icon="◎"
+          compactMobileBody
         >
           <div className="scoreGrid">
             <ScoreBox
@@ -209,6 +211,7 @@ export default function RulesPage() {
           eyebrow="DEADLINES"
           title="Prediction Windows"
           icon="⌚"
+          compactMobileBody
         >
           <p>
             Each Match Week has its own opening time and prediction deadline.
@@ -241,6 +244,7 @@ export default function RulesPage() {
           eyebrow="DON'T MISS OUT"
           title="Missed Predictions"
           icon="!"
+          compactMobileBody
         >
           <p>
             You do not have to predict every fixture.
@@ -269,6 +273,7 @@ export default function RulesPage() {
           eyebrow="FIXTURE CHANGES"
           title="Postponed Fixtures"
           icon="↻"
+          compactMobileBody
         >
           <p>
             If a fixture is postponed, your original prediction will remain
@@ -303,6 +308,7 @@ export default function RulesPage() {
           eyebrow="FIXTURE CHANGES"
           title="Cancelled Fixtures"
           icon="✕"
+          compactMobileBody
         >
           <p>
             If a fixture is cancelled and will not be played, it will be
@@ -337,6 +343,7 @@ export default function RulesPage() {
           eyebrow="STANDINGS"
           title="Leaderboards"
           icon="🏆"
+          compactMobileBody
         >
           <div className="leaderboardInfoGrid">
             <LeaderboardInfo
@@ -379,6 +386,7 @@ export default function RulesPage() {
           eyebrow="RANKINGS"
           title="Tied Positions"
           icon="="
+          compactMobileBody
         >
           <p>
             Entrants with the same number of points share the same leaderboard
@@ -404,6 +412,7 @@ export default function RulesPage() {
           eyebrow="LIVE SCORING"
           title="Provisional Standings"
           icon="▥"
+          compactMobileBody
         >
           <p>
             Weekly standings may be shown as provisional while some fixture
@@ -433,6 +442,7 @@ export default function RulesPage() {
           eyebrow="YOUR ENTRY"
           title="Accounts & Team Names"
           icon="●"
+          compactMobileBody
         >
           <p>
             Predictions are linked to your individual Predictor account.
@@ -460,6 +470,7 @@ export default function RulesPage() {
           eyebrow="THE PREDICTOR"
           title="Fair Play"
           icon="✓"
+          compactMobileBody
         >
           <p>
             The Predictor is intended as a fun club competition.
@@ -535,10 +546,15 @@ function RuleCard({
   icon,
   children,
   featured = false,
+  compactMobileBody = false,
 }) {
   return (
     <section
-      className={`ruleCard ${featured ? "featuredCard" : ""}`}
+      className={`ruleCard ${
+        featured ? "featuredCard" : ""
+      } ${
+        compactMobileBody ? "compactMobileBody" : ""
+      }`}
     >
       <div className="dualTop" />
 
@@ -861,9 +877,7 @@ function Styles() {
         bottom: 8%;
       }
 
-      /* =====================================================
-         DESKTOP HEADER
-      ===================================================== */
+      /* HEADER */
 
       .brandHeader {
         display: flex;
@@ -944,9 +958,7 @@ function Styles() {
         font-weight: 750;
       }
 
-      /* =====================================================
-         DESKTOP CARDS
-      ===================================================== */
+      /* CARDS */
 
       .ruleCard {
         position: relative;
@@ -1044,7 +1056,8 @@ function Styles() {
 
       /* BODY */
 
-      .ruleBody {
+      .ruleBody,
+      .ruleBody p {
         color: #c2d0dd;
         font-size: 15px;
         line-height: 1.58;
@@ -1053,10 +1066,6 @@ function Styles() {
 
       .ruleBody p {
         margin: 0 0 13px;
-        color: #c2d0dd;
-        font-size: 15px;
-        line-height: 1.58;
-        font-weight: 600;
       }
 
       .ruleBody p:last-child {
@@ -1178,7 +1187,7 @@ function Styles() {
         width: 32px;
         height: 32px;
         border-radius: 8px;
-        background: rgba(255,255,255,0.045);
+        background: rgba(255, 255, 255, 0.045);
         color: #ffffff;
         font-size: 15px;
         font-weight: 950;
@@ -1247,7 +1256,7 @@ function Styles() {
         font-weight: 950;
       }
 
-      /* PREDICTION OPTIONS */
+      /* H / D / A */
 
       .predictionOptions {
         display: grid;
@@ -1291,7 +1300,7 @@ function Styles() {
         font-weight: 850;
       }
 
-      /* SCORE */
+      /* SCORING */
 
       .scoreGrid {
         display: grid;
@@ -1355,7 +1364,7 @@ function Styles() {
         font-weight: 950;
       }
 
-      /* HIGHLIGHT */
+      /* HIGHLIGHTS */
 
       .highlight {
         display: flex;
@@ -1463,7 +1472,7 @@ function Styles() {
         font-weight: 600;
       }
 
-      /* RANK */
+      /* RANKING */
 
       .rankingExample {
         display: flex;
@@ -1577,7 +1586,7 @@ function Styles() {
       }
 
       /* =====================================================
-         MOBILE — PURPOSE BUILT, NOT SHRUNK DESKTOP
+         MOBILE
       ===================================================== */
 
       @media (max-width: 620px) {
@@ -1626,12 +1635,12 @@ function Styles() {
           margin: 0 auto 14px;
           padding: 0 6px;
           color: #9db2c6;
-          font-size: 12px !important;
-          line-height: 1.4 !important;
-          font-weight: 700 !important;
+          font-size: 12px;
+          line-height: 1.4;
+          font-weight: 700;
         }
 
-        /* CARDS */
+        /* CARD STRUCTURE */
 
         .ruleCard {
           margin-bottom: 10px;
@@ -1651,14 +1660,16 @@ function Styles() {
 
         .eyebrow {
           margin-bottom: 3px;
-          font-size: 7px !important;
+          font-size: 7px;
           letter-spacing: 1px;
         }
 
+        /* HEADINGS STAY STRONG */
+
         .ruleHeader h2 {
-          font-size: 19px !important;
-          line-height: 1.08 !important;
-          letter-spacing: -0.3px !important;
+          font-size: 19px;
+          line-height: 1.08;
+          letter-spacing: -0.3px;
         }
 
         .ruleIcon {
@@ -1668,27 +1679,21 @@ function Styles() {
           font-size: 18px;
         }
 
-        /* NORMAL MOBILE BODY COPY */
+        /* =================================================
+           ENTRY & PRIZES
+           LEAVE THIS TYPOGRAPHY AS THE BENCHMARK
+        ================================================= */
 
-        .ruleCard .ruleBody,
-        .ruleCard .ruleBody p,
-        .ruleCard .fairPlayPanel p {
-          color: #c1cedb !important;
-          font-size: 13.5px !important;
-          line-height: 1.48 !important;
-          font-weight: 600 !important;
-          letter-spacing: 0 !important;
+        .featuredCard .ruleBody,
+        .featuredCard .ruleBody p {
+          font-size: 13.5px;
+          line-height: 1.48;
+          font-weight: 600;
         }
 
-        .ruleCard .ruleBody p {
-          margin: 0 0 10px !important;
+        .featuredCard .ruleBody p {
+          margin-bottom: 10px;
         }
-
-        .ruleCard .ruleBody p:last-child {
-          margin-bottom: 0 !important;
-        }
-
-        /* ENTRY HERO */
 
         .entryFeeHero {
           gap: 10px;
@@ -1704,14 +1709,14 @@ function Styles() {
 
         .entryAmount {
           margin-top: 2px;
-          font-size: 29px !important;
+          font-size: 29px;
         }
 
         .entrySub {
           max-width: 230px;
           margin-top: 4px;
-          font-size: 10px !important;
-          line-height: 1.35 !important;
+          font-size: 10px;
+          line-height: 1.35;
         }
 
         .entryIcon {
@@ -1720,8 +1725,6 @@ function Styles() {
           border-radius: 11px;
           font-size: 22px;
         }
-
-        /* PAYMENT — COMPACT */
 
         .paymentGrid {
           grid-template-columns: 1fr;
@@ -1744,20 +1747,16 @@ function Styles() {
           font-size: 12px;
         }
 
-        .ruleCard .infoPanel strong {
+        .infoPanel strong {
           margin-bottom: 2px;
-          font-size: 12.5px !important;
-          line-height: 1.25 !important;
-          font-weight: 850 !important;
+          font-size: 12.5px;
+          line-height: 1.25;
         }
 
-        .ruleCard .infoPanel p {
-          font-size: 11px !important;
-          line-height: 1.38 !important;
-          font-weight: 600 !important;
+        .infoPanel p {
+          font-size: 11px;
+          line-height: 1.38;
         }
-
-        /* KEEP PRIZES SIDE BY SIDE */
 
         .prizeGrid {
           grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1793,7 +1792,35 @@ function Styles() {
           font-size: 19px;
         }
 
-        /* H D A */
+        /* =================================================
+           ALL OTHER SECTIONS
+           BODY COPY REDUCED — HEADINGS UNCHANGED
+        ================================================= */
+
+        .compactMobileBody .ruleBody,
+        .compactMobileBody .ruleBody > p {
+          color: #b9c8d6;
+          font-size: 11.5px !important;
+          line-height: 1.48 !important;
+          font-weight: 600 !important;
+          letter-spacing: 0 !important;
+        }
+
+        .compactMobileBody .ruleBody > p {
+          margin: 0 0 9px !important;
+        }
+
+        .compactMobileBody .ruleBody > p:last-child {
+          margin-bottom: 0 !important;
+        }
+
+        .compactMobileBody .ruleBody > p strong,
+        .compactMobileBody .ruleBody > p b {
+          font-size: inherit !important;
+          line-height: inherit !important;
+        }
+
+        /* H / D / A */
 
         .predictionOptions {
           gap: 6px;
@@ -1814,16 +1841,16 @@ function Styles() {
         }
 
         .predictionOption strong {
-          font-size: 10.5px !important;
-          line-height: 1.2 !important;
+          font-size: 10.5px;
+          line-height: 1.2;
         }
 
-        /* SCORE — SIDE BY SIDE */
+        /* SCORING */
 
         .scoreGrid {
           grid-template-columns: repeat(2, minmax(0, 1fr));
           gap: 7px;
-          margin-bottom: 11px;
+          margin-bottom: 10px;
         }
 
         .scoreBox {
@@ -1840,15 +1867,15 @@ function Styles() {
           font-size: 14px;
         }
 
-        .ruleCard .scoreBox strong {
-          font-size: 11px !important;
-          line-height: 1.2 !important;
+        .scoreBox strong {
+          font-size: 11px;
+          line-height: 1.2;
         }
 
-        .ruleCard .scoreBox span {
+        .scoreBox span {
           margin-top: 2px;
-          font-size: 7.5px !important;
-          line-height: 1.15 !important;
+          font-size: 7.5px;
+          line-height: 1.15;
         }
 
         /* CALLOUTS */
@@ -1856,7 +1883,7 @@ function Styles() {
         .highlight {
           align-items: center;
           gap: 8px;
-          margin: 10px 0;
+          margin: 9px 0;
           padding: 9px 10px;
           border-radius: 9px;
         }
@@ -1868,23 +1895,23 @@ function Styles() {
           font-size: 12px;
         }
 
-        .ruleCard .highlightTitle {
+        .highlightTitle {
           margin-bottom: 2px;
-          font-size: 12px !important;
-          line-height: 1.25 !important;
+          font-size: 11.5px;
+          line-height: 1.25;
         }
 
-        .ruleCard .highlightText {
-          font-size: 10.5px !important;
-          line-height: 1.4 !important;
+        .highlightText {
+          font-size: 10.5px;
+          line-height: 1.4;
         }
 
-        /* LEADERBOARD CARDS */
+        /* LEADERBOARD MINI CARDS */
 
         .leaderboardInfoGrid {
           grid-template-columns: repeat(2, minmax(0, 1fr));
           gap: 7px;
-          margin-bottom: 11px;
+          margin-bottom: 10px;
         }
 
         .leaderboardInfo {
@@ -1897,15 +1924,15 @@ function Styles() {
           font-size: 18px;
         }
 
-        .ruleCard .leaderboardInfo strong {
-          font-size: 11px !important;
-          line-height: 1.2 !important;
+        .leaderboardInfo strong {
+          font-size: 11px;
+          line-height: 1.2;
         }
 
-        .ruleCard .leaderboardInfo span {
+        .leaderboardInfo span {
           margin-top: 3px;
-          font-size: 9.5px !important;
-          line-height: 1.35 !important;
+          font-size: 9.5px;
+          line-height: 1.35;
         }
 
         /* RANKING */
@@ -1923,12 +1950,12 @@ function Styles() {
         }
 
         .rankBubble span {
-          font-size: 15px !important;
+          font-size: 15px;
         }
 
         .rankBubble small {
           margin-top: 2px;
-          font-size: 6.5px !important;
+          font-size: 6.5px;
         }
 
         /* FAIR PLAY */
@@ -1947,9 +1974,10 @@ function Styles() {
           font-size: 15px;
         }
 
-        .ruleCard .fairPlayPanel p {
-          font-size: 12px !important;
+        .compactMobileBody .fairPlayPanel p {
+          font-size: 10.5px !important;
           line-height: 1.42 !important;
+          margin: 0 !important;
         }
 
         /* BACK */
@@ -1967,7 +1995,7 @@ function Styles() {
         }
       }
 
-      /* VERY SMALL PHONES */
+      /* SMALLER PHONES */
 
       @media (max-width: 390px) {
 
@@ -1984,12 +2012,13 @@ function Styles() {
         }
 
         .ruleHeader h2 {
-          font-size: 18px !important;
+          font-size: 18px;
         }
 
-        .ruleCard .ruleBody,
-        .ruleCard .ruleBody p {
-          font-size: 13px !important;
+        .compactMobileBody .ruleBody,
+        .compactMobileBody .ruleBody > p {
+          font-size: 11px !important;
+          line-height: 1.46 !important;
         }
 
         .scoreGrid {
@@ -2000,12 +2029,8 @@ function Styles() {
           min-height: 49px;
         }
 
-        .prizeAmount {
-          font-size: 18px;
-        }
-
         .predictionOption strong {
-          font-size: 10px !important;
+          font-size: 10px;
         }
       }
     `}</style>
