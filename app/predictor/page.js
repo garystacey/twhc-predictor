@@ -18,6 +18,10 @@ export default function PredictorPage() {
 
   const [signingOut, setSigningOut] = useState(false);
 
+  /* =====================================================
+     LOAD DATA
+     ===================================================== */
+
   useEffect(() => {
     async function loadUser() {
       const {
@@ -29,9 +33,7 @@ export default function PredictorPage() {
         return;
       }
 
-      /* =====================================================
-         PROFILE
-         ===================================================== */
+      /* PROFILE */
 
       const {
         data: profileData,
@@ -53,9 +55,7 @@ export default function PredictorPage() {
 
       setProfile(profileData);
 
-      /* =====================================================
-         COMPETITION SETTINGS
-         ===================================================== */
+      /* COMPETITION SETTINGS */
 
       const {
         data: settingsData,
@@ -83,13 +83,14 @@ export default function PredictorPage() {
         );
       }
 
-      /* =====================================================
-         CURRENT MATCH WEEK
-         ===================================================== */
+      /* CURRENT MATCH WEEK */
 
-      const now = new Date().toISOString();
+      const now =
+        new Date().toISOString();
 
-      const { data: weekData } = await supabase
+      const {
+        data: weekData,
+      } = await supabase
         .from("match_weeks")
         .select(
           "id, week_no, deadline"
@@ -109,18 +110,19 @@ export default function PredictorPage() {
 
         setCurrentWeek(week);
 
-        const { data: fixtureData } =
-          await supabase
-            .from("fixtures")
-            .select("id, status")
-            .eq(
-              "match_week_id",
-              week.id
-            )
-            .neq(
-              "status",
-              "cancelled"
-            );
+        const {
+          data: fixtureData,
+        } = await supabase
+          .from("fixtures")
+          .select("id, status")
+          .eq(
+            "match_week_id",
+            week.id
+          )
+          .neq(
+            "status",
+            "cancelled"
+          );
 
         const fixtureIds =
           (fixtureData || []).map(
@@ -180,7 +182,7 @@ export default function PredictorPage() {
   }
 
   /* =====================================================
-     MONEY FORMAT
+     MONEY
      ===================================================== */
 
   function formatMoney(value) {
@@ -207,13 +209,11 @@ export default function PredictorPage() {
       return `£${amount}`;
     }
 
-    return `£${amount.toFixed(
-      2
-    )}`;
+    return `£${amount.toFixed(2)}`;
   }
 
   /* =====================================================
-     PAYMENT DATE FORMAT
+     DATE
      ===================================================== */
 
   function formatPaymentDate(
@@ -247,7 +247,7 @@ export default function PredictorPage() {
   }
 
   /* =====================================================
-     PAYMENT DEADLINE STATUS
+     PAYMENT STATUS
      ===================================================== */
 
   function getPaymentStatus() {
@@ -293,102 +293,32 @@ export default function PredictorPage() {
 
   if (loading) {
     return (
-      <main>
-        <div
-          className="container"
-          style={{
-            maxWidth:
-              "760px",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              alignItems:
-                "center",
-              justifyContent:
-                "center",
-              gap: "11px",
-              marginBottom:
-                "18px",
-            }}
-          >
-            <img
-              src="/TWHC-badge-white.png"
-              alt="Telford & Wrekin Hockey Club"
-              style={{
-                width:
-                  "58px",
-                height:
-                  "auto",
-                margin: 0,
-              }}
-            />
+      <main className="wowPage">
+        <BackgroundGlow />
 
-            <div
-              style={{
-                textAlign:
-                  "left",
-              }}
-            >
-              <div
-                style={{
-                  fontSize:
-                    "27px",
-                  lineHeight:
-                    0.95,
-                  fontWeight:
-                    "900",
-                  letterSpacing:
-                    "-1.2px",
-                  color:
-                    "#ffffff",
-                  whiteSpace:
-                    "nowrap",
-                }}
-              >
-                THE PREDICTO
-                <span
-                  style={{
-                    color:
-                      "#ed1c24",
-                  }}
-                >
-                  R
-                </span>
-              </div>
+        <div className="wowShell">
+          <BrandHeader />
 
-              <div
-                style={{
-                  marginTop:
-                    "5px",
-                  fontSize:
-                    "11px",
-                  fontWeight:
-                    "900",
-                  letterSpacing:
-                    "1.4px",
-                  color:
-                    "#a9bfd5",
-                }}
-              >
-                LOADING...
-              </div>
+          <div className="loadingBox">
+            <div className="loadingPulse" />
+            <div>
+              Loading The Predictor...
             </div>
           </div>
         </div>
+
+        <Styles />
       </main>
     );
   }
 
   /* =====================================================
-     PREDICTION STATUS
+     STATUS VALUES
      ===================================================== */
 
   const allComplete =
     predictionStatus &&
-    predictionStatus.total >
-      0 &&
+    predictionStatus.total > 0 &&
     predictionStatus.completed ===
       predictionStatus.total;
 
@@ -397,10 +327,6 @@ export default function PredictorPage() {
       ? predictionStatus.total -
         predictionStatus.completed
       : 0;
-
-  /* =====================================================
-     PAYMENT REMINDER
-     ===================================================== */
 
   const showPaymentReminder =
     profile?.paid === false;
@@ -416,1011 +342,1409 @@ export default function PredictorPage() {
   const formattedEntryFee =
     formatMoney(entryFee);
 
+  /* =====================================================
+     PAGE
+     ===================================================== */
+
   return (
-    <main>
-      <div
-        className="container"
-        style={{
-          maxWidth:
-            "760px",
-        }}
-      >
-        {/* =================================================
-            COMPACT HEADER
-            ================================================= */}
+    <main className="wowPage">
+      <BackgroundGlow />
 
-        <div
-          style={{
-            display: "flex",
-            alignItems:
-              "center",
-            justifyContent:
-              "center",
-            gap: "11px",
-            marginBottom:
-              "16px",
-          }}
-        >
-          <img
-            src="/TWHC-badge-white.png"
-            alt="Telford & Wrekin Hockey Club"
-            style={{
-              display:
-                "block",
-              width:
-                "58px",
-              height:
-                "auto",
-              margin: 0,
-              filter:
-                "drop-shadow(0 4px 8px rgba(0,0,0,0.35))",
-            }}
-          />
+      <div className="wowShell">
 
-          <div
-            style={{
-              textAlign:
-                "left",
-            }}
-          >
-            <div
-              style={{
-                fontSize:
-                  "27px",
-                lineHeight:
-                  0.95,
-                fontWeight:
-                  "900",
-                letterSpacing:
-                  "-1.2px",
-                color:
-                  "#ffffff",
-                whiteSpace:
-                  "nowrap",
-                textShadow:
-                  "0 2px 8px rgba(0,0,0,0.35)",
-              }}
-            >
-              THE PREDICTO
-              <span
-                style={{
-                  color:
-                    "#ed1c24",
-                  textShadow:
-                    "0 0 12px rgba(237,28,36,0.32)",
-                }}
-              >
-                R
-              </span>
+        {/* HEADER */}
+
+        <div className="topBar">
+          <BrandHeader />
+
+          <div className="userBlock">
+            <div className="welcomeText">
+              Welcome,{" "}
+              <strong>
+                {profile?.first_name}{" "}
+                {profile?.surname}
+              </strong>
             </div>
 
-            <div
-              style={{
-                marginTop:
-                  "5px",
-                fontSize:
-                  "11px",
-                fontWeight:
-                  "900",
-                letterSpacing:
-                  "1.4px",
-                color:
-                  "#a9bfd5",
-              }}
-            >
-              PREDICT. COMPETE. WIN.
-            </div>
-          </div>
-        </div>
-
-        {/* =================================================
-            WELCOME
-            ================================================= */}
-
-        <div
-          style={{
-            marginBottom:
-              "16px",
-            textAlign:
-              "center",
-          }}
-        >
-          <div
-            style={{
-              fontSize:
-                "14px",
-              color:
-                "#b9cee2",
-              fontWeight:
-                "700",
-            }}
-          >
-            Welcome,{" "}
-            {profile?.first_name}{" "}
-            {profile?.surname}
-          </div>
-
-          {profile?.team_name && (
-            <div
-              style={{
-                marginTop:
-                  "3px",
-                fontSize:
-                  "18px",
-                fontWeight:
-                  "900",
-                color:
-                  "#ffffff",
-              }}
-            >
-              {
-                profile.team_name
-              }
-            </div>
-          )}
-        </div>
-
-        {/* =================================================
-            PAYMENT REMINDER
-            ================================================= */}
-
-        {showPaymentReminder && (
-          <div
-            className="card"
-            style={{
-              position:
-                "relative",
-              overflow:
-                "hidden",
-              padding:
-                "0",
-              border:
-                paymentStatus ===
-                "overdue"
-                  ? "1px solid rgba(237,28,36,0.55)"
-                  : "1px solid rgba(255,177,31,0.45)",
-              boxShadow:
-                paymentStatus ===
-                "overdue"
-                  ? "0 10px 28px rgba(237,28,36,0.16), 0 5px 14px rgba(0,0,0,0.20)"
-                  : "0 10px 28px rgba(255,157,0,0.12), 0 5px 14px rgba(0,0,0,0.20)",
-            }}
-          >
-            {/* TOP BAR */}
-
-            <div
-              style={{
-                height:
-                  "6px",
-                background:
-                  paymentStatus ===
-                  "overdue"
-                    ? "linear-gradient(90deg, #8f0d15 0%, #ed1c24 50%, #8f0d15 100%)"
-                    : "linear-gradient(90deg, #d27b00 0%, #ffb11f 50%, #d27b00 100%)",
-              }}
-            />
-
-            <div
-              style={{
-                padding:
-                  "17px 16px 16px",
-              }}
-            >
-              {/* HEADING */}
-
-              <div
-                style={{
-                  display:
-                    "flex",
-                  alignItems:
-                    "center",
-                  justifyContent:
-                    "space-between",
-                  gap:
-                    "12px",
-                  marginBottom:
-                    "12px",
-                }}
-              >
-                <div
-                  style={{
-                    textAlign:
-                      "left",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize:
-                        "10px",
-                      fontWeight:
-                        "900",
-                      letterSpacing:
-                        "1.1px",
-                      color:
-                        paymentStatus ===
-                        "overdue"
-                          ? "#cf171f"
-                          : "#b06b00",
-                    }}
-                  >
-                    {paymentStatus ===
-                    "overdue"
-                      ? "PAYMENT OVERDUE"
-                      : paymentStatus ===
-                        "today"
-                      ? "PAYMENT DUE TODAY"
-                      : "ENTRY FEE OUTSTANDING"}
-                  </div>
-
-                  <div
-                    style={{
-                      marginTop:
-                        "3px",
-                      fontSize:
-                        "21px",
-                      lineHeight:
-                        1.1,
-                      fontWeight:
-                        "900",
-                      color:
-                        "#071d36",
-                    }}
-                  >
-                    Predictor Entry
-                    Fee
-                  </div>
-                </div>
-
-                {/* AMOUNT */}
-
-                <div
-                  style={{
-                    flexShrink:
-                      0,
-                    minWidth:
-                      "78px",
-                    padding:
-                      "10px 11px",
-                    borderRadius:
-                      "10px",
-                    background:
-                      paymentStatus ===
-                      "overdue"
-                        ? "linear-gradient(135deg, #981019 0%, #df1b23 100%)"
-                        : "linear-gradient(135deg, #c87b00 0%, #ef9f12 100%)",
-                    color:
-                      "#ffffff",
-                    textAlign:
-                      "center",
-                    boxShadow:
-                      "0 4px 10px rgba(0,0,0,0.18)",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize:
-                        "8px",
-                      fontWeight:
-                        "900",
-                      letterSpacing:
-                        "0.8px",
-                      opacity:
-                        0.85,
-                    }}
-                  >
-                    TO PAY
-                  </div>
-
-                  <div
-                    style={{
-                      marginTop:
-                        "2px",
-                      fontSize:
-                        "21px",
-                      lineHeight:
-                        1,
-                      fontWeight:
-                        "900",
-                    }}
-                  >
-                    {
-                      formattedEntryFee
-                    }
-                  </div>
-                </div>
+            {profile?.team_name && (
+              <div className="teamBadge">
+                {profile.team_name}
               </div>
+            )}
+          </div>
 
-              {/* MESSAGE */}
+          <button
+            className="signOutMini"
+            onClick={
+              handleSignOut
+            }
+            disabled={
+              signingOut
+            }
+          >
+            {signingOut
+              ? "Signing Out..."
+              : "Sign Out"}
+          </button>
+        </div>
 
-              {paymentStatus ===
-              "overdue" ? (
-                <div
-                  style={{
-                    padding:
-                      "11px 12px",
-                    borderRadius:
-                      "9px",
-                    background:
-                      "#fde9ea",
-                    border:
-                      "1px solid #efb6b9",
-                    color:
-                      "#a91920",
-                    fontSize:
-                      "13px",
-                    lineHeight:
-                      1.5,
-                    fontWeight:
-                      "700",
-                    textAlign:
-                      "left",
-                  }}
-                >
+        {/* MAIN DESKTOP GRID */}
+
+        <div className="dashboardGrid">
+
+          {/* LEFT */}
+
+          <section className="dashboardMain">
+
+            {/* PAYMENT */}
+
+            {showPaymentReminder && (
+              <div
+                className={`glassCard paymentCard ${paymentStatus}`}
+              >
+                <div className="cardAccent amberAccent" />
+
+                <div className="paymentTop">
+                  <div>
+                    <div className="eyebrow amber">
+                      {paymentStatus ===
+                      "overdue"
+                        ? "PAYMENT OVERDUE"
+                        : paymentStatus ===
+                          "today"
+                        ? "PAYMENT DUE TODAY"
+                        : "ENTRY FEE OUTSTANDING"}
+                    </div>
+
+                    <h2>
+                      Predictor Entry Fee
+                    </h2>
+                  </div>
+
+                  <div className="feePill">
+                    <span>
+                      TO PAY
+                    </span>
+
+                    <strong>
+                      {
+                        formattedEntryFee
+                      }
+                    </strong>
+                  </div>
+                </div>
+
+                <div className="paymentMessage">
                   Your{" "}
                   <strong>
                     {
                       formattedEntryFee
                     }{" "}
-                    Predictor entry
-                    fee
+                    Predictor entry fee
                   </strong>{" "}
-                  has not yet been
-                  marked as paid.
+                  has not yet been marked
+                  as paid.
 
                   {formattedPaymentDeadline && (
                     <>
                       {" "}
-                      The payment
-                      closing date was{" "}
-                      <strong>
-                        {
-                          formattedPaymentDeadline
-                        }
-                      </strong>
-                      .
-                    </>
-                  )}
-
-                  <br />
-                  <br />
-
-                  Please contact the
-                  competition organiser
-                  as soon as possible.
-                </div>
-              ) : paymentStatus ===
-                "today" ? (
-                <div
-                  style={{
-                    padding:
-                      "11px 12px",
-                    borderRadius:
-                      "9px",
-                    background:
-                      "#fff3dd",
-                    border:
-                      "1px solid #efcf93",
-                    color:
-                      "#83520b",
-                    fontSize:
-                      "13px",
-                    lineHeight:
-                      1.5,
-                    fontWeight:
-                      "700",
-                    textAlign:
-                      "left",
-                  }}
-                >
-                  Your{" "}
-                  <strong>
-                    {
-                      formattedEntryFee
-                    }{" "}
-                    Predictor entry
-                    fee
-                  </strong>{" "}
-                  has not yet been
-                  marked as paid.
-
-                  <br />
-                  <br />
-
-                  <strong>
-                    Payment is due
-                    today.
-                  </strong>
-                </div>
-              ) : (
-                <div
-                  style={{
-                    padding:
-                      "11px 12px",
-                    borderRadius:
-                      "9px",
-                    background:
-                      "#fff7e8",
-                    border:
-                      "1px solid #efd5a5",
-                    color:
-                      "#795117",
-                    fontSize:
-                      "13px",
-                    lineHeight:
-                      1.5,
-                    fontWeight:
-                      "700",
-                    textAlign:
-                      "left",
-                  }}
-                >
-                  Your{" "}
-                  <strong>
-                    {
-                      formattedEntryFee
-                    }{" "}
-                    Predictor entry
-                    fee
-                  </strong>{" "}
-                  has not yet been
-                  marked as paid.
-
-                  {formattedPaymentDeadline ? (
-                    <>
-                      {" "}
-                      Please make
-                      payment by{" "}
+                      Please make payment
+                      by{" "}
                       <strong>
                         {
                           formattedPaymentDeadline
                         }
                       </strong>{" "}
                       to complete your
-                      competition
-                      entry.
-                    </>
-                  ) : (
-                    <>
-                      {" "}
-                      Please make
-                      payment to
-                      complete your
-                      competition
-                      entry.
+                      competition entry.
                     </>
                   )}
                 </div>
-              )}
 
-              {/* SMALL NOTE */}
-
-              <div
-                style={{
-                  marginTop:
-                    "10px",
-                  color:
-                    "#71869a",
-                  fontSize:
-                    "10px",
-                  fontWeight:
-                    "700",
-                  lineHeight:
-                    1.4,
-                }}
-              >
-                This reminder will
-                disappear automatically
-                once your entry has been
-                marked as paid.
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* =================================================
-            CURRENT MATCH WEEK
-            ================================================= */}
-
-        {currentWeek &&
-          predictionStatus && (
-            <div
-              className="card"
-              style={{
-                padding:
-                  "18px 16px",
-              }}
-            >
-              <div
-                style={{
-                  display:
-                    "flex",
-                  alignItems:
-                    "center",
-                  justifyContent:
-                    "space-between",
-                  gap:
-                    "14px",
-                  marginBottom:
-                    "15px",
-                }}
-              >
-                <div
-                  style={{
-                    textAlign:
-                      "left",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize:
-                        "11px",
-                      fontWeight:
-                        "900",
-                      letterSpacing:
-                        "1px",
-                      color:
-                        "#7c8fa2",
-                    }}
-                  >
-                    CURRENT
-                  </div>
-
-                  <div
-                    style={{
-                      marginTop:
-                        "2px",
-                      fontSize:
-                        "23px",
-                      fontWeight:
-                        "900",
-                      color:
-                        "#071d36",
-                    }}
-                  >
-                    Match Week{" "}
-                    {
-                      currentWeek.week_no
-                    }
-                  </div>
+                <div className="smallNote">
+                  This reminder will
+                  disappear automatically
+                  once your entry has been
+                  marked as paid.
                 </div>
+              </div>
+            )}
 
-                <div
-                  style={{
-                    flexShrink:
-                      0,
-                    minWidth:
-                      "70px",
-                    padding:
-                      "9px 10px",
-                    borderRadius:
-                      "9px",
-                    background:
-                      allComplete
-                        ? "#16733f"
-                        : "#071d36",
-                    color:
-                      "#ffffff",
-                    textAlign:
-                      "center",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize:
-                        "18px",
-                      lineHeight:
-                        1,
-                      fontWeight:
-                        "900",
-                    }}
-                  >
-                    {
-                      predictionStatus.completed
-                    }
-                    /
-                    {
-                      predictionStatus.total
-                    }
-                  </div>
+            {/* CURRENT WEEK */}
 
-                  <div
-                    style={{
-                      marginTop:
-                        "4px",
-                      fontSize:
-                        "8px",
-                      fontWeight:
-                        "900",
-                      letterSpacing:
-                        "0.7px",
-                      color:
+            {currentWeek &&
+              predictionStatus && (
+                <div className="glassCard weekCard">
+                  <div className="cardAccent dualAccent" />
+
+                  <div className="weekHeader">
+                    <div>
+                      <div className="eyebrow blue">
+                        CURRENT
+                      </div>
+
+                      <h1>
+                        Match Week{" "}
+                        {
+                          currentWeek.week_no
+                        }
+                      </h1>
+                    </div>
+
+                    <div
+                      className={`scorePill ${
                         allComplete
-                          ? "#d7f2e0"
-                          : "#b9cee2",
-                    }}
-                  >
-                    SELECTED
-                  </div>
-                </div>
-              </div>
+                          ? "complete"
+                          : ""
+                      }`}
+                    >
+                      <strong>
+                        {
+                          predictionStatus.completed
+                        }
+                        /
+                        {
+                          predictionStatus.total
+                        }
+                      </strong>
 
-              {allComplete ? (
-                <div
-                  style={{
-                    marginBottom:
-                      "14px",
-                    padding:
-                      "10px 12px",
-                    borderRadius:
-                      "9px",
-                    background:
-                      "#e7f7ed",
-                    border:
-                      "1px solid #aad8bb",
-                    color:
-                      "#16733f",
-                    fontSize:
-                      "13px",
-                    fontWeight:
-                      "900",
-                  }}
-                >
-                  ✓ All predictions
-                  completed
-                </div>
-              ) : (
-                <div
-                  style={{
-                    marginBottom:
-                      "14px",
-                    padding:
-                      "10px 12px",
-                    borderRadius:
-                      "9px",
-                    background:
-                      "#fff4e5",
-                    border:
-                      "1px solid #efd09a",
-                    color:
-                      "#8c5c0e",
-                    fontSize:
-                      "13px",
-                    fontWeight:
-                      "900",
-                  }}
-                >
-                  {remaining}{" "}
-                  prediction
-                  {remaining === 1
-                    ? ""
-                    : "s"}{" "}
-                  still required
+                      <span>
+                        SELECTED
+                      </span>
+                    </div>
+                  </div>
+
+                  {allComplete ? (
+                    <div className="statusStrip completeStrip">
+                      ✓ All predictions
+                      completed
+                    </div>
+                  ) : (
+                    <div className="statusStrip pendingStrip">
+                      <strong>
+                        {remaining}
+                      </strong>{" "}
+                      prediction
+                      {remaining === 1
+                        ? ""
+                        : "s"}{" "}
+                      still required
+                    </div>
+                  )}
+
+                  <a
+                    href="/predictions"
+                    className="primaryCta"
+                  >
+                    {allComplete
+                      ? "REVIEW PREDICTIONS"
+                      : "COMPLETE PREDICTIONS"}
+                    <span>→</span>
+                  </a>
                 </div>
               )}
+          </section>
 
-              <a href="/predictions">
-                <button>
-                  {allComplete
-                    ? "Review Predictions"
-                    : "Complete Predictions"}
-                </button>
-              </a>
-            </div>
-          )}
+          {/* RIGHT MENU */}
 
-        {/* =================================================
-            MAIN MENU
-            ================================================= */}
+          <section className="menuGrid">
 
-        <div
-          style={{
-            display:
-              "grid",
-            gridTemplateColumns:
-              "repeat(auto-fit, minmax(220px, 1fr))",
-            gap:
-              "14px",
-            marginBottom:
-              "16px",
-          }}
-        >
-          {/* PREDICTIONS */}
+            <WowTile
+              icon="✓"
+              title="Predictions"
+              text="View the fixtures and make or review your selections."
+              href="/predictions"
+              button="Make Predictions"
+            />
 
-          <a
-            href="/predictions"
-            style={{
-              display:
-                "block",
-            }}
-          >
-            <div
-              className="card"
-              style={{
-                height:
-                  "100%",
-                marginBottom:
-                  0,
-                padding:
-                  "19px 16px",
-                cursor:
-                  "pointer",
-              }}
-            >
-              <div
-                style={{
-                  fontSize:
-                    "30px",
-                  marginBottom:
-                    "7px",
-                }}
-              >
-                ✓
-              </div>
+            <WowTile
+              icon="🏆"
+              title="Overall Leaderboard"
+              text="See who's leading The Predictor across the season."
+              href="/leaderboard"
+              button="View Leaderboard"
+            />
 
-              <h2>
-                Predictions
-              </h2>
+            <WowTile
+              icon="📊"
+              title="Weekly Leaderboards"
+              text="View results and standings from completed Match Weeks."
+              href="/last-week"
+              button="Weekly Leaderboards"
+            />
 
-              <p>
-                View the fixtures
-                and make or review
-                your selections.
-              </p>
+            <WowTile
+              icon="📋"
+              title="Competition Rules"
+              text="Check scoring, deadlines, prizes and competition rules."
+              href="/rules"
+              button="View Rules"
+            />
 
-              <button>
-                Make Predictions
-              </button>
-            </div>
-          </a>
-
-          {/* OVERALL LEADERBOARD */}
-
-          <a
-            href="/leaderboard"
-            style={{
-              display:
-                "block",
-            }}
-          >
-            <div
-              className="card"
-              style={{
-                height:
-                  "100%",
-                marginBottom:
-                  0,
-                padding:
-                  "19px 16px",
-                cursor:
-                  "pointer",
-              }}
-            >
-              <div
-                style={{
-                  fontSize:
-                    "30px",
-                  marginBottom:
-                    "7px",
-                }}
-              >
-                🏆
-              </div>
-
-              <h2>
-                Overall Leaderboard
-              </h2>
-
-              <p>
-                See who&apos;s
-                leading The
-                Predictor across
-                the season.
-              </p>
-
-              <button>
-                View Leaderboard
-              </button>
-            </div>
-          </a>
-
-          {/* WEEKLY LEADERBOARD */}
-
-          <a
-            href="/last-week"
-            style={{
-              display:
-                "block",
-            }}
-          >
-            <div
-              className="card"
-              style={{
-                height:
-                  "100%",
-                marginBottom:
-                  0,
-                padding:
-                  "19px 16px",
-                cursor:
-                  "pointer",
-              }}
-            >
-              <div
-                style={{
-                  fontSize:
-                    "30px",
-                  marginBottom:
-                    "7px",
-                }}
-              >
-                📊
-              </div>
-
-              <h2>
-                Weekly Leaderboards
-              </h2>
-
-              <p>
-                View results and
-                standings from
-                completed Match
-                Weeks.
-              </p>
-
-              <button>
-                Weekly Leaderboards
-              </button>
-            </div>
-          </a>
-
-          {/* RULES */}
-
-          <a
-            href="/rules"
-            style={{
-              display:
-                "block",
-            }}
-          >
-            <div
-              className="card"
-              style={{
-                height:
-                  "100%",
-                marginBottom:
-                  0,
-                padding:
-                  "19px 16px",
-                cursor:
-                  "pointer",
-              }}
-            >
-              <div
-                style={{
-                  fontSize:
-                    "30px",
-                  marginBottom:
-                    "7px",
-                }}
-              >
-                📋
-              </div>
-
-              <h2>
-                Competition Rules
-              </h2>
-
-              <p>
-                Check scoring,
-                deadlines, prizes
-                and competition
-                rules.
-              </p>
-
-              <button>
-                View Rules
-              </button>
-            </div>
-          </a>
-
-          {/* ADMIN */}
-
-          {profile?.role ===
-            "admin" && (
-            <a
-              href="/admin"
-              style={{
-                display:
-                  "block",
-              }}
-            >
-              <div
-                className="card"
-                style={{
-                  height:
-                    "100%",
-                  marginBottom:
-                    0,
-                  padding:
-                    "19px 16px",
-                  cursor:
-                    "pointer",
-                  border:
-                    "1px solid rgba(237,28,36,0.35)",
-                }}
-              >
-                <div
-                  style={{
-                    fontSize:
-                      "30px",
-                    marginBottom:
-                      "7px",
-                  }}
-                >
-                  ⚙️
-                </div>
-
-                <h2>
-                  Administrator
-                </h2>
-
-                <p>
-                  Manage members,
-                  fixtures,
-                  results and
-                  competition
-                  settings.
-                </p>
-
-                <button
-                  style={{
-                    background:
-                      "#e31b23",
-                    boxShadow:
-                      "0 3px 0 #a20d13, 0 6px 12px rgba(0,0,0,0.16)",
-                  }}
-                >
-                  Admin Area
-                </button>
-              </div>
-            </a>
-          )}
+            {profile?.role ===
+              "admin" && (
+              <WowTile
+                icon="⚙"
+                title="Administrator"
+                text="Manage members, fixtures, results and competition settings."
+                href="/admin"
+                button="Admin Area"
+                admin
+              />
+            )}
+          </section>
         </div>
 
-        {/* =================================================
-            SIGN OUT
-            ================================================= */}
-
-        <button
-          onClick={
-            handleSignOut
-          }
-          disabled={
-            signingOut
-          }
-          style={{
-            background:
-              "#536579",
-            boxShadow:
-              "0 3px 0 #354657, 0 5px 10px rgba(0,0,0,0.16)",
-            opacity:
-              signingOut
-                ? 0.5
-                : 1,
-            marginTop:
-              "4px",
-          }}
-        >
-          {signingOut
-            ? "Signing Out..."
-            : "Sign Out"}
-        </button>
-
-        <p className="footer">
-          Telford & Wrekin
-          Hockey Club
-        </p>
+        <div className="footer">
+          Telford & Wrekin Hockey Club
+        </div>
       </div>
+
+      <Styles />
     </main>
+  );
+}
+
+/* =====================================================
+   BRAND HEADER
+   ===================================================== */
+
+function BrandHeader() {
+  return (
+    <div className="brandHeader">
+      <img
+        src="/TWHC-badge-white.png"
+        alt="Telford & Wrekin Hockey Club"
+        className="brandBadge"
+      />
+
+      <div>
+        <div className="brandTitle">
+          THE PREDICTO
+          <span>R</span>
+        </div>
+
+        <div className="brandLine" />
+
+        <div className="brandTag">
+          <span className="blueText">
+            PREDICT
+          </span>
+          <b>•</b>
+          <span>
+            COMPETE
+          </span>
+          <b>•</b>
+          <span className="redText">
+            WIN
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* =====================================================
+   MENU TILE
+   ===================================================== */
+
+function WowTile({
+  icon,
+  title,
+  text,
+  href,
+  button,
+  admin = false,
+}) {
+  return (
+    <a
+      href={href}
+      className={`wowTile ${
+        admin
+          ? "adminTile"
+          : ""
+      }`}
+    >
+      <div className="tileGlow" />
+
+      <div className="tileIcon">
+        {icon}
+      </div>
+
+      <h2>
+        {title}
+      </h2>
+
+      <p>
+        {text}
+      </p>
+
+      <div
+        className={`tileButton ${
+          admin
+            ? "adminButton"
+            : ""
+        }`}
+      >
+        {button}
+      </div>
+    </a>
+  );
+}
+
+/* =====================================================
+   BACKGROUND
+   ===================================================== */
+
+function BackgroundGlow() {
+  return (
+    <>
+      <div className="bgBlueGlow" />
+      <div className="bgRedGlow" />
+
+      <div className="blueSlash one" />
+      <div className="blueSlash two" />
+
+      <div className="redSlash one" />
+      <div className="redSlash two" />
+    </>
+  );
+}
+
+/* =====================================================
+   STYLES
+   ===================================================== */
+
+function Styles() {
+  return (
+    <style jsx global>{`
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: #020c19;
+      }
+
+      body {
+        overflow-x: hidden;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+      button,
+      a {
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .wowPage {
+        min-height: 100vh;
+        position: relative;
+        overflow: hidden;
+        background:
+          radial-gradient(
+            circle at 10% 18%,
+            rgba(0, 112, 255, 0.16),
+            transparent 32%
+          ),
+          radial-gradient(
+            circle at 90% 42%,
+            rgba(237, 28, 36, 0.12),
+            transparent 35%
+          ),
+          linear-gradient(
+            135deg,
+            #061b35 0%,
+            #031428 37%,
+            #050e1c 66%,
+            #160c18 100%
+          );
+        color: #ffffff;
+        font-family:
+          Arial,
+          Helvetica,
+          sans-serif;
+      }
+
+      .wowShell {
+        position: relative;
+        z-index: 5;
+        width: min(
+          1180px,
+          calc(100% - 34px)
+        );
+        margin: 0 auto;
+        padding: 30px 0 26px;
+      }
+
+      /* =========================
+         BACKGROUND FX
+         ========================= */
+
+      .bgBlueGlow,
+      .bgRedGlow {
+        position: fixed;
+        width: 470px;
+        height: 470px;
+        border-radius: 50%;
+        filter: blur(110px);
+        pointer-events: none;
+        opacity: 0.18;
+      }
+
+      .bgBlueGlow {
+        left: -180px;
+        top: 80px;
+        background: #087eff;
+      }
+
+      .bgRedGlow {
+        right: -190px;
+        top: 150px;
+        background: #ed1c24;
+      }
+
+      .blueSlash,
+      .redSlash {
+        position: fixed;
+        width: 280px;
+        height: 58px;
+        transform: skewX(-35deg);
+        opacity: 0.13;
+        pointer-events: none;
+      }
+
+      .blueSlash {
+        left: -120px;
+        background:
+          linear-gradient(
+            90deg,
+            transparent,
+            #087eff
+          );
+      }
+
+      .blueSlash.one {
+        top: 18%;
+      }
+
+      .blueSlash.two {
+        bottom: 12%;
+      }
+
+      .redSlash {
+        right: -120px;
+        background:
+          linear-gradient(
+            90deg,
+            #ed1c24,
+            transparent
+          );
+      }
+
+      .redSlash.one {
+        top: 28%;
+      }
+
+      .redSlash.two {
+        bottom: 7%;
+      }
+
+      /* =========================
+         TOP BAR
+         ========================= */
+
+      .topBar {
+        display: grid;
+        grid-template-columns:
+          1fr auto 1fr;
+        align-items: center;
+        gap: 22px;
+        margin-bottom: 28px;
+      }
+
+      .brandHeader {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+      }
+
+      .brandBadge {
+        width: 61px;
+        height: auto;
+        display: block;
+        filter:
+          drop-shadow(
+            0 5px 12px rgba(
+              0,
+              0,
+              0,
+              0.45
+            )
+          );
+      }
+
+      .brandTitle {
+        font-size: 29px;
+        line-height: 0.95;
+        font-weight: 950;
+        letter-spacing: -1.6px;
+        white-space: nowrap;
+        color: #ffffff;
+        text-shadow:
+          0 3px 10px rgba(
+            0,
+            0,
+            0,
+            0.5
+          );
+      }
+
+      .brandTitle span {
+        color: #ed1c24;
+        text-shadow:
+          0 0 16px rgba(
+            237,
+            28,
+            36,
+            0.45
+          );
+      }
+
+      .brandLine {
+        height: 2px;
+        margin-top: 7px;
+        background:
+          linear-gradient(
+            90deg,
+            #087eff,
+            transparent 50%,
+            #ed1c24
+          );
+      }
+
+      .brandTag {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 7px;
+        font-size: 10px;
+        font-weight: 900;
+        letter-spacing: 1.8px;
+        color: #e8eff7;
+      }
+
+      .brandTag b {
+        color: #5f7690;
+      }
+
+      .blueText {
+        color: #2d9cff;
+      }
+
+      .redText {
+        color: #ff3040;
+      }
+
+      .userBlock {
+        text-align: center;
+      }
+
+      .welcomeText {
+        font-size: 13px;
+        color: #c5d3e1;
+      }
+
+      .welcomeText strong {
+        color: #ffffff;
+      }
+
+      .teamBadge {
+        display: inline-block;
+        margin-top: 5px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        border:
+          1px solid rgba(
+            0,
+            135,
+            255,
+            0.5
+          );
+        background:
+          rgba(
+            0,
+            92,
+            178,
+            0.18
+          );
+        color: #40a9ff;
+        font-size: 11px;
+        font-weight: 900;
+        box-shadow:
+          inset 0 0 16px rgba(
+            0,
+            128,
+            255,
+            0.08
+          );
+      }
+
+      .signOutMini {
+        justify-self: end;
+        width: auto;
+        min-width: 94px;
+        margin: 0;
+        padding: 11px 17px;
+        border-radius: 8px;
+        border:
+          1px solid rgba(
+            151,
+            182,
+            215,
+            0.3
+          );
+        background:
+          rgba(
+            9,
+            28,
+            51,
+            0.72
+          );
+        color: #dbe7f4;
+        font-size: 11px;
+        font-weight: 900;
+        letter-spacing: 0.4px;
+        cursor: pointer;
+        box-shadow:
+          inset 0 1px 0 rgba(
+            255,
+            255,
+            255,
+            0.04
+          );
+      }
+
+      .signOutMini:hover {
+        border-color:
+          rgba(
+            237,
+            28,
+            36,
+            0.6
+          );
+        color: #ffffff;
+      }
+
+      /* =========================
+         DASHBOARD
+         ========================= */
+
+      .dashboardGrid {
+        display: grid;
+        grid-template-columns:
+          minmax(0, 1.08fr)
+          minmax(430px, 0.92fr);
+        gap: 22px;
+        align-items: stretch;
+      }
+
+      .dashboardMain {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .glassCard,
+      .wowTile {
+        position: relative;
+        overflow: hidden;
+        background:
+          linear-gradient(
+            155deg,
+            rgba(
+              12,
+              35,
+              64,
+              0.94
+            ),
+            rgba(
+              4,
+              17,
+              33,
+              0.94
+            )
+          );
+        border:
+          1px solid rgba(
+            111,
+            153,
+            197,
+            0.37
+          );
+        box-shadow:
+          0 16px 40px rgba(
+            0,
+            0,
+            0,
+            0.28
+          ),
+          inset 0 1px 0 rgba(
+            255,
+            255,
+            255,
+            0.035
+          );
+        backdrop-filter:
+          blur(15px);
+      }
+
+      .glassCard {
+        border-radius: 14px;
+        padding: 22px;
+      }
+
+      .cardAccent {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        height: 3px;
+      }
+
+      .dualAccent {
+        background:
+          linear-gradient(
+            90deg,
+            #087eff,
+            #087eff 35%,
+            #ed1c24 100%
+          );
+      }
+
+      .amberAccent {
+        background:
+          linear-gradient(
+            90deg,
+            #ff9a00,
+            #ffd05b 50%,
+            #ed1c24
+          );
+      }
+
+      /* =========================
+         PAYMENT
+         ========================= */
+
+      .paymentCard {
+        border-color:
+          rgba(
+            233,
+            155,
+            33,
+            0.42
+          );
+      }
+
+      .paymentTop {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+      }
+
+      .paymentTop h2,
+      .weekHeader h1 {
+        margin: 4px 0 0;
+        color: #ffffff;
+        font-size: 24px;
+        line-height: 1.05;
+        font-weight: 950;
+        letter-spacing: -0.7px;
+      }
+
+      .eyebrow {
+        font-size: 10px;
+        font-weight: 950;
+        letter-spacing: 1.2px;
+      }
+
+      .eyebrow.amber {
+        color: #ffaf28;
+      }
+
+      .eyebrow.blue {
+        color: #239cff;
+      }
+
+      .feePill {
+        min-width: 86px;
+        padding: 11px 13px;
+        text-align: center;
+        border-radius: 12px;
+        color: #ffffff;
+        background:
+          linear-gradient(
+            145deg,
+            #b76500,
+            #e89900
+          );
+        border:
+          1px solid rgba(
+            255,
+            190,
+            72,
+            0.6
+          );
+        box-shadow:
+          0 8px 20px rgba(
+            224,
+            139,
+            0,
+            0.2
+          );
+      }
+
+      .feePill span {
+        display: block;
+        font-size: 8px;
+        font-weight: 900;
+        letter-spacing: 0.8px;
+        opacity: 0.8;
+      }
+
+      .feePill strong {
+        display: block;
+        margin-top: 2px;
+        font-size: 23px;
+        line-height: 1;
+      }
+
+      .paymentMessage {
+        margin-top: 18px;
+        padding: 14px 15px;
+        border-radius: 9px;
+        border:
+          1px solid rgba(
+            255,
+            177,
+            31,
+            0.35
+          );
+        background:
+          rgba(
+            120,
+            72,
+            0,
+            0.19
+          );
+        color: #f2d3a0;
+        font-size: 13px;
+        font-weight: 650;
+        line-height: 1.55;
+      }
+
+      .smallNote {
+        margin-top: 10px;
+        color: #55a9f4;
+        font-size: 10px;
+        font-weight: 700;
+      }
+
+      /* =========================
+         WEEK
+         ========================= */
+
+      .weekCard {
+        flex: 1;
+      }
+
+      .weekHeader {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+      }
+
+      .scorePill {
+        min-width: 82px;
+        padding: 10px;
+        border-radius: 11px;
+        text-align: center;
+        border:
+          1px solid rgba(
+            68,
+            138,
+            209,
+            0.38
+          );
+        background:
+          rgba(
+            4,
+            18,
+            35,
+            0.9
+          );
+      }
+
+      .scorePill strong {
+        display: block;
+        color: #ffffff;
+        font-size: 20px;
+        line-height: 1;
+      }
+
+      .scorePill span {
+        display: block;
+        margin-top: 4px;
+        color: #adc6df;
+        font-size: 8px;
+        font-weight: 900;
+        letter-spacing: 0.7px;
+      }
+
+      .scorePill.complete {
+        border-color:
+          rgba(
+            43,
+            196,
+            113,
+            0.45
+          );
+        background:
+          rgba(
+            18,
+            108,
+            60,
+            0.3
+          );
+      }
+
+      .statusStrip {
+        margin-top: 19px;
+        padding: 12px;
+        border-radius: 9px;
+        text-align: center;
+        font-size: 13px;
+        font-weight: 900;
+      }
+
+      .pendingStrip {
+        border:
+          1px solid rgba(
+            255,
+            171,
+            26,
+            0.38
+          );
+        background:
+          rgba(
+            103,
+            60,
+            0,
+            0.24
+          );
+        color: #e9b04d;
+      }
+
+      .completeStrip {
+        border:
+          1px solid rgba(
+            52,
+            194,
+            114,
+            0.42
+          );
+        background:
+          rgba(
+            15,
+            100,
+            56,
+            0.26
+          );
+        color: #65dc97;
+      }
+
+      .primaryCta,
+      .tileButton {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border-radius: 9px;
+        color: #ffffff;
+        font-weight: 900;
+        text-align: center;
+        background:
+          linear-gradient(
+            100deg,
+            #087eff 0%,
+            #405eea 40%,
+            #c12665 72%,
+            #ed1c24 100%
+          );
+        box-shadow:
+          0 8px 18px rgba(
+            0,
+            76,
+            190,
+            0.22
+          );
+      }
+
+      .primaryCta {
+        margin-top: 15px;
+        min-height: 48px;
+        padding: 13px 18px;
+        font-size: 13px;
+        letter-spacing: 0.4px;
+      }
+
+      .primaryCta:hover,
+      .tileButton:hover {
+        filter: brightness(1.08);
+      }
+
+      /* =========================
+         TILES
+         ========================= */
+
+      .menuGrid {
+        display: grid;
+        grid-template-columns:
+          repeat(
+            2,
+            minmax(0, 1fr)
+          );
+        gap: 14px;
+      }
+
+      .wowTile {
+        min-height: 246px;
+        padding: 21px 17px 17px;
+        border-radius: 13px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        color: #ffffff;
+        transition:
+          transform 0.2s ease,
+          border-color 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+
+      .wowTile:hover {
+        transform:
+          translateY(-3px);
+        border-color:
+          rgba(
+            28,
+            136,
+            255,
+            0.72
+          );
+        box-shadow:
+          0 18px 42px rgba(
+            0,
+            0,
+            0,
+            0.38
+          ),
+          0 0 24px rgba(
+            0,
+            112,
+            255,
+            0.08
+          );
+      }
+
+      .wowTile::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 52%;
+        height: 2px;
+        background:
+          #087eff;
+      }
+
+      .wowTile::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 48%;
+        height: 2px;
+        background:
+          #ed1c24;
+      }
+
+      .tileGlow {
+        position: absolute;
+        inset: auto -40px -60px auto;
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background:
+          rgba(
+            237,
+            28,
+            36,
+            0.07
+          );
+        filter: blur(32px);
+      }
+
+      .tileIcon {
+        min-height: 44px;
+        display: grid;
+        place-items: center;
+        margin-bottom: 10px;
+        font-size: 34px;
+        line-height: 1;
+      }
+
+      .wowTile h2 {
+        margin: 0;
+        color: #ffffff;
+        font-size: 20px;
+        line-height: 1.08;
+        font-weight: 950;
+        letter-spacing: -0.4px;
+      }
+
+      .wowTile p {
+        margin: 12px 0 17px;
+        color: #aebed0;
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      .tileButton {
+        width: 100%;
+        margin-top: auto;
+        min-height: 43px;
+        padding: 11px 12px;
+        font-size: 11px;
+      }
+
+      .adminTile {
+        border-color:
+          rgba(
+            237,
+            28,
+            36,
+            0.42
+          );
+      }
+
+      .adminButton {
+        background:
+          linear-gradient(
+            100deg,
+            #8e1117,
+            #ed1c24
+          );
+      }
+
+      /* =========================
+         FOOTER
+         ========================= */
+
+      .footer {
+        margin-top: 24px;
+        text-align: center;
+        color: #71869a;
+        font-size: 10px;
+      }
+
+      /* =========================
+         LOADING
+         ========================= */
+
+      .loadingBox {
+        width: min(
+          460px,
+          100%
+        );
+        margin: 70px auto;
+        padding: 30px;
+        border-radius: 14px;
+        text-align: center;
+        color: #b7c9dc;
+        background:
+          rgba(
+            7,
+            26,
+            49,
+            0.82
+          );
+        border:
+          1px solid rgba(
+            95,
+            145,
+            194,
+            0.35
+          );
+      }
+
+      .loadingPulse {
+        width: 12px;
+        height: 12px;
+        margin: 0 auto 13px;
+        border-radius: 50%;
+        background: #168eff;
+        box-shadow:
+          0 0 20px
+          #168eff;
+        animation:
+          pulse 1.1s
+          infinite ease-in-out;
+      }
+
+      @keyframes pulse {
+        50% {
+          opacity: 0.35;
+          transform:
+            scale(0.75);
+        }
+      }
+
+      /* =========================
+         TABLET
+         ========================= */
+
+      @media (
+        max-width: 980px
+      ) {
+        .topBar {
+          grid-template-columns:
+            1fr auto;
+        }
+
+        .userBlock {
+          grid-column:
+            1 / -1;
+          grid-row: 2;
+        }
+
+        .dashboardGrid {
+          grid-template-columns:
+            1fr;
+        }
+
+        .menuGrid {
+          grid-template-columns:
+            repeat(
+              2,
+              minmax(0, 1fr)
+            );
+        }
+      }
+
+      /* =========================
+         MOBILE
+         ========================= */
+
+      @media (
+        max-width: 620px
+      ) {
+        .wowShell {
+          width:
+            min(
+              100% - 20px,
+              1180px
+            );
+          padding-top: 18px;
+        }
+
+        .topBar {
+          display: flex;
+          flex-direction: column;
+          gap: 13px;
+          margin-bottom: 18px;
+        }
+
+        .brandHeader {
+          justify-content:
+            center;
+        }
+
+        .brandBadge {
+          width: 52px;
+        }
+
+        .brandTitle {
+          font-size: 25px;
+        }
+
+        .brandTag {
+          font-size: 8px;
+          letter-spacing:
+            1.3px;
+        }
+
+        .signOutMini {
+          display: none;
+        }
+
+        .dashboardGrid {
+          gap: 13px;
+        }
+
+        .glassCard {
+          padding: 17px 14px;
+        }
+
+        .paymentTop h2,
+        .weekHeader h1 {
+          font-size: 21px;
+        }
+
+        .feePill {
+          min-width: 74px;
+        }
+
+        .menuGrid {
+          grid-template-columns:
+            1fr;
+        }
+
+        .wowTile {
+          min-height: auto;
+          padding:
+            17px 15px;
+        }
+
+        .wowTile p {
+          margin:
+            8px 0 13px;
+        }
+
+        .tileIcon {
+          font-size: 28px;
+          min-height: 35px;
+        }
+
+        .wowTile h2 {
+          font-size: 19px;
+        }
+
+        .paymentMessage {
+          font-size: 12px;
+        }
+
+        .primaryCta {
+          font-size: 12px;
+        }
+      }
+    `}</style>
   );
 }
