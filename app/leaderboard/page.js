@@ -190,7 +190,9 @@ export default function LeaderboardPage() {
           <div className="leaderHeader">
             <div>
               <div className="eyebrow">SEASON STANDINGS</div>
+
               <h1>Overall Leaderboard</h1>
+
               <p>Who will become The Predictor?</p>
             </div>
 
@@ -207,7 +209,7 @@ export default function LeaderboardPage() {
             <>
               <div className="columnHeadings">
                 <span>POS</span>
-                <span>PLAYER</span>
+                <span>TEAM / PLAYER</span>
                 <span>POINTS</span>
               </div>
 
@@ -220,9 +222,7 @@ export default function LeaderboardPage() {
                       key={row.id}
                       className={`leaderRow ${position.className}`}
                     >
-                      {row.position === 1 && (
-                        <div className="leaderGlow" />
-                      )}
+                      {row.position === 1 && <div className="leaderGlow" />}
 
                       <div
                         className={`positionBadge ${position.className}`}
@@ -231,17 +231,18 @@ export default function LeaderboardPage() {
                       </div>
 
                       <div className="playerInfo">
-                        <div className="playerName">
-                          {row.firstName} {row.surname}
+                        <div className="teamNameMain">
+                          {row.teamName || "Unnamed Team"}
                         </div>
 
-                        {row.teamName && (
-                          <div className="teamName">{row.teamName}</div>
-                        )}
+                        <div className="playerNameSub">
+                          {row.firstName} {row.surname}
+                        </div>
                       </div>
 
                       <div className="pointsBox">
                         <strong>{row.points}</strong>
+
                         <span>
                           {row.points === 1 ? "POINT" : "POINTS"}
                         </span>
@@ -258,7 +259,9 @@ export default function LeaderboardPage() {
           ← BACK TO THE PREDICTOR
         </a>
 
-        <div className="footer">Telford & Wrekin Hockey Club</div>
+        <div className="footer">
+          Telford & Wrekin Hockey Club
+        </div>
       </div>
 
       <Styles />
@@ -290,7 +293,9 @@ function BrandHeader() {
           <span className="redWord">WIN</span>
         </div>
 
-        <div className="pageTag">OVERALL LEADERBOARD</div>
+        <div className="pageTag">
+          OVERALL LEADERBOARD
+        </div>
       </div>
     </header>
   );
@@ -301,8 +306,10 @@ function BackgroundFX() {
     <>
       <div className="blueGlow" />
       <div className="redGlow" />
+
       <div className="blueSlash slashOne" />
       <div className="blueSlash slashTwo" />
+
       <div className="redSlash redOne" />
       <div className="redSlash redTwo" />
     </>
@@ -501,12 +508,12 @@ function Styles() {
         letter-spacing: 1.3px;
       }
 
-      /* LEADERBOARD */
+      /* LEADERBOARD CARD */
 
       .leaderboardCard {
         position: relative;
         overflow: hidden;
-        padding: 21px 16px 15px;
+        padding: 22px 16px 16px;
         border: 1px solid rgba(104, 150, 196, 0.38);
         border-radius: 14px;
         background: linear-gradient(
@@ -535,43 +542,45 @@ function Styles() {
         );
       }
 
+      /* HEADER */
+
       .leaderHeader {
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 18px;
-        padding: 3px 5px 17px;
+        padding: 4px 6px 19px;
       }
 
       .eyebrow {
         color: #2b9cff;
-        font-size: 9px;
+        font-size: 10px;
         font-weight: 950;
-        letter-spacing: 1.4px;
+        letter-spacing: 1.5px;
       }
 
       .leaderHeader h1 {
-        margin: 4px 0 0;
+        margin: 5px 0 0;
         color: #ffffff;
-        font-size: 27px;
+        font-size: 32px;
         line-height: 1;
         font-weight: 950;
-        letter-spacing: -0.8px;
+        letter-spacing: -0.9px;
       }
 
       .leaderHeader p {
-        margin: 7px 0 0;
-        color: #91a9c0;
-        font-size: 11px;
+        margin: 9px 0 0;
+        color: #a2b7ca;
+        font-size: 13px;
         font-weight: 700;
       }
 
       .trophyBox {
         display: grid;
         place-items: center;
-        flex: 0 0 64px;
-        width: 64px;
-        height: 64px;
+        flex: 0 0 68px;
+        width: 68px;
+        height: 68px;
         border: 1px solid rgba(255, 194, 51, 0.4);
         border-radius: 15px;
         background:
@@ -581,21 +590,21 @@ function Styles() {
             rgba(255, 190, 28, 0.02) 65%
           ),
           rgba(4, 17, 33, 0.7);
-        font-size: 31px;
+        font-size: 34px;
         box-shadow:
           0 0 25px rgba(255, 183, 0, 0.09),
           inset 0 0 20px rgba(255, 187, 0, 0.04);
       }
 
-      /* HEADINGS */
+      /* COLUMN HEADINGS */
 
       .columnHeadings {
         display: grid;
-        grid-template-columns: 55px minmax(0, 1fr) 82px;
+        grid-template-columns: 66px minmax(0, 1fr) 90px;
         gap: 10px;
-        padding: 8px 9px;
-        color: #607c97;
-        font-size: 7px;
+        padding: 9px 11px;
+        color: #7893ad;
+        font-size: 9px;
         font-weight: 950;
         letter-spacing: 1px;
       }
@@ -615,11 +624,11 @@ function Styles() {
       .leaderRow {
         position: relative;
         display: grid;
-        grid-template-columns: 55px minmax(0, 1fr) 82px;
+        grid-template-columns: 66px minmax(0, 1fr) 90px;
         align-items: center;
         gap: 10px;
-        min-height: 67px;
-        padding: 9px;
+        min-height: 78px;
+        padding: 11px;
         overflow: hidden;
         border-bottom: 1px solid rgba(103, 139, 174, 0.18);
         background: rgba(255, 255, 255, 0.008);
@@ -629,18 +638,18 @@ function Styles() {
         background: rgba(255, 255, 255, 0.018);
       }
 
-      /* TOP THREE */
+      /* TOP 3 */
 
       .leaderRow.gold {
-        min-height: 83px;
-        border: 1px solid rgba(255, 196, 47, 0.36);
-        border-radius: 11px;
-        margin: 4px 0 7px;
+        min-height: 94px;
+        margin: 5px 0 8px;
+        border: 1px solid rgba(255, 196, 47, 0.42);
+        border-radius: 12px;
         background:
           linear-gradient(
             90deg,
-            rgba(151, 102, 0, 0.19),
-            rgba(255, 188, 0, 0.04) 55%,
+            rgba(151, 102, 0, 0.21),
+            rgba(255, 188, 0, 0.045) 55%,
             transparent
           ),
           rgba(255, 255, 255, 0.012);
@@ -650,19 +659,19 @@ function Styles() {
       }
 
       .leaderRow.silver {
-        border-left: 2px solid rgba(194, 211, 225, 0.65);
+        border-left: 3px solid rgba(194, 211, 225, 0.72);
         background: linear-gradient(
           90deg,
-          rgba(181, 204, 224, 0.08),
+          rgba(181, 204, 224, 0.09),
           transparent 65%
         );
       }
 
       .leaderRow.bronze {
-        border-left: 2px solid rgba(209, 128, 67, 0.68);
+        border-left: 3px solid rgba(209, 128, 67, 0.75);
         background: linear-gradient(
           90deg,
-          rgba(187, 103, 44, 0.08),
+          rgba(187, 103, 44, 0.09),
           transparent 65%
         );
       }
@@ -686,20 +695,20 @@ function Styles() {
         z-index: 2;
         display: grid;
         place-items: center;
-        width: 39px;
-        height: 39px;
+        width: 46px;
+        height: 46px;
         border-radius: 50%;
-        font-size: 13px;
+        font-size: 16px;
         font-weight: 950;
       }
 
       .positionBadge.gold {
-        width: 46px;
-        height: 46px;
+        width: 54px;
+        height: 54px;
         border: 1px solid rgba(255, 223, 103, 0.9);
         background: linear-gradient(145deg, #ffc928, #a96b00);
         color: #ffffff;
-        font-size: 22px;
+        font-size: 25px;
         box-shadow:
           0 0 0 3px rgba(255, 188, 0, 0.08),
           0 0 19px rgba(255, 183, 0, 0.18);
@@ -709,14 +718,12 @@ function Styles() {
         border: 1px solid #d7e2ec;
         background: linear-gradient(145deg, #b9c8d5, #687887);
         color: #ffffff;
-        box-shadow: 0 0 14px rgba(192, 214, 232, 0.13);
       }
 
       .positionBadge.bronze {
         border: 1px solid #dc955e;
         background: linear-gradient(145deg, #c77b43, #79401f);
         color: #ffffff;
-        box-shadow: 0 0 14px rgba(201, 113, 54, 0.14);
       }
 
       .positionBadge.normal {
@@ -725,7 +732,7 @@ function Styles() {
         color: #8ecbff;
       }
 
-      /* PLAYER */
+      /* TEAM / PLAYER */
 
       .playerInfo {
         position: relative;
@@ -733,37 +740,46 @@ function Styles() {
         min-width: 0;
       }
 
-      .playerName {
+      .teamNameMain {
         overflow: hidden;
-        color: #edf5fc;
-        font-size: 14px;
+        color: #ffffff;
+        font-size: 19px;
+        line-height: 1.1;
         font-weight: 950;
+        letter-spacing: -0.35px;
         text-overflow: ellipsis;
         white-space: nowrap;
       }
 
-      .leaderRow.gold .playerName {
-        color: #fff6d1;
-        font-size: 16px;
-      }
-
-      .leaderRow.silver .playerName,
-      .leaderRow.bronze .playerName {
-        font-size: 15px;
-      }
-
-      .teamName {
-        margin-top: 4px;
+      .playerNameSub {
+        margin-top: 6px;
         overflow: hidden;
-        color: #7894ad;
-        font-size: 10px;
+        color: #91a9c0;
+        font-size: 13px;
+        line-height: 1.1;
         font-weight: 750;
         text-overflow: ellipsis;
         white-space: nowrap;
       }
 
-      .leaderRow.gold .teamName {
+      .leaderRow.gold .teamNameMain {
+        color: #fff3bf;
+        font-size: 21px;
+        text-shadow: 0 0 13px rgba(255, 191, 31, 0.14);
+      }
+
+      .leaderRow.gold .playerNameSub {
         color: #d7bc73;
+      }
+
+      .leaderRow.silver .teamNameMain {
+        color: #f1f7fc;
+        font-size: 20px;
+      }
+
+      .leaderRow.bronze .teamNameMain {
+        color: #efb084;
+        font-size: 20px;
       }
 
       /* POINTS */
@@ -777,23 +793,23 @@ function Styles() {
       .pointsBox strong {
         display: block;
         color: #ffffff;
-        font-size: 19px;
+        font-size: 26px;
         line-height: 1;
         font-weight: 950;
       }
 
       .pointsBox span {
         display: block;
-        margin-top: 4px;
-        color: #68839c;
-        font-size: 7px;
+        margin-top: 5px;
+        color: #7e98b0;
+        font-size: 8px;
         font-weight: 950;
-        letter-spacing: 0.8px;
+        letter-spacing: 0.9px;
       }
 
       .leaderRow.gold .pointsBox strong {
         color: #ffc83d;
-        font-size: 24px;
+        font-size: 32px;
         text-shadow: 0 0 13px rgba(255, 191, 31, 0.2);
       }
 
@@ -816,7 +832,7 @@ function Styles() {
         align-items: center;
         justify-content: center;
         width: 100%;
-        min-height: 47px;
+        min-height: 49px;
         margin-top: 14px;
         border: 1px solid rgba(75, 150, 221, 0.43);
         border-radius: 10px;
@@ -828,12 +844,10 @@ function Styles() {
           #ed1c24 100%
         );
         color: #ffffff;
-        font-size: 11px;
+        font-size: 12px;
         font-weight: 950;
         letter-spacing: 0.45px;
-        box-shadow:
-          0 8px 20px rgba(0, 0, 0, 0.2),
-          0 0 22px rgba(0, 113, 255, 0.05);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
       }
 
       .backButton:hover {
@@ -850,7 +864,7 @@ function Styles() {
         background: rgba(126, 20, 27, 0.26);
         color: #ff7c83;
         text-align: center;
-        font-size: 11px;
+        font-size: 12px;
         font-weight: 850;
       }
 
@@ -859,7 +873,7 @@ function Styles() {
         border-top: 1px solid rgba(103, 139, 174, 0.2);
         color: #8fa6bb;
         text-align: center;
-        font-size: 12px;
+        font-size: 13px;
         font-weight: 750;
       }
 
@@ -867,7 +881,7 @@ function Styles() {
         margin-top: 20px;
         color: #647b91;
         text-align: center;
-        font-size: 9px;
+        font-size: 10px;
       }
 
       .loadingCard {
@@ -879,7 +893,7 @@ function Styles() {
         background: rgba(7, 27, 52, 0.93);
         color: #afc4d7;
         text-align: center;
-        font-size: 12px;
+        font-size: 13px;
         font-weight: 800;
         box-shadow: 0 17px 42px rgba(0, 0, 0, 0.3);
       }
@@ -934,91 +948,99 @@ function Styles() {
         }
 
         .leaderboardCard {
-          padding: 17px 7px 10px;
+          padding: 18px 8px 11px;
         }
 
         .leaderHeader {
-          padding: 2px 5px 13px;
+          padding: 3px 6px 15px;
         }
 
         .leaderHeader h1 {
-          font-size: 22px;
+          font-size: 26px;
         }
 
         .leaderHeader p {
-          font-size: 9px;
+          font-size: 11px;
+        }
+
+        .eyebrow {
+          font-size: 8px;
         }
 
         .trophyBox {
-          flex-basis: 51px;
-          width: 51px;
-          height: 51px;
+          flex-basis: 54px;
+          width: 54px;
+          height: 54px;
           border-radius: 12px;
-          font-size: 25px;
+          font-size: 27px;
         }
 
         .columnHeadings,
         .leaderRow {
-          grid-template-columns: 47px minmax(0, 1fr) 62px;
-          gap: 7px;
+          grid-template-columns: 52px minmax(0, 1fr) 66px;
+          gap: 6px;
         }
 
         .columnHeadings {
-          padding-right: 6px;
-          padding-left: 6px;
-          font-size: 6px;
+          padding: 8px 7px;
+          font-size: 7px;
         }
 
         .leaderRow {
-          min-height: 60px;
-          padding: 7px 6px;
+          min-height: 70px;
+          padding: 8px 7px;
         }
 
         .leaderRow.gold {
-          min-height: 73px;
+          min-height: 82px;
         }
 
         .positionBadge {
-          width: 34px;
-          height: 34px;
-          font-size: 11px;
-        }
-
-        .positionBadge.gold {
-          width: 40px;
-          height: 40px;
-          font-size: 19px;
-        }
-
-        .playerName {
-          font-size: 12px;
-        }
-
-        .leaderRow.gold .playerName {
-          font-size: 14px;
-        }
-
-        .leaderRow.silver .playerName,
-        .leaderRow.bronze .playerName {
+          width: 38px;
+          height: 38px;
           font-size: 13px;
         }
 
-        .teamName {
-          font-size: 9px;
+        .positionBadge.gold {
+          width: 44px;
+          height: 44px;
+          font-size: 20px;
         }
 
-        .pointsBox strong {
+        .teamNameMain {
+          font-size: 15px;
+        }
+
+        .playerNameSub {
+          margin-top: 4px;
+          font-size: 11px;
+        }
+
+        .leaderRow.gold .teamNameMain {
           font-size: 17px;
         }
 
-        .leaderRow.gold .pointsBox strong {
+        .leaderRow.silver .teamNameMain,
+        .leaderRow.bronze .teamNameMain {
+          font-size: 16px;
+        }
+
+        .pointsBox strong {
           font-size: 21px;
         }
 
+        .leaderRow.gold .pointsBox strong {
+          font-size: 25px;
+        }
+
+        .pointsBox span {
+          font-size: 7px;
+        }
+
         .backButton {
-          min-height: 44px;
+          min-height: 46px;
           margin-top: 10px;
-          font-size: 9px;
+          font-size: 10px;
         }
       }
 
@@ -1032,20 +1054,24 @@ function Styles() {
         }
 
         .leaderHeader h1 {
-          font-size: 20px;
+          font-size: 23px;
         }
 
         .columnHeadings,
         .leaderRow {
-          grid-template-columns: 43px minmax(0, 1fr) 55px;
+          grid-template-columns: 48px minmax(0, 1fr) 60px;
         }
 
-        .playerName {
-          font-size: 11px;
+        .teamNameMain {
+          font-size: 14px;
         }
 
-        .teamName {
-          font-size: 8px;
+        .leaderRow.gold .teamNameMain {
+          font-size: 16px;
+        }
+
+        .playerNameSub {
+          font-size: 10px;
         }
       }
     `}</style>
