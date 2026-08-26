@@ -55,7 +55,9 @@ export default function RulesPage() {
           Everything you need to know about playing The Predictor.
         </div>
 
-        {/* ENTRY & PRIZES */}
+        {/* =====================================================
+            ENTRY & PRIZES
+        ===================================================== */}
 
         <RuleCard
           eyebrow="ENTRY & PRIZES"
@@ -69,9 +71,11 @@ export default function RulesPage() {
               <div className="entryFeeHero">
                 <div>
                   <div className="miniLabel">ENTRY FEE</div>
+
                   <div className="entryAmount">
                     {formatMoney(settings.entry_fee)}
                   </div>
+
                   <div className="entrySub">
                     One entry. One season. Become The Predictor.
                   </div>
@@ -86,6 +90,7 @@ export default function RulesPage() {
 
                   <div>
                     <strong>Pay via Teamo</strong>
+
                     <p>
                       The entry fee can be paid via the{" "}
                       <b>Telford & Wrekin HC Teamo app</b>.
@@ -98,6 +103,7 @@ export default function RulesPage() {
 
                   <div>
                     <strong>Not registered on Teamo?</strong>
+
                     <p>
                       Payment can also be made at the{" "}
                       <b>hockey pitch café</b> via <b>SumUp</b>.
@@ -109,8 +115,10 @@ export default function RulesPage() {
               <div className="prizeGrid">
                 <div className="prizeCard gold">
                   <div className="medal">🏆</div>
+
                   <div>
                     <div className="prizeLabel">1ST PRIZE</div>
+
                     <div className="prizeAmount">
                       {formatMoney(settings.first_prize)}
                     </div>
@@ -119,8 +127,10 @@ export default function RulesPage() {
 
                 <div className="prizeCard silver">
                   <div className="medal">🥈</div>
+
                   <div>
                     <div className="prizeLabel">2ND PRIZE</div>
+
                     <div className="prizeAmount">
                       {formatMoney(settings.second_prize)}
                     </div>
@@ -148,7 +158,9 @@ export default function RulesPage() {
           )}
         </RuleCard>
 
-        {/* HOW TO PLAY */}
+        {/* =====================================================
+            HOW TO PLAY
+        ===================================================== */}
 
         <RuleCard
           eyebrow="THE BASICS"
@@ -160,7 +172,9 @@ export default function RulesPage() {
             Wrekin Hockey Club fixtures.
           </p>
 
-          <p>For every fixture, choose one of:</p>
+          <p>
+            For every fixture, choose one of:
+          </p>
 
           <div className="predictionOptions">
             <PredictionOption letter="H" text="Home Win" />
@@ -169,7 +183,9 @@ export default function RulesPage() {
           </div>
         </RuleCard>
 
-        {/* SCORING */}
+        {/* =====================================================
+            SCORING
+        ===================================================== */}
 
         <RuleCard
           eyebrow="POINTS"
@@ -179,6 +195,7 @@ export default function RulesPage() {
           <div className="scoreGrid">
             <div className="scoreBox correct">
               <div className="scoreIcon">✓</div>
+
               <div>
                 <strong>Correct Prediction</strong>
                 <span>1 POINT</span>
@@ -187,6 +204,7 @@ export default function RulesPage() {
 
             <div className="scoreBox incorrect">
               <div className="scoreIcon">✕</div>
+
               <div>
                 <strong>Incorrect Prediction</strong>
                 <span>0 POINTS</span>
@@ -205,7 +223,9 @@ export default function RulesPage() {
           </p>
         </RuleCard>
 
-        {/* PREDICTION WINDOWS */}
+        {/* =====================================================
+            PREDICTION WINDOWS
+        ===================================================== */}
 
         <RuleCard
           eyebrow="DEADLINES"
@@ -221,15 +241,13 @@ export default function RulesPage() {
             Match Week is open.
           </p>
 
-          <div className="highlight blueHighlight">
-            <span className="highlightIcon">🔒</span>
-            <div>
-              <strong>Once the deadline passes</strong>
-              <span>
-                All predictions are locked and can no longer be changed.
-              </span>
-            </div>
-          </div>
+          <Highlight
+            type="blue"
+            icon="🔒"
+            title="Once the deadline passes"
+          >
+            All predictions are locked and can no longer be changed.
+          </Highlight>
 
           <p>
             Locked predictions remain available to view afterwards, so you
@@ -237,26 +255,27 @@ export default function RulesPage() {
           </p>
         </RuleCard>
 
-        {/* MISSED PREDICTIONS */}
+        {/* =====================================================
+            MISSED PREDICTIONS
+        ===================================================== */}
 
         <RuleCard
           eyebrow="DON'T MISS OUT"
           title="Missed Predictions"
           icon="!"
         >
-          <p>You do not have to predict every fixture.</p>
+          <p>
+            You do not have to predict every fixture.
+          </p>
 
-          <div className="highlight amberHighlight">
-            <span className="highlightIcon">!</span>
-
-            <div>
-              <strong>No prediction = 0 points</strong>
-              <span>
-                If you do not submit a prediction before the deadline, that
-                fixture scores 0 points.
-              </span>
-            </div>
-          </div>
+          <Highlight
+            type="amber"
+            icon="!"
+            title="No prediction = 0 points"
+          >
+            If you do not submit a prediction before the deadline, that
+            fixture scores 0 points.
+          </Highlight>
 
           <p>
             No prediction will be entered automatically and missing
@@ -264,7 +283,9 @@ export default function RulesPage() {
           </p>
         </RuleCard>
 
-        {/* POSTPONED */}
+        {/* =====================================================
+            POSTPONED
+        ===================================================== */}
 
         <RuleCard
           eyebrow="FIXTURE CHANGES"
@@ -276,17 +297,14 @@ export default function RulesPage() {
             valid.
           </p>
 
-          <div className="highlight blueHighlight">
-            <span className="highlightIcon">↻</span>
-
-            <div>
-              <strong>Your prediction carries forward</strong>
-              <span>
-                It remains attached to the fixture until the rearranged match
-                is played.
-              </span>
-            </div>
-          </div>
+          <Highlight
+            type="blue"
+            icon="↻"
+            title="Your prediction carries forward"
+          >
+            It remains attached to the fixture until the rearranged match is
+            played.
+          </Highlight>
 
           <p>
             You will not be able to change your original prediction because
@@ -299,7 +317,9 @@ export default function RulesPage() {
           </p>
         </RuleCard>
 
-        {/* CANCELLED */}
+        {/* =====================================================
+            CANCELLED
+        ===================================================== */}
 
         <RuleCard
           eyebrow="FIXTURE CHANGES"
@@ -311,17 +331,14 @@ export default function RulesPage() {
             removed from the active prediction list.
           </p>
 
-          <div className="highlight redHighlight">
-            <span className="highlightIcon">✕</span>
-
-            <div>
-              <strong>No points awarded</strong>
-              <span>
-                Any prediction already made for the cancelled fixture will
-                not count.
-              </span>
-            </div>
-          </div>
+          <Highlight
+            type="red"
+            icon="✕"
+            title="No points awarded"
+          >
+            Any prediction already made for the cancelled fixture will not
+            count.
+          </Highlight>
 
           <p>
             No points will be awarded and the fixture will be excluded from
@@ -334,7 +351,9 @@ export default function RulesPage() {
           </p>
         </RuleCard>
 
-        {/* LEADERBOARDS */}
+        {/* =====================================================
+            LEADERBOARDS
+        ===================================================== */}
 
         <RuleCard
           eyebrow="STANDINGS"
@@ -344,7 +363,9 @@ export default function RulesPage() {
           <div className="leaderboardInfoGrid">
             <div className="leaderboardInfo">
               <div className="lbIcon">🏆</div>
+
               <strong>Overall Leaderboard</strong>
+
               <span>
                 Shows each entrant&apos;s total points across the competition.
               </span>
@@ -352,7 +373,9 @@ export default function RulesPage() {
 
             <div className="leaderboardInfo">
               <div className="lbIcon">📊</div>
+
               <strong>Weekly Leaderboards</strong>
+
               <span>
                 Shows the points scored in each completed Match Week.
               </span>
@@ -376,7 +399,9 @@ export default function RulesPage() {
           </p>
         </RuleCard>
 
-        {/* TIES */}
+        {/* =====================================================
+            TIES
+        ===================================================== */}
 
         <RuleCard
           eyebrow="RANKINGS"
@@ -388,27 +413,20 @@ export default function RulesPage() {
             position.
           </p>
 
-          <p>Standard competition ranking is used.</p>
+          <p>
+            Standard competition ranking is used.
+          </p>
 
           <div className="rankingExample">
-            <div>
-              <span>1</span>
-              <small>1ST</small>
-            </div>
-
-            <div>
-              <span>1</span>
-              <small>1ST</small>
-            </div>
-
-            <div>
-              <span>3</span>
-              <small>3RD</small>
-            </div>
+            <RankBubble number="1" label="1ST" gold />
+            <RankBubble number="1" label="1ST" gold />
+            <RankBubble number="3" label="3RD" />
           </div>
         </RuleCard>
 
-        {/* PROVISIONAL */}
+        {/* =====================================================
+            PROVISIONAL
+        ===================================================== */}
 
         <RuleCard
           eyebrow="LIVE SCORING"
@@ -420,17 +438,14 @@ export default function RulesPage() {
             results are still outstanding.
           </p>
 
-          <div className="highlight blueHighlight">
-            <span className="highlightIcon">●</span>
-
-            <div>
-              <strong>Standings update as results arrive</strong>
-              <span>
-                Only fixtures with confirmed results contribute to the points
-                total at that time.
-              </span>
-            </div>
-          </div>
+          <Highlight
+            type="blue"
+            icon="●"
+            title="Standings update as results arrive"
+          >
+            Only fixtures with confirmed results contribute to the points
+            total at that time.
+          </Highlight>
 
           <p>
             Outstanding postponed fixtures will remain pending until the
@@ -438,7 +453,9 @@ export default function RulesPage() {
           </p>
         </RuleCard>
 
-        {/* ACCOUNTS */}
+        {/* =====================================================
+            ACCOUNTS
+        ===================================================== */}
 
         <RuleCard
           eyebrow="YOUR ENTRY"
@@ -453,20 +470,19 @@ export default function RulesPage() {
             Predictor team-name changes are controlled by the Administrator.
           </p>
 
-          <div className="highlight blueHighlight">
-            <span className="highlightIcon">✓</span>
-
-            <div>
-              <strong>Make sure it saves</strong>
-              <span>
-                Only predictions successfully saved before the relevant
-                deadline will count.
-              </span>
-            </div>
-          </div>
+          <Highlight
+            type="blue"
+            icon="✓"
+            title="Make sure it saves"
+          >
+            Only predictions successfully saved before the relevant deadline
+            will count.
+          </Highlight>
         </RuleCard>
 
-        {/* FAIR PLAY */}
+        {/* =====================================================
+            FAIR PLAY
+        ===================================================== */}
 
         <RuleCard
           eyebrow="THE PREDICTOR"
@@ -488,7 +504,10 @@ export default function RulesPage() {
           </div>
         </RuleCard>
 
-        <a href="/predictor" className="backButton">
+        <a
+          href="/predictor"
+          className="backButton"
+        >
           ← BACK TO THE PREDICTOR
         </a>
 
@@ -546,7 +565,9 @@ function RuleCard({
   featured = false,
 }) {
   return (
-    <section className={`ruleCard ${featured ? "featuredCard" : ""}`}>
+    <section
+      className={`ruleCard ${featured ? "featuredCard" : ""}`}
+    >
       <div className="dualTop" />
 
       <div className="ruleHeader">
@@ -555,7 +576,9 @@ function RuleCard({
             {eyebrow}
           </div>
 
-          <h2>{title}</h2>
+          <h2>
+            {title}
+          </h2>
         </div>
 
         {icon && (
@@ -572,14 +595,66 @@ function RuleCard({
   );
 }
 
-function PredictionOption({ letter, text }) {
+function PredictionOption({
+  letter,
+  text,
+}) {
   return (
     <div className="predictionOption">
       <div className="predictionLetter">
         {letter}
       </div>
 
-      <strong>{text}</strong>
+      <strong>
+        {text}
+      </strong>
+    </div>
+  );
+}
+
+function Highlight({
+  type,
+  icon,
+  title,
+  children,
+}) {
+  return (
+    <div
+      className={`highlight ${type}Highlight`}
+    >
+      <span className="highlightIcon">
+        {icon}
+      </span>
+
+      <div>
+        <strong>
+          {title}
+        </strong>
+
+        <span className="highlightText">
+          {children}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function RankBubble({
+  number,
+  label,
+  gold = false,
+}) {
+  return (
+    <div
+      className={`rankBubble ${gold ? "goldRank" : ""}`}
+    >
+      <span>
+        {number}
+      </span>
+
+      <small>
+        {label}
+      </small>
     </div>
   );
 }
@@ -622,26 +697,24 @@ function Styles() {
         overflow-x: hidden;
       }
 
-      button,
-      select {
-        font: inherit;
-      }
-
       a {
         text-decoration: none;
         -webkit-tap-highlight-color: transparent;
       }
 
-      /* =====================================================
-         PAGE
-      ===================================================== */
+      /* PAGE */
 
       .wowPage {
         position: relative;
         min-height: 100vh;
         overflow: hidden;
+
         color: #ffffff;
-        font-family: Arial, Helvetica, sans-serif;
+
+        font-family:
+          Arial,
+          Helvetica,
+          sans-serif;
 
         background:
           radial-gradient(
@@ -667,22 +740,19 @@ function Styles() {
         position: relative;
         z-index: 5;
 
-        width: min(
-          900px,
-          calc(100% - 30px)
-        );
+        width:
+          min(
+            900px,
+            calc(100% - 30px)
+          );
 
         margin: 0 auto;
 
         padding:
-          28px
-          0
-          34px;
+          28px 0 34px;
       }
 
-      /* =====================================================
-         BACKGROUND FX
-      ===================================================== */
+      /* BACKGROUND FX */
 
       .blueGlow,
       .redGlow {
@@ -721,7 +791,8 @@ function Styles() {
         width: 280px;
         height: 55px;
 
-        transform: skewX(-35deg);
+        transform:
+          skewX(-35deg);
 
         pointer-events: none;
 
@@ -766,9 +837,7 @@ function Styles() {
         bottom: 8%;
       }
 
-      /* =====================================================
-         BRAND HEADER
-      ===================================================== */
+      /* HEADER */
 
       .brandHeader {
         display: flex;
@@ -791,7 +860,7 @@ function Styles() {
         filter:
           drop-shadow(
             0 5px 12px
-            rgba(0, 0, 0, 0.42)
+            rgba(0,0,0,0.42)
           );
       }
 
@@ -814,7 +883,7 @@ function Styles() {
 
         text-shadow:
           0 3px 10px
-          rgba(0, 0, 0, 0.45);
+          rgba(0,0,0,0.45);
       }
 
       .brandTitle span {
@@ -822,7 +891,7 @@ function Styles() {
 
         text-shadow:
           0 0 15px
-          rgba(237, 28, 36, 0.42);
+          rgba(237,28,36,0.42);
       }
 
       .brandLine {
@@ -883,9 +952,7 @@ function Styles() {
 
       .intro {
         margin:
-          0
-          auto
-          22px;
+          0 auto 22px;
 
         color: #a8bdd1;
 
@@ -896,9 +963,7 @@ function Styles() {
         font-weight: 750;
       }
 
-      /* =====================================================
-         RULE CARDS
-      ===================================================== */
+      /* RULE CARDS */
 
       .ruleCard {
         position: relative;
@@ -908,35 +973,29 @@ function Styles() {
         margin-bottom: 17px;
 
         padding:
-          24px
-          24px
-          22px;
+          24px 24px 22px;
 
         border:
           1px solid
-          rgba(104, 150, 196, 0.38);
+          rgba(104,150,196,0.38);
 
         border-radius: 15px;
 
         background:
           linear-gradient(
             155deg,
-            rgba(12, 35, 64, 0.97),
-            rgba(4, 17, 33, 0.97)
+            rgba(12,35,64,0.97),
+            rgba(4,17,33,0.97)
           );
 
         box-shadow:
           0 17px 42px
-          rgba(0, 0, 0, 0.30),
+          rgba(0,0,0,0.30),
           inset 0 1px 0
-          rgba(255, 255, 255, 0.035);
+          rgba(255,255,255,0.035);
 
-        backdrop-filter: blur(15px);
-      }
-
-      .ruleCard:hover {
-        border-color:
-          rgba(104, 166, 225, 0.48);
+        backdrop-filter:
+          blur(15px);
       }
 
       .dualTop {
@@ -960,7 +1019,7 @@ function Styles() {
 
       .featuredCard {
         border-color:
-          rgba(230, 163, 25, 0.38);
+          rgba(230,163,25,0.38);
       }
 
       .featuredCard .dualTop {
@@ -973,9 +1032,7 @@ function Styles() {
           );
       }
 
-      /* =====================================================
-         RULE HEADERS
-      ===================================================== */
+      /* RULE HEADERS */
 
       .ruleHeader {
         display: flex;
@@ -1016,10 +1073,6 @@ function Styles() {
         font-weight: 950;
 
         letter-spacing: -0.5px;
-
-        text-shadow:
-          0 2px 8px
-          rgba(0, 0, 0, 0.28);
       }
 
       .ruleIcon {
@@ -1034,15 +1087,15 @@ function Styles() {
 
         border:
           1px solid
-          rgba(41, 144, 237, 0.48);
+          rgba(41,144,237,0.48);
 
         border-radius: 14px;
 
         background:
           linear-gradient(
             145deg,
-            rgba(9, 52, 91, 0.95),
-            rgba(3, 24, 45, 0.95)
+            rgba(9,52,91,0.95),
+            rgba(3,24,45,0.95)
           );
 
         color: #ffffff;
@@ -1050,17 +1103,9 @@ function Styles() {
         font-size: 27px;
 
         font-weight: 950;
-
-        box-shadow:
-          inset 0 1px 0
-          rgba(255, 255, 255, 0.04),
-          0 7px 18px
-          rgba(0, 0, 0, 0.22);
       }
 
-      /* =====================================================
-         BODY TEXT
-      ===================================================== */
+      /* BODY */
 
       .ruleBody {
         color: #c2d0dd;
@@ -1074,9 +1119,7 @@ function Styles() {
 
       .ruleBody p {
         margin:
-          0
-          0
-          14px;
+          0 0 14px;
       }
 
       .ruleBody p:last-child {
@@ -1090,9 +1133,7 @@ function Styles() {
         font-weight: 900;
       }
 
-      /* =====================================================
-         ENTRY FEE
-      ===================================================== */
+      /* ENTRY FEE */
 
       .entryFeeHero {
         display: flex;
@@ -1105,25 +1146,20 @@ function Styles() {
         margin-bottom: 16px;
 
         padding:
-          18px
-          20px;
+          18px 20px;
 
         border:
           1px solid
-          rgba(255, 181, 28, 0.42);
+          rgba(255,181,28,0.42);
 
         border-radius: 12px;
 
         background:
           linear-gradient(
             120deg,
-            rgba(100, 62, 0, 0.35),
-            rgba(14, 32, 51, 0.78)
+            rgba(100,62,0,0.35),
+            rgba(14,32,51,0.78)
           );
-
-        box-shadow:
-          inset 0 1px 0
-          rgba(255, 255, 255, 0.035);
       }
 
       .miniLabel {
@@ -1146,8 +1182,6 @@ function Styles() {
         line-height: 1;
 
         font-weight: 950;
-
-        letter-spacing: -1px;
       }
 
       .entrySub {
@@ -1184,21 +1218,15 @@ function Styles() {
         font-size: 30px;
 
         font-weight: 950;
-
-        box-shadow:
-          0 8px 20px
-          rgba(204, 130, 0, 0.25);
       }
 
-      /* =====================================================
-         PAYMENT
-      ===================================================== */
+      /* PAYMENT */
 
       .paymentGrid {
         display: grid;
 
         grid-template-columns:
-          repeat(2, 1fr);
+          repeat(2,1fr);
 
         gap: 11px;
 
@@ -1236,34 +1264,32 @@ function Styles() {
       .bluePanel {
         border:
           1px solid
-          rgba(38, 149, 248, 0.37);
+          rgba(38,149,248,0.37);
 
         background:
-          rgba(0, 96, 183, 0.15);
+          rgba(0,96,183,0.15);
       }
 
       .redPanel {
         border:
           1px solid
-          rgba(237, 28, 36, 0.33);
+          rgba(237,28,36,0.33);
 
         background:
-          rgba(142, 19, 27, 0.14);
+          rgba(142,19,27,0.14);
       }
 
       .infoIcon {
         font-size: 22px;
       }
 
-      /* =====================================================
-         PRIZES
-      ===================================================== */
+      /* PRIZES */
 
       .prizeGrid {
         display: grid;
 
         grid-template-columns:
-          repeat(2, 1fr);
+          repeat(2,1fr);
 
         gap: 11px;
 
@@ -1285,27 +1311,19 @@ function Styles() {
       .prizeCard.gold {
         border:
           1px solid
-          rgba(239, 178, 23, 0.43);
+          rgba(239,178,23,0.43);
 
         background:
-          linear-gradient(
-            120deg,
-            rgba(112, 75, 0, 0.33),
-            rgba(45, 35, 10, 0.25)
-          );
+          rgba(112,75,0,0.26);
       }
 
       .prizeCard.silver {
         border:
           1px solid
-          rgba(176, 195, 214, 0.34);
+          rgba(176,195,214,0.34);
 
         background:
-          linear-gradient(
-            120deg,
-            rgba(108, 127, 146, 0.18),
-            rgba(29, 42, 55, 0.26)
-          );
+          rgba(108,127,146,0.15);
       }
 
       .medal {
@@ -1338,15 +1356,13 @@ function Styles() {
         font-weight: 950;
       }
 
-      /* =====================================================
-         H / D / A
-      ===================================================== */
+      /* H D A */
 
       .predictionOptions {
         display: grid;
 
         grid-template-columns:
-          repeat(3, 1fr);
+          repeat(3,1fr);
 
         gap: 11px;
 
@@ -1355,21 +1371,16 @@ function Styles() {
 
       .predictionOption {
         padding:
-          15px
-          10px;
+          15px 10px;
 
         border:
           1px solid
-          rgba(41, 144, 237, 0.38);
+          rgba(41,144,237,0.38);
 
         border-radius: 11px;
 
         background:
-          linear-gradient(
-            145deg,
-            rgba(8, 48, 85, 0.85),
-            rgba(4, 26, 48, 0.85)
-          );
+          rgba(5,39,70,0.65);
 
         text-align: center;
       }
@@ -1383,13 +1394,11 @@ function Styles() {
         height: 47px;
 
         margin:
-          0
-          auto
-          9px;
+          0 auto 9px;
 
         border:
           1px solid
-          rgba(255, 255, 255, 0.78);
+          rgba(255,255,255,0.78);
 
         border-radius: 10px;
 
@@ -1407,25 +1416,19 @@ function Styles() {
         font-size: 17px;
 
         font-weight: 950;
-
-        box-shadow:
-          0 6px 16px
-          rgba(0, 0, 0, 0.25);
       }
 
       .predictionOption strong {
         font-size: 13px;
       }
 
-      /* =====================================================
-         SCORING
-      ===================================================== */
+      /* SCORING */
 
       .scoreGrid {
         display: grid;
 
         grid-template-columns:
-          repeat(2, 1fr);
+          repeat(2,1fr);
 
         gap: 11px;
 
@@ -1447,19 +1450,19 @@ function Styles() {
       .scoreBox.correct {
         border:
           1px solid
-          rgba(42, 205, 116, 0.40);
+          rgba(42,205,116,0.40);
 
         background:
-          rgba(12, 104, 56, 0.20);
+          rgba(12,104,56,0.20);
       }
 
       .scoreBox.incorrect {
         border:
           1px solid
-          rgba(237, 67, 75, 0.36);
+          rgba(237,67,75,0.36);
 
         background:
-          rgba(135, 21, 28, 0.18);
+          rgba(135,21,28,0.18);
       }
 
       .scoreIcon {
@@ -1503,21 +1506,9 @@ function Styles() {
         font-size: 10px;
 
         font-weight: 950;
-
-        letter-spacing: 0.8px;
       }
 
-      .correct span {
-        color: #60dc96;
-      }
-
-      .incorrect span {
-        color: #ff747b;
-      }
-
-      /* =====================================================
-         HIGHLIGHTS
-      ===================================================== */
+      /* HIGHLIGHTS */
 
       .highlight {
         display: flex;
@@ -1527,12 +1518,10 @@ function Styles() {
         gap: 13px;
 
         margin:
-          15px
-          0;
+          15px 0;
 
         padding:
-          14px
-          15px;
+          14px 15px;
 
         border-radius: 11px;
       }
@@ -1559,26 +1548,26 @@ function Styles() {
       .highlight strong {
         display: block;
 
-        margin-bottom: 2px;
+        margin-bottom: 3px;
 
         font-size: 13px;
       }
 
-      .highlight span:not(.highlightIcon) {
+      .highlightText {
         display: block;
 
-        font-size: 11px;
+        font-size: 12px;
 
-        line-height: 1.45;
+        line-height: 1.5;
       }
 
       .blueHighlight {
         border:
           1px solid
-          rgba(39, 146, 242, 0.36);
+          rgba(39,146,242,0.36);
 
         background:
-          rgba(0, 91, 174, 0.15);
+          rgba(0,91,174,0.15);
       }
 
       .blueHighlight .highlightIcon {
@@ -1588,10 +1577,10 @@ function Styles() {
       .amberHighlight {
         border:
           1px solid
-          rgba(242, 170, 44, 0.40);
+          rgba(242,170,44,0.40);
 
         background:
-          rgba(119, 72, 0, 0.20);
+          rgba(119,72,0,0.20);
       }
 
       .amberHighlight .highlightIcon {
@@ -1601,25 +1590,23 @@ function Styles() {
       .redHighlight {
         border:
           1px solid
-          rgba(237, 54, 63, 0.36);
+          rgba(237,54,63,0.36);
 
         background:
-          rgba(132, 18, 25, 0.18);
+          rgba(132,18,25,0.18);
       }
 
       .redHighlight .highlightIcon {
         background: #c4242d;
       }
 
-      /* =====================================================
-         LEADERBOARD INFO
-      ===================================================== */
+      /* LEADERBOARDS */
 
       .leaderboardInfoGrid {
         display: grid;
 
         grid-template-columns:
-          repeat(2, 1fr);
+          repeat(2,1fr);
 
         gap: 11px;
 
@@ -1631,12 +1618,12 @@ function Styles() {
 
         border:
           1px solid
-          rgba(43, 144, 235, 0.35);
+          rgba(43,144,235,0.35);
 
         border-radius: 11px;
 
         background:
-          rgba(5, 39, 70, 0.55);
+          rgba(5,39,70,0.55);
 
         text-align: center;
       }
@@ -1660,14 +1647,12 @@ function Styles() {
 
         color: #9eb3c8;
 
-        font-size: 11px;
+        font-size: 12px;
 
         line-height: 1.45;
       }
 
-      /* =====================================================
-         RANKING EXAMPLE
-      ===================================================== */
+      /* RANKING */
 
       .rankingExample {
         display: flex;
@@ -1682,21 +1667,20 @@ function Styles() {
 
         border:
           1px solid
-          rgba(62, 139, 213, 0.30);
+          rgba(62,139,213,0.30);
 
         border-radius: 11px;
 
         background:
-          rgba(3, 24, 45, 0.62);
+          rgba(3,24,45,0.62);
       }
 
-      .rankingExample > div {
+      .rankBubble {
         display: flex;
 
         flex-direction: column;
 
         align-items: center;
-
         justify-content: center;
 
         width: 59px;
@@ -1704,7 +1688,7 @@ function Styles() {
 
         border:
           1px solid
-          rgba(40, 145, 239, 0.42);
+          rgba(40,145,239,0.42);
 
         border-radius: 50%;
 
@@ -1716,7 +1700,19 @@ function Styles() {
           );
       }
 
-      .rankingExample span {
+      .goldRank {
+        border-color:
+          rgba(255,201,54,0.58);
+
+        background:
+          linear-gradient(
+            145deg,
+            #926100,
+            #3a2a06
+          );
+      }
+
+      .rankBubble span {
         color: #ffffff;
 
         font-size: 19px;
@@ -1726,7 +1722,7 @@ function Styles() {
         font-weight: 950;
       }
 
-      .rankingExample small {
+      .rankBubble small {
         margin-top: 4px;
 
         color: #6ebaff;
@@ -1736,9 +1732,11 @@ function Styles() {
         font-weight: 950;
       }
 
-      /* =====================================================
-         FAIR PLAY
-      ===================================================== */
+      .goldRank small {
+        color: #ffc942;
+      }
+
+      /* FAIR PLAY */
 
       .fairPlayPanel {
         display: flex;
@@ -1751,12 +1749,12 @@ function Styles() {
 
         border:
           1px solid
-          rgba(98, 148, 197, 0.34);
+          rgba(98,148,197,0.34);
 
         border-radius: 11px;
 
         background:
-          rgba(5, 31, 56, 0.56);
+          rgba(5,31,56,0.56);
       }
 
       .fairPlayPanel p {
@@ -1791,9 +1789,7 @@ function Styles() {
         font-weight: 950;
       }
 
-      /* =====================================================
-         BACK BUTTON
-      ===================================================== */
+      /* BACK */
 
       .backButton {
         display: flex;
@@ -1825,14 +1821,6 @@ function Styles() {
         font-weight: 950;
 
         letter-spacing: 0.35px;
-
-        box-shadow:
-          0 8px 22px
-          rgba(0, 0, 0, 0.27);
-      }
-
-      .backButton:hover {
-        filter: brightness(1.08);
       }
 
       .footer {
@@ -1847,6 +1835,7 @@ function Styles() {
 
       /* =====================================================
          MOBILE
+         THIS IS THE IMPORTANT SIZE FIX
       ===================================================== */
 
       @media (max-width: 620px) {
@@ -1889,16 +1878,14 @@ function Styles() {
         .intro {
           margin-bottom: 17px;
 
-          font-size: 12px;
+          font-size: 13px;
         }
 
         .ruleCard {
           margin-bottom: 12px;
 
           padding:
-            19px
-            15px
-            17px;
+            19px 15px 17px;
 
           border-radius: 13px;
         }
@@ -1908,7 +1895,7 @@ function Styles() {
         }
 
         .ruleHeader h2 {
-          font-size: 22px;
+          font-size: 23px;
         }
 
         .eyebrow {
@@ -1924,16 +1911,24 @@ function Styles() {
           font-size: 22px;
         }
 
+        /* KEY FIX:
+           NORMAL, READABLE MOBILE BODY COPY */
+
         .ruleBody {
-          font-size: 14px;
+          font-size: 15px;
 
           line-height: 1.6;
+
+          font-weight: 650;
+        }
+
+        .ruleBody p {
+          margin-bottom: 13px;
         }
 
         .entryFeeHero {
           padding:
-            15px
-            14px;
+            15px 14px;
         }
 
         .entryAmount {
@@ -1947,11 +1942,25 @@ function Styles() {
           font-size: 25px;
         }
 
+        .entrySub {
+          font-size: 11px;
+        }
+
         .paymentGrid,
         .prizeGrid,
         .scoreGrid,
         .leaderboardInfoGrid {
           grid-template-columns: 1fr;
+        }
+
+        .infoPanel strong {
+          font-size: 14px;
+        }
+
+        .infoPanel p {
+          font-size: 12px;
+
+          line-height: 1.5;
         }
 
         .predictionOptions {
@@ -1960,8 +1969,7 @@ function Styles() {
 
         .predictionOption {
           padding:
-            13px
-            5px;
+            13px 5px;
         }
 
         .predictionLetter {
@@ -1977,8 +1985,7 @@ function Styles() {
 
         .highlight {
           padding:
-            12px
-            11px;
+            12px 11px;
 
           gap: 10px;
         }
@@ -1990,11 +1997,29 @@ function Styles() {
           font-size: 14px;
         }
 
+        .highlight strong {
+          font-size: 13px;
+        }
+
+        .highlightText {
+          font-size: 12px;
+
+          line-height: 1.5;
+        }
+
+        .leaderboardInfo strong {
+          font-size: 14px;
+        }
+
+        .leaderboardInfo span {
+          font-size: 12px;
+        }
+
         .rankingExample {
           gap: 10px;
         }
 
-        .rankingExample > div {
+        .rankBubble {
           width: 54px;
           height: 54px;
         }
@@ -2014,6 +2039,8 @@ function Styles() {
 
         .backButton {
           min-height: 48px;
+
+          font-size: 11px;
         }
       }
 
@@ -2028,18 +2055,16 @@ function Styles() {
         }
 
         .ruleHeader h2 {
-          font-size: 20px;
+          font-size: 21px;
         }
 
         .ruleBody {
-          font-size: 13.5px;
+          font-size: 14.5px;
+
+          line-height: 1.6;
         }
 
         .predictionOption strong {
-          font-size: 10px;
-        }
-
-        .entrySub {
           font-size: 10px;
         }
       }
