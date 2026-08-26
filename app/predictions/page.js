@@ -294,8 +294,6 @@ export default function PredictionsPage() {
           </div>
         )}
 
-        {/* MATCH WEEK SELECTOR */}
-
         <section className="glassCard selectorCard">
           <div className="dualTop" />
 
@@ -334,8 +332,6 @@ export default function PredictionsPage() {
           </div>
         </section>
 
-        {/* FIXTURES */}
-
         {selectedWeek &&
           (() => {
             const opensAt = new Date(selectedWeek.opens_at);
@@ -371,8 +367,6 @@ export default function PredictionsPage() {
               <section className="glassCard fixturesCard">
                 <div className="dualTop" />
 
-                {/* WEEK HEADER */}
-
                 <div className="weekTop">
                   <div>
                     <div className="eyebrow blue">THE PREDICTOR</div>
@@ -398,8 +392,6 @@ export default function PredictionsPage() {
                     </div>
                   )}
                 </div>
-
-                {/* STATUS */}
 
                 <div
                   className={`statusBar ${
@@ -439,8 +431,6 @@ export default function PredictionsPage() {
                   )}
                 </div>
 
-                {/* KEY */}
-
                 <div className="fixtureKey">
                   <div>FIXTURE</div>
 
@@ -450,8 +440,6 @@ export default function PredictionsPage() {
                     <span>AWAY</span>
                   </div>
                 </div>
-
-                {/* ROWS */}
 
                 <div className="fixtureList">
                   {weekFixtures.map((fixture, index) => {
@@ -537,22 +525,19 @@ export default function PredictionsPage() {
                   })}
                 </div>
 
-                {/* COMPLETE */}
-
                 {isOpen && allComplete && (
                   <div className="completeBanner">
                     <div className="completeTick">✓</div>
 
                     <div>
                       <strong>ALL PREDICTIONS COMPLETED</strong>
+
                       <span>
                         You're all set for Match Week {selectedWeek.week_no}.
                       </span>
                     </div>
                   </div>
                 )}
-
-                {/* ACTIONS */}
 
                 <div className="bottomActions">
                   {isOpen && (
@@ -887,7 +872,7 @@ function Styles() {
         background: rgba(116, 67, 0, 0.31);
         color: #ffc45c;
         text-align: center;
-        font-size: 11px;
+        font-size: 12px;
         font-weight: 900;
       }
 
@@ -906,13 +891,13 @@ function Styles() {
 
       .selectorGrid {
         display: grid;
-        grid-template-columns: 125px 1fr;
+        grid-template-columns: 130px 1fr;
         align-items: center;
         gap: 15px;
       }
 
       .eyebrow {
-        font-size: 9px;
+        font-size: 10px;
         font-weight: 950;
         letter-spacing: 1.3px;
       }
@@ -922,11 +907,10 @@ function Styles() {
       }
 
       .selectorLabel {
-        margin-top: 3px;
+        margin-top: 4px;
         color: #ffffff;
-        font-size: 15px;
+        font-size: 17px;
         font-weight: 950;
-        letter-spacing: 0.2px;
       }
 
       .selectWrap {
@@ -935,14 +919,14 @@ function Styles() {
 
       .selectWrap select {
         width: 100%;
-        min-height: 45px;
+        min-height: 48px;
         padding: 10px 42px 10px 14px;
         border: 1px solid rgba(102, 157, 211, 0.48);
         border-radius: 9px;
         outline: none;
         background: #071b34;
         color: #ffffff;
-        font-size: 14px;
+        font-size: 16px;
         font-weight: 850;
         cursor: pointer;
       }
@@ -961,37 +945,37 @@ function Styles() {
       /* FIXTURE CARD */
 
       .fixturesCard {
-        padding: 20px 14px 16px;
+        padding: 22px 14px 16px;
       }
 
       .weekTop {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 15px;
-        padding: 0 5px 14px;
+        gap: 18px;
+        padding: 0 6px 15px;
       }
 
       .weekTop h1 {
-        margin: 4px 0 0;
+        margin: 5px 0 0;
         color: #ffffff;
-        font-size: 25px;
+        font-size: 30px;
         line-height: 1;
         font-weight: 950;
-        letter-spacing: -0.7px;
+        letter-spacing: -0.8px;
       }
 
       .weekDate {
-        margin-top: 7px;
-        color: #91a9c0;
-        font-size: 12px;
+        margin-top: 8px;
+        color: #9bb1c5;
+        font-size: 13px;
         font-weight: 750;
       }
 
       .selectedCounter {
         flex-shrink: 0;
-        min-width: 78px;
-        padding: 10px 11px;
+        min-width: 82px;
+        padding: 11px;
         border: 1px solid rgba(57, 136, 215, 0.5);
         border-radius: 11px;
         background: rgba(3, 15, 31, 0.92);
@@ -1004,7 +988,7 @@ function Styles() {
       .selectedCounter strong {
         display: block;
         color: #ffffff;
-        font-size: 19px;
+        font-size: 21px;
         line-height: 1;
       }
 
@@ -1012,7 +996,7 @@ function Styles() {
         display: block;
         margin-top: 4px;
         color: #9ebad4;
-        font-size: 7px;
+        font-size: 8px;
         font-weight: 950;
         letter-spacing: 0.8px;
       }
@@ -1030,23 +1014,23 @@ function Styles() {
         align-items: center;
         justify-content: space-between;
         gap: 12px;
-        margin-bottom: 12px;
-        padding: 11px 13px;
+        margin-bottom: 13px;
+        padding: 12px 14px;
         border-radius: 9px;
       }
 
       .statusBar strong {
         display: block;
-        font-size: 11px;
+        font-size: 13px;
         font-weight: 950;
         letter-spacing: 0.3px;
       }
 
       .statusBar span {
         display: block;
-        margin-top: 3px;
+        margin-top: 4px;
         color: #9eb3c8;
-        font-size: 10px;
+        font-size: 11px;
         font-weight: 700;
       }
 
@@ -1089,7 +1073,7 @@ function Styles() {
       .remainingText {
         flex-shrink: 0;
         color: #ffb337;
-        font-size: 10px;
+        font-size: 11px;
         font-weight: 950;
         letter-spacing: 0.5px;
       }
@@ -1098,12 +1082,12 @@ function Styles() {
 
       .fixtureKey {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) 174px;
+        grid-template-columns: minmax(0, 1fr) 188px;
         align-items: center;
         gap: 10px;
-        padding: 2px 7px 8px;
-        color: #718ba4;
-        font-size: 8px;
+        padding: 4px 8px 9px;
+        color: #7893ad;
+        font-size: 9px;
         font-weight: 950;
         letter-spacing: 0.7px;
       }
@@ -1111,7 +1095,7 @@ function Styles() {
       .resultKey {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 7px;
+        gap: 8px;
         text-align: center;
       }
 
@@ -1126,11 +1110,11 @@ function Styles() {
       .fixtureRow {
         position: relative;
         display: grid;
-        grid-template-columns: minmax(0, 1fr) 174px;
+        grid-template-columns: minmax(0, 1fr) 188px;
         align-items: center;
-        gap: 10px;
-        min-height: 62px;
-        padding: 8px 7px;
+        gap: 12px;
+        min-height: 72px;
+        padding: 10px 8px;
         border-bottom: 1px solid rgba(103, 139, 174, 0.19);
         transition:
           background 0.18s ease,
@@ -1154,35 +1138,37 @@ function Styles() {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        color: #eaf2fa;
-        font-size: 13px;
-        font-weight: 850;
+        color: #f1f6fc;
+        font-size: 16px;
+        line-height: 1.25;
+        font-weight: 950;
+        letter-spacing: -0.2px;
       }
 
       .homeTeam,
       .awayTeam {
-        color: #eaf2fa;
+        color: #f1f6fc;
       }
 
       .versus {
-        margin: 0 5px;
-        color: #64819e;
-        font-size: 11px;
-        font-weight: 800;
+        margin: 0 6px;
+        color: #7089a1;
+        font-size: 12px;
+        font-weight: 850;
       }
 
       .choiceButtons {
         display: flex;
         flex-wrap: nowrap;
         justify-content: flex-end;
-        gap: 9px;
+        gap: 10px;
       }
 
       .choiceButton {
         position: relative;
-        width: 50px;
-        min-width: 50px;
-        height: 44px;
+        width: 54px;
+        min-width: 54px;
+        height: 48px;
         margin: 0;
         padding: 0;
         border: 1px solid rgba(37, 139, 232, 0.52);
@@ -1190,7 +1176,7 @@ function Styles() {
         outline: none;
         background: linear-gradient(145deg, #0a3158, #07233f);
         color: #9dd1ff;
-        font-size: 13px;
+        font-size: 14px;
         font-weight: 950;
         cursor: pointer;
         box-shadow:
@@ -1237,18 +1223,19 @@ function Styles() {
       /* CANCELLED */
 
       .cancelledFixture {
-        padding: 12px 7px;
+        padding: 13px 8px;
         border-bottom: 1px solid rgba(103, 139, 174, 0.19);
       }
 
       .cancelledName {
-        color: #b4c3d1;
-        font-size: 13px;
-        font-weight: 850;
+        color: #d3dee8;
+        font-size: 15px;
+        font-weight: 900;
       }
 
       .cancelledName span {
-        color: #617b94;
+        color: #7089a1;
+        font-size: 12px;
       }
 
       .cancelledInfo {
@@ -1306,7 +1293,7 @@ function Styles() {
       .completeBanner strong {
         display: block;
         color: #62df99;
-        font-size: 11px;
+        font-size: 12px;
         font-weight: 950;
       }
 
@@ -1314,7 +1301,7 @@ function Styles() {
         display: block;
         margin-top: 2px;
         color: #9dc9b0;
-        font-size: 9px;
+        font-size: 10px;
         font-weight: 700;
       }
 
@@ -1329,9 +1316,9 @@ function Styles() {
 
       .clearButton,
       .backButton {
-        min-height: 43px;
+        min-height: 46px;
         border-radius: 9px;
-        font-size: 10px;
+        font-size: 11px;
         font-weight: 950;
         letter-spacing: 0.3px;
       }
@@ -1362,16 +1349,17 @@ function Styles() {
         justify-content: center;
         border: 1px solid rgba(75, 150, 221, 0.43);
         background: linear-gradient(
-          110deg,
-          rgba(7, 87, 171, 0.52),
-          rgba(8, 38, 69, 0.62)
+          105deg,
+          #087eff 0%,
+          #405eea 40%,
+          #bd286b 70%,
+          #ed1c24 100%
         );
-        color: #d9efff;
+        color: #ffffff;
       }
 
       .backButton:hover {
-        border-color: #168eff;
-        color: #ffffff;
+        filter: brightness(1.08);
       }
 
       /* MISC */
@@ -1380,7 +1368,7 @@ function Styles() {
         margin-top: 22px;
         text-align: center;
         color: #647b91;
-        font-size: 9px;
+        font-size: 10px;
       }
 
       .emptyCard {
@@ -1398,7 +1386,7 @@ function Styles() {
         border-radius: 14px;
         text-align: center;
         color: #afc4d7;
-        font-size: 12px;
+        font-size: 13px;
         font-weight: 800;
       }
 
@@ -1456,98 +1444,108 @@ function Styles() {
         }
 
         .selectorGrid {
-          grid-template-columns: 92px 1fr;
+          grid-template-columns: 96px 1fr;
           gap: 9px;
         }
 
         .selectorLabel {
-          font-size: 12px;
+          font-size: 14px;
         }
 
         .selectWrap select {
-          min-height: 42px;
+          min-height: 43px;
           padding-left: 10px;
-          font-size: 12px;
+          font-size: 14px;
         }
 
         .fixturesCard {
-          padding: 17px 7px 12px;
+          padding: 18px 7px 12px;
         }
 
         .weekTop {
-          padding: 0 5px 12px;
+          padding: 0 5px 13px;
         }
 
         .weekTop h1 {
-          font-size: 21px;
+          font-size: 25px;
         }
 
         .weekDate {
-          font-size: 10px;
+          font-size: 11px;
         }
 
         .selectedCounter {
-          min-width: 67px;
+          min-width: 68px;
           padding: 8px;
         }
 
         .selectedCounter strong {
-          font-size: 16px;
+          font-size: 17px;
+        }
+
+        .selectedCounter span {
+          font-size: 7px;
         }
 
         .statusBar {
           margin-right: 2px;
           margin-left: 2px;
-          padding: 9px 10px;
+          padding: 10px;
         }
 
         .statusBar strong {
-          font-size: 9px;
+          font-size: 10px;
         }
 
         .statusBar span {
-          font-size: 8px;
+          font-size: 9px;
         }
 
         .remainingText {
-          font-size: 8px;
+          font-size: 9px;
         }
 
         .fixtureKey {
-          grid-template-columns: minmax(0, 1fr) 132px;
+          grid-template-columns: minmax(0, 1fr) 138px;
           gap: 5px;
           padding-right: 4px;
-          padding-left: 4px;
-          font-size: 6px;
+          padding-left: 5px;
+          font-size: 7px;
         }
 
         .fixtureRow {
-          grid-template-columns: minmax(0, 1fr) 132px;
-          gap: 5px;
-          min-height: 57px;
-          padding: 7px 4px;
+          grid-template-columns: minmax(0, 1fr) 138px;
+          gap: 6px;
+          min-height: 64px;
+          padding: 8px 5px;
         }
 
         .fixtureName {
           padding-right: 3px;
-          font-size: 11px;
+          font-size: 14px;
+          line-height: 1.2;
+          font-weight: 950;
         }
 
         .versus {
-          margin: 0 2px;
-          font-size: 9px;
+          margin: 0 3px;
+          font-size: 10px;
         }
 
         .choiceButtons {
-          gap: 5px;
+          gap: 6px;
         }
 
         .choiceButton {
-          width: 40px;
-          min-width: 40px;
-          height: 40px;
+          width: 42px;
+          min-width: 42px;
+          height: 42px;
           border-radius: 9px;
-          font-size: 11px;
+          font-size: 12px;
+        }
+
+        .cancelledName {
+          font-size: 13px;
         }
 
         .bottomActions {
@@ -1559,7 +1557,7 @@ function Styles() {
         .clearButton,
         .backButton {
           width: 100%;
-          min-height: 41px;
+          min-height: 43px;
           flex: none;
         }
 
@@ -1580,7 +1578,7 @@ function Styles() {
 
         .fixtureKey,
         .fixtureRow {
-          grid-template-columns: minmax(0, 1fr) 120px;
+          grid-template-columns: minmax(0, 1fr) 126px;
         }
 
         .choiceButtons {
@@ -1588,13 +1586,13 @@ function Styles() {
         }
 
         .choiceButton {
-          width: 37px;
-          min-width: 37px;
-          height: 38px;
+          width: 39px;
+          min-width: 39px;
+          height: 40px;
         }
 
         .fixtureName {
-          font-size: 10px;
+          font-size: 13px;
         }
       }
     `}</style>
