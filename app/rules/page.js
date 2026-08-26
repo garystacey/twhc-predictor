@@ -55,9 +55,7 @@ export default function RulesPage() {
           Everything you need to know about playing The Predictor.
         </div>
 
-        {/* =====================================================
-            ENTRY & PRIZES
-        ===================================================== */}
+        {/* ENTRY & PRIZES */}
 
         <RuleCard
           eyebrow="ENTRY & PRIZES"
@@ -140,15 +138,12 @@ export default function RulesPage() {
           )}
         </RuleCard>
 
-        {/* =====================================================
-            HOW TO PLAY
-        ===================================================== */}
+        {/* HOW TO PLAY */}
 
         <RuleCard
           eyebrow="THE BASICS"
           title="How To Play"
           icon="✓"
-          compactMobileBody
         >
           <p>
             Each Match Week you predict the result of the listed Telford &
@@ -166,15 +161,12 @@ export default function RulesPage() {
           </div>
         </RuleCard>
 
-        {/* =====================================================
-            SCORING
-        ===================================================== */}
+        {/* SCORING */}
 
         <RuleCard
           eyebrow="POINTS"
           title="Scoring"
           icon="◎"
-          compactMobileBody
         >
           <div className="scoreGrid">
             <ScoreBox
@@ -203,15 +195,12 @@ export default function RulesPage() {
           </p>
         </RuleCard>
 
-        {/* =====================================================
-            PREDICTION WINDOWS
-        ===================================================== */}
+        {/* PREDICTION WINDOWS */}
 
         <RuleCard
           eyebrow="DEADLINES"
           title="Prediction Windows"
           icon="⌚"
-          compactMobileBody
         >
           <p>
             Each Match Week has its own opening time and prediction deadline.
@@ -236,15 +225,12 @@ export default function RulesPage() {
           </p>
         </RuleCard>
 
-        {/* =====================================================
-            MISSED PREDICTIONS
-        ===================================================== */}
+        {/* MISSED PREDICTIONS */}
 
         <RuleCard
           eyebrow="DON'T MISS OUT"
           title="Missed Predictions"
           icon="!"
-          compactMobileBody
         >
           <p>
             You do not have to predict every fixture.
@@ -265,15 +251,12 @@ export default function RulesPage() {
           </p>
         </RuleCard>
 
-        {/* =====================================================
-            POSTPONED
-        ===================================================== */}
+        {/* POSTPONED */}
 
         <RuleCard
           eyebrow="FIXTURE CHANGES"
           title="Postponed Fixtures"
           icon="↻"
-          compactMobileBody
         >
           <p>
             If a fixture is postponed, your original prediction will remain
@@ -300,15 +283,12 @@ export default function RulesPage() {
           </p>
         </RuleCard>
 
-        {/* =====================================================
-            CANCELLED
-        ===================================================== */}
+        {/* CANCELLED */}
 
         <RuleCard
           eyebrow="FIXTURE CHANGES"
           title="Cancelled Fixtures"
           icon="✕"
-          compactMobileBody
         >
           <p>
             If a fixture is cancelled and will not be played, it will be
@@ -335,15 +315,12 @@ export default function RulesPage() {
           </p>
         </RuleCard>
 
-        {/* =====================================================
-            LEADERBOARDS
-        ===================================================== */}
+        {/* LEADERBOARDS */}
 
         <RuleCard
           eyebrow="STANDINGS"
           title="Leaderboards"
           icon="🏆"
-          compactMobileBody
         >
           <div className="leaderboardInfoGrid">
             <LeaderboardInfo
@@ -378,15 +355,12 @@ export default function RulesPage() {
           </p>
         </RuleCard>
 
-        {/* =====================================================
-            TIED POSITIONS
-        ===================================================== */}
+        {/* TIED POSITIONS */}
 
         <RuleCard
           eyebrow="RANKINGS"
           title="Tied Positions"
           icon="="
-          compactMobileBody
         >
           <p>
             Entrants with the same number of points share the same leaderboard
@@ -404,15 +378,12 @@ export default function RulesPage() {
           </div>
         </RuleCard>
 
-        {/* =====================================================
-            PROVISIONAL
-        ===================================================== */}
+        {/* PROVISIONAL */}
 
         <RuleCard
           eyebrow="LIVE SCORING"
           title="Provisional Standings"
           icon="▥"
-          compactMobileBody
         >
           <p>
             Weekly standings may be shown as provisional while some fixture
@@ -434,15 +405,12 @@ export default function RulesPage() {
           </p>
         </RuleCard>
 
-        {/* =====================================================
-            ACCOUNTS
-        ===================================================== */}
+        {/* ACCOUNTS */}
 
         <RuleCard
           eyebrow="YOUR ENTRY"
           title="Accounts & Team Names"
           icon="●"
-          compactMobileBody
         >
           <p>
             Predictions are linked to your individual Predictor account.
@@ -462,15 +430,12 @@ export default function RulesPage() {
           </Highlight>
         </RuleCard>
 
-        {/* =====================================================
-            FAIR PLAY
-        ===================================================== */}
+        {/* FAIR PLAY */}
 
         <RuleCard
           eyebrow="THE PREDICTOR"
           title="Fair Play"
           icon="✓"
-          compactMobileBody
         >
           <p>
             The Predictor is intended as a fun club competition.
@@ -546,15 +511,10 @@ function RuleCard({
   icon,
   children,
   featured = false,
-  compactMobileBody = false,
 }) {
   return (
     <section
-      className={`ruleCard ${
-        featured ? "featuredCard" : ""
-      } ${
-        compactMobileBody ? "compactMobileBody" : ""
-      }`}
+      className={`ruleCard ${featured ? "featuredCard" : ""}`}
     >
       <div className="dualTop" />
 
@@ -564,9 +524,7 @@ function RuleCard({
             {eyebrow}
           </div>
 
-          <h2>
-            {title}
-          </h2>
+          <h2>{title}</h2>
         </div>
 
         {icon && (
@@ -596,13 +554,9 @@ function InfoPanel({
       </div>
 
       <div className="infoPanelCopy">
-        <strong>
-          {title}
-        </strong>
+        <strong>{title}</strong>
 
-        <p>
-          {children}
-        </p>
+        <p>{children}</p>
       </div>
     </div>
   );
@@ -643,9 +597,7 @@ function PredictionOption({
         {letter}
       </div>
 
-      <strong>
-        {text}
-      </strong>
+      <strong>{text}</strong>
     </div>
   );
 }
@@ -663,13 +615,8 @@ function ScoreBox({
       </div>
 
       <div>
-        <strong>
-          {title}
-        </strong>
-
-        <span>
-          {points}
-        </span>
+        <strong>{title}</strong>
+        <span>{points}</span>
       </div>
     </div>
   );
@@ -711,13 +658,8 @@ function LeaderboardInfo({
         {icon}
       </div>
 
-      <strong>
-        {title}
-      </strong>
-
-      <span>
-        {children}
-      </span>
+      <strong>{title}</strong>
+      <span>{children}</span>
     </div>
   );
 }
@@ -729,13 +671,8 @@ function RankBubble({
 }) {
   return (
     <div className={`rankBubble ${gold ? "goldRank" : ""}`}>
-      <span>
-        {number}
-      </span>
-
-      <small>
-        {label}
-      </small>
+      <span>{number}</span>
+      <small>{label}</small>
     </div>
   );
 }
@@ -958,7 +895,7 @@ function Styles() {
         font-weight: 750;
       }
 
-      /* CARDS */
+      /* RULE CARDS */
 
       .ruleCard {
         position: relative;
@@ -1005,7 +942,7 @@ function Styles() {
         );
       }
 
-      /* RULE HEADER */
+      /* RULE HEADERS */
 
       .ruleHeader {
         display: flex;
@@ -1054,27 +991,34 @@ function Styles() {
         font-weight: 950;
       }
 
-      /* BODY */
+      /* =====================================================
+         ONE NORMAL BODY STYLE FOR EVERY RULE CARD
+      ===================================================== */
 
-      .ruleBody,
-      .ruleBody p {
+      .ruleBody {
         color: #c2d0dd;
         font-size: 15px;
         line-height: 1.58;
         font-weight: 600;
       }
 
-      .ruleBody p {
+      .ruleBody > p {
         margin: 0 0 13px;
+        color: #c2d0dd;
+        font-size: 15px;
+        line-height: 1.58;
+        font-weight: 600;
       }
 
-      .ruleBody p:last-child {
+      .ruleBody > p:last-child {
         margin-bottom: 0;
       }
 
-      .ruleBody strong,
-      .ruleBody b {
+      .ruleBody > p strong,
+      .ruleBody > p b {
         color: #ffffff;
+        font-size: inherit;
+        line-height: inherit;
         font-weight: 850;
       }
 
@@ -1534,6 +1478,10 @@ function Styles() {
 
       .fairPlayPanel p {
         margin: 0;
+        color: #b7c9d9;
+        font-size: 12px;
+        line-height: 1.5;
+        font-weight: 600;
       }
 
       .fairIcon {
@@ -1555,7 +1503,7 @@ function Styles() {
         font-weight: 950;
       }
 
-      /* BACK */
+      /* BACK BUTTON */
 
       .backButton {
         display: flex;
@@ -1590,13 +1538,10 @@ function Styles() {
       ===================================================== */
 
       @media (max-width: 620px) {
-
         .pageShell {
           width: calc(100% - 20px);
           padding: 17px 0 24px;
         }
-
-        /* HEADER */
 
         .brandHeader {
           gap: 9px;
@@ -1640,7 +1585,7 @@ function Styles() {
           font-weight: 700;
         }
 
-        /* CARD STRUCTURE */
+        /* CARDS */
 
         .ruleCard {
           margin-bottom: 10px;
@@ -1664,8 +1609,6 @@ function Styles() {
           letter-spacing: 1px;
         }
 
-        /* HEADINGS STAY STRONG */
-
         .ruleHeader h2 {
           font-size: 19px;
           line-height: 1.08;
@@ -1679,21 +1622,41 @@ function Styles() {
           font-size: 18px;
         }
 
-        /* =================================================
-           ENTRY & PRIZES
-           LEAVE THIS TYPOGRAPHY AS THE BENCHMARK
-        ================================================= */
+        /* =====================================================
+           THIS IS THE IMPORTANT CHANGE.
 
-        .featuredCard .ruleBody,
-        .featuredCard .ruleBody p {
+           ALL NORMAL PARAGRAPHS — ENTRY & PRIZES, HOW TO PLAY,
+           SCORING, PREDICTION WINDOWS, ETC. — ARE IDENTICAL.
+        ===================================================== */
+
+        .ruleCard .ruleBody {
+          color: #c2d0dd;
           font-size: 13.5px;
           line-height: 1.48;
           font-weight: 600;
         }
 
-        .featuredCard .ruleBody p {
-          margin-bottom: 10px;
+        .ruleCard .ruleBody > p {
+          margin: 0 0 10px;
+          color: #c2d0dd;
+          font-size: 13.5px;
+          line-height: 1.48;
+          font-weight: 600;
         }
+
+        .ruleCard .ruleBody > p:last-child {
+          margin-bottom: 0;
+        }
+
+        .ruleCard .ruleBody > p strong,
+        .ruleCard .ruleBody > p b {
+          color: #ffffff;
+          font-size: inherit;
+          line-height: inherit;
+          font-weight: 850;
+        }
+
+        /* ENTRY */
 
         .entryFeeHero {
           gap: 10px;
@@ -1790,34 +1753,6 @@ function Styles() {
         .prizeAmount {
           margin-top: 2px;
           font-size: 19px;
-        }
-
-        /* =================================================
-           ALL OTHER SECTIONS
-           BODY COPY REDUCED — HEADINGS UNCHANGED
-        ================================================= */
-
-        .compactMobileBody .ruleBody,
-        .compactMobileBody .ruleBody > p {
-          color: #b9c8d6;
-          font-size: 11.5px !important;
-          line-height: 1.48 !important;
-          font-weight: 600 !important;
-          letter-spacing: 0 !important;
-        }
-
-        .compactMobileBody .ruleBody > p {
-          margin: 0 0 9px !important;
-        }
-
-        .compactMobileBody .ruleBody > p:last-child {
-          margin-bottom: 0 !important;
-        }
-
-        .compactMobileBody .ruleBody > p strong,
-        .compactMobileBody .ruleBody > p b {
-          font-size: inherit !important;
-          line-height: inherit !important;
         }
 
         /* H / D / A */
@@ -1974,13 +1909,10 @@ function Styles() {
           font-size: 15px;
         }
 
-        .compactMobileBody .fairPlayPanel p {
-          font-size: 10.5px !important;
-          line-height: 1.42 !important;
-          margin: 0 !important;
+        .fairPlayPanel p {
+          font-size: 10.5px;
+          line-height: 1.42;
         }
-
-        /* BACK */
 
         .backButton {
           min-height: 43px;
@@ -1995,10 +1927,9 @@ function Styles() {
         }
       }
 
-      /* SMALLER PHONES */
+      /* SMALL PHONES */
 
       @media (max-width: 390px) {
-
         .pageShell {
           width: calc(100% - 14px);
         }
@@ -2015,11 +1946,11 @@ function Styles() {
           font-size: 18px;
         }
 
-        .compactMobileBody .ruleBody,
-        .compactMobileBody .ruleBody > p {
-          font-size: 11px !important;
-          line-height: 1.46 !important;
-        }
+        /*
+         DO NOT REDUCE NORMAL RULE BODY TEXT HERE.
+         Let the phone/browser handle its normal responsive behaviour.
+         All normal paragraphs remain matched to Prize Money.
+        */
 
         .scoreGrid {
           grid-template-columns: 1fr;
