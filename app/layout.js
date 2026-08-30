@@ -1,4 +1,5 @@
 import "./globals.css";
+import AddToHomeScreen from "./components/AddToHomeScreen";
 
 export const metadata = {
   title: "The Predictor | Telford & Wrekin HC",
@@ -50,7 +51,10 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        {children}
+        <AddToHomeScreen />
+      </body>
     </html>
   );
 }
