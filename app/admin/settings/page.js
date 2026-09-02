@@ -36,20 +36,13 @@ export default function CompetitionSettingsPage() {
         return;
       }
 
-      const {
-        data: profile,
-        error: profileError,
-      } = await supabase
+      const { data: profile, error: profileError } = await supabase
         .from("profiles")
         .select("role")
         .eq("id", user.id)
         .single();
 
-      if (
-        profileError ||
-        !profile ||
-        profile.role !== "admin"
-      ) {
+      if (profileError || !profile || profile.role !== "admin") {
         setMessage(
           "You do not have permission to access this page."
         );
@@ -60,10 +53,7 @@ export default function CompetitionSettingsPage() {
 
       setAuthorised(true);
 
-      const {
-        data,
-        error,
-      } = await supabase
+      const { data, error } = await supabase
         .from("competition_settings")
         .select(
           "id, entry_fee, first_prize, second_prize, payment_deadline, prediction_reminders_enabled"
@@ -114,37 +104,24 @@ export default function CompetitionSettingsPage() {
     loadSettings();
   }, [router]);
 
-  /* =====================================================
-     SAVE MAIN SETTINGS
-     ===================================================== */
-
   async function saveSettings() {
     if (!settingsId) return;
 
-    if (
-      !entryFee ||
-      Number(entryFee) < 0
-    ) {
+    if (!entryFee || Number(entryFee) < 0) {
       setMessage(
         "Please enter a valid entry fee."
       );
       return;
     }
 
-    if (
-      firstPrize &&
-      Number(firstPrize) < 0
-    ) {
+    if (firstPrize && Number(firstPrize) < 0) {
       setMessage(
         "Please enter a valid 1st Prize amount."
       );
       return;
     }
 
-    if (
-      secondPrize &&
-      Number(secondPrize) < 0
-    ) {
+    if (secondPrize && Number(secondPrize) < 0) {
       setMessage(
         "Please enter a valid 2nd Prize amount."
       );
@@ -154,13 +131,10 @@ export default function CompetitionSettingsPage() {
     setSaving(true);
     setMessage("");
 
-    const {
-      error,
-    } = await supabase
+    const { error } = await supabase
       .from("competition_settings")
       .update({
-        entry_fee:
-          Number(entryFee),
+        entry_fee: Number(entryFee),
 
         first_prize:
           firstPrize.trim() === ""
@@ -183,10 +157,7 @@ export default function CompetitionSettingsPage() {
         updated_at:
           new Date().toISOString(),
       })
-      .eq(
-        "id",
-        settingsId
-      );
+      .eq("id", settingsId);
 
     if (error) {
       setMessage(
@@ -204,15 +175,8 @@ export default function CompetitionSettingsPage() {
     setSaving(false);
   }
 
-  /* =====================================================
-     SAVE REMINDER SWITCH IMMEDIATELY
-     ===================================================== */
-
   async function togglePredictionReminders() {
-    if (
-      !settingsId ||
-      savingReminder
-    ) {
+    if (!settingsId || savingReminder) {
       return;
     }
 
@@ -222,10 +186,7 @@ export default function CompetitionSettingsPage() {
     setSavingReminder(true);
     setMessage("");
 
-    const {
-      data,
-      error,
-    } = await supabase
+    const { data, error } = await supabase
       .from("competition_settings")
       .update({
         prediction_reminders_enabled:
@@ -234,10 +195,7 @@ export default function CompetitionSettingsPage() {
         updated_at:
           new Date().toISOString(),
       })
-      .eq(
-        "id",
-        settingsId
-      )
+      .eq("id", settingsId)
       .select(
         "prediction_reminders_enabled"
       )
@@ -278,10 +236,6 @@ export default function CompetitionSettingsPage() {
     setSavingReminder(false);
   }
 
-  /* =====================================================
-     FORMATTING
-     ===================================================== */
-
   function formatPreview(value) {
     if (
       value === null ||
@@ -291,24 +245,17 @@ export default function CompetitionSettingsPage() {
       return "TBC";
     }
 
-    const amount =
-      Number(value);
+    const amount = Number(value);
 
-    if (
-      Number.isNaN(amount)
-    ) {
+    if (Number.isNaN(amount)) {
       return "TBC";
     }
 
-    if (
-      Number.isInteger(amount)
-    ) {
+    if (Number.isInteger(amount)) {
       return `£${amount}`;
     }
 
-    return `£${amount.toFixed(
-      2
-    )}`;
+    return `£${amount.toFixed(2)}`;
   }
 
   function formatDatePreview(value) {
@@ -317,15 +264,9 @@ export default function CompetitionSettingsPage() {
     }
 
     const date =
-      new Date(
-        `${value}T12:00:00`
-      );
+      new Date(`${value}T12:00:00`);
 
-    if (
-      Number.isNaN(
-        date.getTime()
-      )
-    ) {
+    if (Number.isNaN(date.getTime())) {
       return "TBC";
     }
 
@@ -339,72 +280,24 @@ export default function CompetitionSettingsPage() {
     );
   }
 
-  /* =====================================================
-     HEADER
-     ===================================================== */
-
   function Header() {
     return (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: "11px",
-          marginBottom: "16px",
-        }}
-      >
+      <div className="brandHeader">
+        <div className="brandGlow brandGlowBlue" />
+        <div className="brandGlow brandGlowRed" />
+
         <img
           src="/TWHC-badge-white.png"
           alt="Telford & Wrekin Hockey Club"
-          style={{
-            display: "block",
-            width: "58px",
-            height: "auto",
-            margin: 0,
-            filter:
-              "drop-shadow(0 4px 8px rgba(0,0,0,0.35))",
-          }}
+          className="brandBadge"
         />
 
-        <div
-          style={{
-            textAlign: "left",
-          }}
-        >
-          <div
-            style={{
-              fontSize: "27px",
-              lineHeight: 0.95,
-              fontWeight: "900",
-              letterSpacing: "-1.2px",
-              color: "#ffffff",
-              whiteSpace: "nowrap",
-              textShadow:
-                "0 2px 8px rgba(0,0,0,0.35)",
-            }}
-          >
-            THE PREDICTO
-            <span
-              style={{
-                color: "#ed1c24",
-                textShadow:
-                  "0 0 12px rgba(237,28,36,0.32)",
-              }}
-            >
-              R
-            </span>
+        <div className="brandCopy">
+          <div className="brandTitle">
+            THE PREDICTO<span>R</span>
           </div>
 
-          <div
-            style={{
-              marginTop: "5px",
-              fontSize: "11px",
-              fontWeight: "900",
-              letterSpacing: "1.4px",
-              color: "#a9bfd5",
-            }}
-          >
+          <div className="brandLabel">
             ADMIN — COMPETITION SETTINGS
           </div>
         </div>
@@ -412,465 +305,263 @@ export default function CompetitionSettingsPage() {
     );
   }
 
-  /* =====================================================
-     LOADING
-     ===================================================== */
-
   if (loading) {
     return (
       <main>
-        <div
-          className="container"
-          style={{
-            maxWidth: "760px",
-          }}
-        >
+        <div className="container settingsShell">
           <Header />
 
-          <div className="card">
-            <p>
-              Loading settings...
-            </p>
+          <div className="loadingCard">
+            <div className="loadingPulse" />
+            <p>Loading settings...</p>
           </div>
         </div>
+
+        <PageStyles />
       </main>
     );
   }
-
-  /* =====================================================
-     ACCESS DENIED
-     ===================================================== */
 
   if (!authorised) {
     return (
       <main>
-        <div
-          className="container"
-          style={{
-            maxWidth: "760px",
-          }}
-        >
+        <div className="container settingsShell">
           <Header />
 
-          <div className="card">
-            <h2>
-              Access Denied
-            </h2>
+          <section className="pageHero">
+            <div className="heroLine" />
+            <div className="heroEyebrow">
+              COMPETITION CONTROL
+            </div>
+            <h1>Competition Settings</h1>
+          </section>
 
-            <p>
-              {message}
-            </p>
+          <div className="accessCard">
+            <h2>Access Denied</h2>
+            <p>{message}</p>
           </div>
 
-          <a href="/admin">
-            <button>
-              Back to Admin
+          <a
+            href="/admin"
+            className="backLink"
+          >
+            <button className="backButton">
+              ← Back to Admin
             </button>
           </a>
         </div>
+
+        <PageStyles />
       </main>
     );
   }
 
-  /* =====================================================
-     PAGE
-     ===================================================== */
-
   return (
     <main>
-      <div
-        className="container"
-        style={{
-          maxWidth: "760px",
-        }}
-      >
+      <div className="container settingsShell">
         <Header />
 
-        {/* MESSAGE */}
+        <section className="pageHero">
+          <div className="heroLine" />
+
+          <div className="heroEyebrow">
+            THE PREDICTOR CONTROL CENTRE
+          </div>
+
+          <h1>Competition Settings</h1>
+
+          <p>
+            Entry fee, prize money, payments & reminders
+          </p>
+
+          <div className="heroRule">
+            <span className="blueRule" />
+            <span className="centreDot" />
+            <span className="redRule" />
+          </div>
+        </section>
 
         {message && (
           <div
-            className="card"
-            style={{
-              padding: "12px 16px",
-            }}
+            className={`messageBar ${
+              message
+                .toLowerCase()
+                .includes("saved") ||
+              message
+                .toLowerCase()
+                .includes("switched")
+                ? "success"
+                : "warning"
+            }`}
           >
-            <p
-              style={{
-                margin: 0,
-                fontWeight: "800",
-              }}
-            >
-              {message}
-            </p>
+            <span>
+              {message
+                .toLowerCase()
+                .includes("saved") ||
+              message
+                .toLowerCase()
+                .includes("switched")
+                ? "✓"
+                : "ⓘ"}
+            </span>
+
+            {message}
           </div>
         )}
 
-        {/* =================================================
-            CURRENT SETTINGS PREVIEW
-            ================================================= */}
-
-        <div
-          className="card"
-          style={{
-            padding: "16px",
-          }}
-        >
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns:
-                "repeat(auto-fit, minmax(120px, 1fr))",
-              gap: "8px",
-            }}
-          >
-            {/* ENTRY */}
-
-            <div
-              style={{
-                padding: "12px 7px",
-                borderRadius: "9px",
-                background: "#071d36",
-                color: "#ffffff",
-                textAlign: "center",
-              }}
-            >
-              <div
-                style={{
-                  fontSize: "9px",
-                  fontWeight: "900",
-                  letterSpacing: "0.7px",
-                  color: "#b9cee2",
-                }}
-              >
-                ENTRY
+        <section className="overviewPanel">
+          <div className="panelHeading">
+            <div>
+              <div className="sectionEyebrow">
+                CURRENT SETTINGS
               </div>
 
-              <div
-                style={{
-                  marginTop: "4px",
-                  fontSize: "20px",
-                  fontWeight: "900",
-                }}
-              >
-                {formatPreview(
-                  entryFee
-                )}
-              </div>
+              <h2>Competition Overview</h2>
             </div>
 
-            {/* 1ST PRIZE */}
+            <div className="livePill">
+              LIVE
+            </div>
+          </div>
 
-            <div
-              style={{
-                padding: "12px 7px",
-                borderRadius: "9px",
-                background: "#d9a900",
-                color: "#ffffff",
-                textAlign: "center",
-              }}
-            >
-              <div
-                style={{
-                  fontSize: "9px",
-                  fontWeight: "900",
-                  letterSpacing: "0.7px",
-                  color: "#fff7d1",
-                }}
-              >
-                1ST PRIZE
-              </div>
-
-              <div
-                style={{
-                  marginTop: "4px",
-                  fontSize: "20px",
-                  fontWeight: "900",
-                }}
-              >
-                {formatPreview(
-                  firstPrize
-                )}
-              </div>
+          <div className="overviewGrid">
+            <div className="overviewCard entry">
+              <span>ENTRY</span>
+              <strong>
+                {formatPreview(entryFee)}
+              </strong>
             </div>
 
-            {/* 2ND PRIZE */}
-
-            <div
-              style={{
-                padding: "12px 7px",
-                borderRadius: "9px",
-                background: "#8d99a6",
-                color: "#ffffff",
-                textAlign: "center",
-              }}
-            >
-              <div
-                style={{
-                  fontSize: "9px",
-                  fontWeight: "900",
-                  letterSpacing: "0.7px",
-                }}
-              >
-                2ND PRIZE
-              </div>
-
-              <div
-                style={{
-                  marginTop: "4px",
-                  fontSize: "20px",
-                  fontWeight: "900",
-                }}
-              >
-                {formatPreview(
-                  secondPrize
-                )}
-              </div>
+            <div className="overviewCard gold">
+              <span>1ST PRIZE</span>
+              <strong>
+                {formatPreview(firstPrize)}
+              </strong>
             </div>
 
-            {/* PAYMENT DEADLINE */}
+            <div className="overviewCard silver">
+              <span>2ND PRIZE</span>
+              <strong>
+                {formatPreview(secondPrize)}
+              </strong>
+            </div>
 
-            <div
-              style={{
-                padding: "12px 7px",
-                borderRadius: "9px",
-                background:
-                  "linear-gradient(135deg, #8f1018 0%, #d71920 100%)",
-                color: "#ffffff",
-                textAlign: "center",
-              }}
-            >
-              <div
-                style={{
-                  fontSize: "9px",
-                  fontWeight: "900",
-                  letterSpacing: "0.7px",
-                  color: "#ffd9dc",
-                }}
-              >
-                PAYMENT DEADLINE
-              </div>
-
-              <div
-                style={{
-                  marginTop: "4px",
-                  fontSize: "15px",
-                  fontWeight: "900",
-                  lineHeight: 1.2,
-                }}
-              >
+            <div className="overviewCard deadline">
+              <span>PAYMENT DEADLINE</span>
+              <strong className="dateValue">
                 {formatDatePreview(
                   paymentDeadline
                 )}
-              </div>
+              </strong>
             </div>
 
-            {/* EMAIL REMINDERS */}
-
             <div
-              style={{
-                padding: "12px 7px",
-                borderRadius: "9px",
-
-                background:
-                  predictionRemindersEnabled
-                    ? "linear-gradient(135deg, #116b3d 0%, #18a15c 100%)"
-                    : "linear-gradient(135deg, #59697a 0%, #7c8b99 100%)",
-
-                color: "#ffffff",
-                textAlign: "center",
-              }}
+              className={`overviewCard reminder ${
+                predictionRemindersEnabled
+                  ? "reminderOn"
+                  : "reminderOff"
+              }`}
             >
-              <div
-                style={{
-                  fontSize: "9px",
-                  fontWeight: "900",
-                  letterSpacing: "0.7px",
+              <span>EMAIL REMINDERS</span>
 
-                  color:
-                    predictionRemindersEnabled
-                      ? "#d9f7e7"
-                      : "#edf1f4",
-                }}
-              >
-                EMAIL REMINDERS
-              </div>
-
-              <div
-                style={{
-                  marginTop: "4px",
-                  fontSize: "20px",
-                  fontWeight: "900",
-                }}
-              >
+              <strong>
                 {predictionRemindersEnabled
                   ? "ON"
                   : "OFF"}
+              </strong>
+            </div>
+          </div>
+        </section>
+
+        <section className="settingsPanel">
+          <div className="panelHeading">
+            <div>
+              <div className="sectionEyebrow">
+                COMPETITION SETTINGS
               </div>
-            </div>
-          </div>
-        </div>
 
-        {/* =================================================
-            EDIT SETTINGS
-            ================================================= */}
-
-        <div
-          className="card"
-          style={{
-            padding: "18px 16px",
-          }}
-        >
-          <div
-            style={{
-              marginBottom: "16px",
-              textAlign: "left",
-            }}
-          >
-            <div
-              style={{
-                fontSize: "11px",
-                fontWeight: "900",
-                letterSpacing: "1px",
-                color: "#7c8fa2",
-              }}
-            >
-              COMPETITION SETTINGS
-            </div>
-
-            <div
-              style={{
-                marginTop: "2px",
-                fontSize: "24px",
-                fontWeight: "900",
-                color: "#071d36",
-              }}
-            >
-              Entry, Prizes & Payment
+              <h2>
+                Entry, Prizes & Payment
+              </h2>
             </div>
           </div>
 
-          <div
-            style={{
-              display: "grid",
-              gap: "15px",
-              textAlign: "left",
-            }}
-          >
-            {/* ENTRY FEE */}
+          <div className="formGrid">
+            <label className="settingField">
+              <span className="fieldLabel">
+                ENTRY FEE (£)
+              </span>
 
-            <label>
-              <strong
-                style={{
-                  fontSize: "13px",
-                  color: "#354b61",
-                }}
-              >
-                Entry Fee (£)
-              </strong>
+              <div className="moneyInput">
+                <span>£</span>
 
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                value={entryFee}
-                onChange={(e) =>
-                  setEntryFee(
-                    e.target.value
-                  )
-                }
-                style={{
-                  width: "100%",
-                  padding: "12px",
-                  marginTop: "6px",
-                  borderRadius: "8px",
-                  boxSizing: "border-box",
-                  fontSize: "16px",
-                }}
-              />
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={entryFee}
+                  onChange={(e) =>
+                    setEntryFee(
+                      e.target.value
+                    )
+                  }
+                />
+              </div>
             </label>
 
-            {/* 1ST PRIZE */}
+            <label className="settingField">
+              <span className="fieldLabel goldText">
+                1ST PRIZE (£)
+              </span>
 
-            <label>
-              <strong
-                style={{
-                  fontSize: "13px",
-                  color: "#354b61",
-                }}
-              >
-                1st Prize (£)
-              </strong>
+              <div className="moneyInput goldInput">
+                <span>£</span>
 
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                value={firstPrize}
-                onChange={(e) =>
-                  setFirstPrize(
-                    e.target.value
-                  )
-                }
-                placeholder="Leave blank for TBC"
-                style={{
-                  width: "100%",
-                  padding: "12px",
-                  marginTop: "6px",
-                  borderRadius: "8px",
-                  boxSizing: "border-box",
-                  fontSize: "16px",
-                }}
-              />
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={firstPrize}
+                  onChange={(e) =>
+                    setFirstPrize(
+                      e.target.value
+                    )
+                  }
+                  placeholder="TBC"
+                />
+              </div>
             </label>
 
-            {/* 2ND PRIZE */}
+            <label className="settingField">
+              <span className="fieldLabel silverText">
+                2ND PRIZE (£)
+              </span>
 
-            <label>
-              <strong
-                style={{
-                  fontSize: "13px",
-                  color: "#354b61",
-                }}
-              >
-                2nd Prize (£)
-              </strong>
+              <div className="moneyInput silverInput">
+                <span>£</span>
 
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                value={secondPrize}
-                onChange={(e) =>
-                  setSecondPrize(
-                    e.target.value
-                  )
-                }
-                placeholder="Leave blank for TBC"
-                style={{
-                  width: "100%",
-                  padding: "12px",
-                  marginTop: "6px",
-                  borderRadius: "8px",
-                  boxSizing: "border-box",
-                  fontSize: "16px",
-                }}
-              />
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={secondPrize}
+                  onChange={(e) =>
+                    setSecondPrize(
+                      e.target.value
+                    )
+                  }
+                  placeholder="TBC"
+                />
+              </div>
             </label>
 
-            {/* PAYMENT DEADLINE */}
-
-            <label>
-              <strong
-                style={{
-                  fontSize: "13px",
-                  color: "#354b61",
-                }}
-              >
-                Payment Closing Date
-              </strong>
+            <label className="settingField">
+              <span className="fieldLabel redText">
+                PAYMENT CLOSING DATE
+              </span>
 
               <input
+                className="dateInput"
                 type="date"
                 value={paymentDeadline}
                 onChange={(e) =>
@@ -878,242 +569,1287 @@ export default function CompetitionSettingsPage() {
                     e.target.value
                   )
                 }
-                style={{
-                  width: "100%",
-                  padding: "12px",
-                  marginTop: "6px",
-                  borderRadius: "8px",
-                  boxSizing: "border-box",
-                  fontSize: "16px",
-                }}
               />
 
-              <div
-                style={{
-                  marginTop: "6px",
-                  color: "#71869a",
-                  fontSize: "11px",
-                  fontWeight: "700",
-                  lineHeight: 1.4,
-                }}
-              >
-                Unpaid entrants will be reminded on the
-                Predictor home page.
-              </div>
+              <small>
+                Unpaid entrants will be reminded
+                on the Predictor home page.
+              </small>
             </label>
+          </div>
 
-            {/* =================================================
-                PREDICTION REMINDER EMAILS
-                ================================================= */}
+          <div
+            className={`reminderPanel ${
+              predictionRemindersEnabled
+                ? "enabled"
+                : "disabled"
+            }`}
+          >
+            <div className="reminderTop">
+              <div className="reminderIcon">
+                ✉
+              </div>
 
-            <div
-              style={{
-                padding: "15px",
-                borderRadius: "10px",
-
-                background:
-                  predictionRemindersEnabled
-                    ? "#edf8f2"
-                    : "#f1f4f7",
-
-                border:
-                  predictionRemindersEnabled
-                    ? "1px solid #acd8be"
-                    : "1px solid #d7dee7",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  gap: "15px",
-                }}
-              >
-                <div
-                  style={{
-                    flex: 1,
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: "13px",
-                      fontWeight: "900",
-                      color: "#071d36",
-                    }}
-                  >
-                    Prediction Reminder Emails
-                  </div>
-
-                  <div
-                    style={{
-                      marginTop: "5px",
-                      color: "#65788c",
-                      fontSize: "11px",
-                      fontWeight: "700",
-                      lineHeight: 1.45,
-                    }}
-                  >
-                    Send an automatic reminder to entrants
-                    who have not completed all their
-                    predictions approximately 24 hours
-                    before that Match Week closes.
-                  </div>
+              <div className="reminderCopy">
+                <div className="reminderTitle">
+                  Prediction Reminder Emails
                 </div>
 
-                <button
-                  type="button"
-                  disabled={
-                    savingReminder
-                  }
-                  onClick={
-                    togglePredictionReminders
-                  }
-                  style={{
-                    width: "76px",
-                    minWidth: "76px",
+                <div className="reminderDescription">
+                  Automatically remind entrants
+                  who have not completed all their
+                  predictions before the Match Week
+                  deadline.
+                </div>
+              </div>
 
-                    padding: "11px 8px",
-                    margin: 0,
+              <button
+                type="button"
+                disabled={savingReminder}
+                onClick={
+                  togglePredictionReminders
+                }
+                className={`toggleButton ${
+                  predictionRemindersEnabled
+                    ? "toggleOn"
+                    : "toggleOff"
+                }`}
+              >
+                <span className="toggleTrack">
+                  <span className="toggleKnob" />
+                </span>
 
-                    borderRadius: "9px",
-                    border: "none",
-
-                    background:
-                      savingReminder
-                        ? "#9aa6b1"
-                        : predictionRemindersEnabled
-                        ? "#16884e"
-                        : "#68798a",
-
-                    color: "#ffffff",
-
-                    fontSize: "12px",
-                    fontWeight: "900",
-
-                    boxShadow:
-                      predictionRemindersEnabled
-                        ? "0 3px 0 #0d5f35"
-                        : "0 3px 0 #465565",
-
-                    cursor:
-                      savingReminder
-                        ? "wait"
-                        : "pointer",
-
-                    opacity:
-                      savingReminder
-                        ? 0.7
-                        : 1,
-                  }}
-                >
+                <strong>
                   {savingReminder
                     ? "SAVING"
                     : predictionRemindersEnabled
                     ? "ON"
                     : "OFF"}
-                </button>
-              </div>
-
-              <div
-                style={{
-                  marginTop: "11px",
-                  padding: "9px 10px",
-                  borderRadius: "8px",
-                  background: "#ffffff",
-                  color: "#71869a",
-                  fontSize: "10px",
-                  fontWeight: "700",
-                  lineHeight: 1.45,
-                }}
-              >
-                Each reminder will check only the specific
-                Match Week approaching its deadline. Any
-                later Match Weeks already open for
-                predictions are ignored.
-              </div>
-
-              <div
-                style={{
-                  marginTop: "8px",
-                  color:
-                    predictionRemindersEnabled
-                      ? "#16733f"
-                      : "#71869a",
-                  fontSize: "10px",
-                  fontWeight: "900",
-                }}
-              >
-                STATUS:{" "}
-                {predictionRemindersEnabled
-                  ? "AUTOMATIC REMINDERS ENABLED"
-                  : "AUTOMATIC REMINDERS DISABLED"}
-              </div>
+                </strong>
+              </button>
             </div>
 
-            {/* INFORMATION */}
+            <div className="reminderInfo">
+              <span className="infoDot" />
+
+              <span>
+                The reminder checks only the
+                specific Match Week approaching
+                its deadline. Later open weeks are
+                ignored.
+              </span>
+            </div>
 
             <div
-              style={{
-                padding: "11px 12px",
-                borderRadius: "9px",
-                background: "#f1f4f7",
-                border:
-                  "1px solid #d7dee7",
-                color: "#65788c",
-                fontSize: "12px",
-                fontWeight: "700",
-                lineHeight: 1.5,
-              }}
+              className={`reminderStatus ${
+                predictionRemindersEnabled
+                  ? "statusOn"
+                  : "statusOff"
+              }`}
             >
-              Leave a prize field blank and the Rules page
-              will show
-              <strong> TBC</strong>.
-              <br />
+              <span
+                className="statusLight"
+              />
 
-              Leave the payment closing date blank if you
-              do not want to show a payment deadline.
-              <br />
+              {predictionRemindersEnabled
+                ? "AUTOMATIC REMINDERS ENABLED"
+                : "AUTOMATIC REMINDERS DISABLED"}
+            </div>
+          </div>
 
-              The Prediction Reminder Emails switch saves
-              immediately when changed.
+          <div className="infoPanel">
+            <div className="infoIcon">
+              i
             </div>
 
-            {/* SAVE MAIN SETTINGS */}
-
-            <button
-              onClick={
-                saveSettings
-              }
-              disabled={
-                saving
-              }
-              style={{
-                opacity:
-                  saving
-                    ? 0.5
-                    : 1,
-              }}
-            >
-              {saving
-                ? "Saving..."
-                : "Save Competition Settings"}
-            </button>
+            <div>
+              Leave either prize field blank
+              and the Rules page will display{" "}
+              <strong>TBC</strong>.
+              <br />
+              Leave the payment closing date
+              blank if you do not want to show
+              a payment deadline.
+              <br />
+              The reminder email switch saves
+              immediately when changed.
+            </div>
           </div>
-        </div>
 
-        {/* BACK */}
+          <button
+            onClick={saveSettings}
+            disabled={saving}
+            className="saveButton"
+          >
+            {saving
+              ? "SAVING SETTINGS..."
+              : "SAVE COMPETITION SETTINGS"}
+          </button>
+        </section>
 
-        <a href="/admin">
-          <button>
-            Back to Admin
+        <a
+          href="/admin"
+          className="backLink"
+        >
+          <button className="backButton">
+            ← Back to Admin
           </button>
         </a>
 
-        <p className="footer">
+        <p className="pageFooter">
           Telford & Wrekin Hockey Club
         </p>
       </div>
+
+      <PageStyles />
     </main>
+  );
+}
+
+function PageStyles() {
+  return (
+    <style jsx global>{`
+      .settingsShell {
+        max-width: 820px !important;
+        padding-bottom: 28px;
+      }
+
+      .brandHeader {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        width: fit-content;
+        max-width: 100%;
+        margin: 0 auto 14px;
+        padding: 7px 14px;
+      }
+
+      .brandGlow {
+        position: absolute;
+        top: 50%;
+        width: 80px;
+        height: 44px;
+        border-radius: 50%;
+        filter: blur(23px);
+        opacity: 0.34;
+        pointer-events: none;
+      }
+
+      .brandGlowBlue {
+        left: -18px;
+        background: #087eff;
+      }
+
+      .brandGlowRed {
+        right: -20px;
+        background: #ed1c24;
+      }
+
+      .brandBadge {
+        position: relative;
+        z-index: 1;
+        display: block;
+        width: 60px;
+        height: auto;
+        margin: 0;
+        filter:
+          drop-shadow(
+            0 0 10px
+            rgba(0, 125, 255, 0.24)
+          )
+          drop-shadow(
+            0 4px 8px
+            rgba(0, 0, 0, 0.42)
+          );
+      }
+
+      .brandCopy {
+        position: relative;
+        z-index: 1;
+        text-align: left;
+      }
+
+      .brandTitle {
+        color: #ffffff;
+        font-size: 28px;
+        line-height: 0.95;
+        font-weight: 950;
+        letter-spacing: -1.3px;
+        white-space: nowrap;
+        text-shadow:
+          0 2px 8px
+          rgba(0, 0, 0, 0.45),
+          0 0 12px
+          rgba(255, 255, 255, 0.08);
+      }
+
+      .brandTitle span {
+        color: #ed1c24;
+        text-shadow:
+          0 0 14px
+          rgba(237, 28, 36, 0.46);
+      }
+
+      .brandLabel {
+        margin-top: 6px;
+        color: #a9bfd5;
+        font-size: 10px;
+        font-weight: 950;
+        letter-spacing: 1.5px;
+      }
+
+      .pageHero {
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 12px;
+        padding: 18px 18px 16px;
+        border:
+          1px solid
+          rgba(72, 145, 215, 0.34);
+        border-radius: 15px;
+        text-align: center;
+        background:
+          radial-gradient(
+            circle at 4% 10%,
+            rgba(0, 121, 255, 0.18),
+            transparent 33%
+          ),
+          radial-gradient(
+            circle at 96% 82%,
+            rgba(237, 28, 36, 0.15),
+            transparent 34%
+          ),
+          linear-gradient(
+            145deg,
+            rgba(8, 30, 56, 0.97),
+            rgba(3, 12, 25, 0.99)
+          );
+        box-shadow:
+          -7px 0 24px
+          rgba(0, 105, 255, 0.08),
+          7px 0 24px
+          rgba(237, 28, 36, 0.07),
+          0 15px 34px
+          rgba(0, 0, 0, 0.3),
+          inset 0 1px 0
+          rgba(255, 255, 255, 0.035);
+      }
+
+      .heroLine {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background:
+          linear-gradient(
+            90deg,
+            #087eff 0 42%,
+            #d7e8f8 50%,
+            #ed1c24 58% 100%
+          );
+      }
+
+      .heroEyebrow,
+      .sectionEyebrow {
+        color: #2999ff;
+        font-size: 9px;
+        font-weight: 950;
+        letter-spacing: 1.7px;
+      }
+
+      .pageHero h1 {
+        margin: 4px 0 0;
+        color: #ffffff;
+        font-size: 25px;
+        line-height: 1.05;
+        font-weight: 950;
+        letter-spacing: -0.6px;
+      }
+
+      .pageHero p {
+        margin: 6px 0 0;
+        color: #9eb6cd;
+        font-size: 12px;
+        font-weight: 750;
+      }
+
+      .heroRule {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        width: min(330px, 80%);
+        margin: 12px auto 0;
+      }
+
+      .blueRule,
+      .redRule {
+        flex: 1;
+        height: 2px;
+      }
+
+      .blueRule {
+        background:
+          linear-gradient(
+            90deg,
+            transparent,
+            #168cff
+          );
+      }
+
+      .redRule {
+        background:
+          linear-gradient(
+            90deg,
+            #ed1c24,
+            transparent
+          );
+      }
+
+      .centreDot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: #ffffff;
+        box-shadow:
+          0 0 8px
+          rgba(255, 255, 255, 0.65);
+      }
+
+      .overviewPanel,
+      .settingsPanel {
+        position: relative;
+        margin-bottom: 12px;
+        padding: 14px;
+        border-radius: 13px;
+        background:
+          radial-gradient(
+            circle at 0 0,
+            rgba(0, 119, 255, 0.1),
+            transparent 35%
+          ),
+          radial-gradient(
+            circle at 100% 100%,
+            rgba(237, 28, 36, 0.06),
+            transparent 30%
+          ),
+          linear-gradient(
+            145deg,
+            rgba(7, 28, 53, 0.98),
+            rgba(3, 14, 28, 0.99)
+          );
+        box-shadow:
+          0 12px 26px
+          rgba(0, 0, 0, 0.25),
+          inset 0 1px 0
+          rgba(255, 255, 255, 0.03);
+      }
+
+      .overviewPanel {
+        border:
+          1px solid
+          rgba(46, 133, 218, 0.48);
+      }
+
+      .settingsPanel {
+        border:
+          1px solid
+          rgba(67, 130, 190, 0.38);
+      }
+
+      .panelHeading {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 11px;
+      }
+
+      .panelHeading h2 {
+        margin: 2px 0 0;
+        color: #ffffff;
+        font-size: 18px;
+        font-weight: 950;
+      }
+
+      .livePill {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 24px;
+        padding: 0 9px;
+        border:
+          1px solid
+          rgba(38, 145, 247, 0.5);
+        border-radius: 999px;
+        background:
+          rgba(5, 71, 130, 0.24);
+        color: #55aeff;
+        font-size: 8px;
+        font-weight: 950;
+        letter-spacing: 0.8px;
+      }
+
+      .overviewGrid {
+        display: grid;
+        grid-template-columns:
+          repeat(5, 1fr);
+        gap: 7px;
+      }
+
+      .overviewCard {
+        min-width: 0;
+        padding: 11px 5px 10px;
+        border-radius: 9px;
+        text-align: center;
+      }
+
+      .overviewCard span {
+        display: block;
+        font-size: 7px;
+        font-weight: 950;
+        letter-spacing: 0.55px;
+      }
+
+      .overviewCard strong {
+        display: block;
+        margin-top: 4px;
+        color: #ffffff;
+        font-size: 18px;
+        line-height: 1.1;
+        font-weight: 950;
+      }
+
+      .overviewCard .dateValue {
+        font-size: 12px;
+      }
+
+      .overviewCard.entry {
+        border:
+          1px solid
+          rgba(41, 151, 255, 0.45);
+        background:
+          linear-gradient(
+            145deg,
+            rgba(7, 79, 145, 0.68),
+            rgba(4, 43, 81, 0.76)
+          );
+        color: #9cd2ff;
+      }
+
+      .overviewCard.gold {
+        border:
+          1px solid
+          rgba(238, 182, 25, 0.56);
+        background:
+          linear-gradient(
+            145deg,
+            rgba(151, 102, 6, 0.7),
+            rgba(88, 61, 7, 0.82)
+          );
+        color: #ffe28a;
+      }
+
+      .overviewCard.silver {
+        border:
+          1px solid
+          rgba(164, 182, 200, 0.44);
+        background:
+          linear-gradient(
+            145deg,
+            rgba(84, 102, 120, 0.68),
+            rgba(50, 64, 78, 0.82)
+          );
+        color: #d8e2eb;
+      }
+
+      .overviewCard.deadline {
+        border:
+          1px solid
+          rgba(237, 49, 58, 0.48);
+        background:
+          linear-gradient(
+            145deg,
+            rgba(145, 15, 24, 0.7),
+            rgba(86, 10, 17, 0.82)
+          );
+        color: #ff9ca1;
+      }
+
+      .overviewCard.reminderOn {
+        border:
+          1px solid
+          rgba(53, 207, 121, 0.48);
+        background:
+          linear-gradient(
+            145deg,
+            rgba(15, 116, 61, 0.72),
+            rgba(10, 74, 41, 0.84)
+          );
+        color: #9ae6bb;
+      }
+
+      .overviewCard.reminderOff {
+        border:
+          1px solid
+          rgba(137, 153, 168, 0.36);
+        background:
+          linear-gradient(
+            145deg,
+            rgba(73, 86, 100, 0.68),
+            rgba(43, 53, 64, 0.82)
+          );
+        color: #c2ced8;
+      }
+
+      .formGrid {
+        display: grid;
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+        gap: 11px;
+      }
+
+      .settingField {
+        min-width: 0;
+      }
+
+      .fieldLabel {
+        display: block;
+        margin: 0 0 5px 2px;
+        color: #5fb6ff;
+        font-size: 8px;
+        font-weight: 950;
+        letter-spacing: 0.8px;
+      }
+
+      .goldText {
+        color: #f5ca50;
+      }
+
+      .silverText {
+        color: #c7d3de;
+      }
+
+      .redText {
+        color: #ff6b72;
+      }
+
+      .moneyInput {
+        display: grid;
+        grid-template-columns: 34px 1fr;
+        min-height: 43px;
+        overflow: hidden;
+        border:
+          1px solid
+          rgba(71, 146, 216, 0.48);
+        border-radius: 8px;
+        background:
+          rgba(3, 17, 33, 0.92);
+      }
+
+      .moneyInput > span {
+        display: grid;
+        place-items: center;
+        border-right:
+          1px solid
+          rgba(71, 146, 216, 0.28);
+        background:
+          rgba(5, 59, 108, 0.38);
+        color: #6cbdff;
+        font-weight: 950;
+      }
+
+      .goldInput {
+        border-color:
+          rgba(221, 171, 40, 0.45);
+      }
+
+      .goldInput > span {
+        border-right-color:
+          rgba(221, 171, 40, 0.28);
+        background:
+          rgba(113, 77, 6, 0.36);
+        color: #ffd966;
+      }
+
+      .silverInput {
+        border-color:
+          rgba(157, 178, 197, 0.4);
+      }
+
+      .silverInput > span {
+        border-right-color:
+          rgba(157, 178, 197, 0.24);
+        background:
+          rgba(72, 84, 96, 0.4);
+        color: #d4dee7;
+      }
+
+      .moneyInput input,
+      .dateInput {
+        width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+        border: none;
+        outline: none;
+        background:
+          rgba(3, 17, 33, 0.92);
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: 850;
+      }
+
+      .moneyInput input {
+        padding: 0 10px;
+      }
+
+      .dateInput {
+        min-height: 43px;
+        padding: 0 10px;
+        border:
+          1px solid
+          rgba(237, 49, 58, 0.4);
+        border-radius: 8px;
+      }
+
+      .moneyInput:focus-within,
+      .dateInput:focus {
+        border-color: #2999ff;
+        box-shadow:
+          0 0 0 2px
+          rgba(41, 153, 255, 0.1);
+      }
+
+      .settingField small {
+        display: block;
+        margin-top: 5px;
+        color: #748da5;
+        font-size: 8px;
+        font-weight: 700;
+        line-height: 1.35;
+      }
+
+      .reminderPanel {
+        margin-top: 13px;
+        padding: 12px;
+        border-radius: 10px;
+        transition: 0.2s ease;
+      }
+
+      .reminderPanel.enabled {
+        border:
+          1px solid
+          rgba(53, 207, 121, 0.4);
+        background:
+          radial-gradient(
+            circle at 100% 0,
+            rgba(53, 207, 121, 0.11),
+            transparent 32%
+          ),
+          rgba(6, 32, 28, 0.66);
+      }
+
+      .reminderPanel.disabled {
+        border:
+          1px solid
+          rgba(115, 139, 161, 0.28);
+        background:
+          rgba(11, 28, 45, 0.72);
+      }
+
+      .reminderTop {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .reminderIcon {
+        display: grid;
+        place-items: center;
+        flex: 0 0 36px;
+        width: 36px;
+        height: 36px;
+        border:
+          1px solid
+          rgba(70, 145, 214, 0.4);
+        border-radius: 9px;
+        background:
+          rgba(7, 63, 113, 0.35);
+        color: #6abbff;
+        font-size: 16px;
+        font-weight: 900;
+      }
+
+      .reminderCopy {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .reminderTitle {
+        color: #ffffff;
+        font-size: 12px;
+        font-weight: 950;
+      }
+
+      .reminderDescription {
+        margin-top: 3px;
+        color: #829ab0;
+        font-size: 8px;
+        font-weight: 700;
+        line-height: 1.4;
+      }
+
+      .toggleButton {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        width: auto;
+        min-width: 91px;
+        min-height: 38px;
+        margin: 0;
+        padding: 5px 8px;
+        border: none;
+        border-radius: 9px;
+        color: #ffffff;
+        font-size: 8px;
+        font-weight: 950;
+        cursor: pointer;
+      }
+
+      .toggleOn {
+        background:
+          linear-gradient(
+            145deg,
+            #198c50,
+            #11653a
+          );
+        box-shadow:
+          0 3px 0 #0a4829;
+      }
+
+      .toggleOff {
+        background:
+          linear-gradient(
+            145deg,
+            #627587,
+            #435568
+          );
+        box-shadow:
+          0 3px 0 #2c3c4d;
+      }
+
+      .toggleTrack {
+        position: relative;
+        display: block;
+        width: 31px;
+        height: 17px;
+        border-radius: 999px;
+        background:
+          rgba(1, 12, 22, 0.48);
+      }
+
+      .toggleKnob {
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        background: #ffffff;
+        transition: 0.2s ease;
+      }
+
+      .toggleOn .toggleKnob {
+        transform: translateX(14px);
+      }
+
+      .reminderInfo {
+        display: flex;
+        align-items: flex-start;
+        gap: 7px;
+        margin-top: 10px;
+        padding: 8px 9px;
+        border-radius: 7px;
+        background:
+          rgba(2, 14, 27, 0.5);
+        color: #7992aa;
+        font-size: 8px;
+        font-weight: 700;
+        line-height: 1.4;
+      }
+
+      .infoDot {
+        flex: 0 0 6px;
+        width: 6px;
+        height: 6px;
+        margin-top: 2px;
+        border-radius: 50%;
+        background: #168cff;
+        box-shadow:
+          0 0 7px
+          rgba(22, 140, 255, 0.6);
+      }
+
+      .reminderStatus {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 8px;
+        font-size: 7px;
+        font-weight: 950;
+        letter-spacing: 0.5px;
+      }
+
+      .statusOn {
+        color: #78dda5;
+      }
+
+      .statusOff {
+        color: #8196aa;
+      }
+
+      .statusLight {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+        box-shadow:
+          0 0 7px currentColor;
+      }
+
+      .infoPanel {
+        display: flex;
+        align-items: flex-start;
+        gap: 9px;
+        margin-top: 12px;
+        padding: 10px;
+        border:
+          1px solid
+          rgba(81, 137, 188, 0.25);
+        border-radius: 8px;
+        background:
+          rgba(5, 24, 43, 0.62);
+        color: #7d96ad;
+        font-size: 8px;
+        font-weight: 700;
+        line-height: 1.45;
+      }
+
+      .infoIcon {
+        display: grid;
+        place-items: center;
+        flex: 0 0 22px;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background:
+          rgba(13, 99, 178, 0.38);
+        color: #67b8ff;
+        font-size: 11px;
+        font-weight: 950;
+      }
+
+      .infoPanel strong {
+        color: #ffffff;
+      }
+
+      .saveButton {
+        width: 100%;
+        min-height: 43px;
+        margin: 13px 0 0;
+        border: none;
+        border-radius: 9px;
+        background:
+          linear-gradient(
+            105deg,
+            #087eff,
+            #155fb8
+          );
+        color: #ffffff;
+        font-size: 9px;
+        font-weight: 950;
+        letter-spacing: 0.4px;
+        box-shadow:
+          0 3px 0 #06417e,
+          0 6px 14px
+          rgba(0, 76, 160, 0.2);
+        cursor: pointer;
+      }
+
+      .saveButton:disabled {
+        opacity: 0.5;
+        cursor: default;
+      }
+
+      .messageBar {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin-bottom: 12px;
+        padding: 10px 12px;
+        border-radius: 9px;
+        font-size: 11px;
+        font-weight: 850;
+      }
+
+      .messageBar.success {
+        border:
+          1px solid
+          rgba(50, 194, 115, 0.48);
+        background:
+          rgba(19, 104, 59, 0.2);
+        color: #8ee5b5;
+      }
+
+      .messageBar.warning {
+        border:
+          1px solid
+          rgba(240, 165, 40, 0.45);
+        background:
+          rgba(117, 74, 10, 0.2);
+        color: #ffd181;
+      }
+
+      .loadingCard,
+      .accessCard {
+        margin: 12px 0;
+        padding: 20px;
+        border:
+          1px solid
+          rgba(57, 137, 214, 0.42);
+        border-radius: 13px;
+        background:
+          linear-gradient(
+            145deg,
+            rgba(7, 29, 55, 0.97),
+            rgba(3, 14, 28, 0.99)
+          );
+        color: #ffffff;
+        text-align: center;
+      }
+
+      .loadingCard p,
+      .accessCard p {
+        margin: 6px 0 0;
+        color: #9eb4c9;
+        font-size: 11px;
+      }
+
+      .accessCard h2 {
+        margin: 0;
+      }
+
+      .loadingPulse {
+        width: 12px;
+        height: 12px;
+        margin: 0 auto 8px;
+        border-radius: 50%;
+        background: #168cff;
+        box-shadow:
+          0 0 14px
+          rgba(22, 140, 255, 0.75);
+        animation:
+          settingsPulse
+          1.2s infinite ease-in-out;
+      }
+
+      @keyframes settingsPulse {
+        0%,
+        100% {
+          opacity: 0.35;
+          transform: scale(0.8);
+        }
+
+        50% {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .backLink {
+        display: block;
+        margin-top: 14px;
+        text-decoration: none;
+      }
+
+      .backButton {
+        width: 100%;
+        min-height: 42px;
+        margin: 0;
+        border: none;
+        border-radius: 9px;
+        background:
+          linear-gradient(
+            105deg,
+            #087eff,
+            #155fb8
+          );
+        color: #ffffff;
+        font-size: 10px;
+        font-weight: 950;
+        box-shadow:
+          0 3px 0 #06417e,
+          0 6px 12px
+          rgba(0, 0, 0, 0.16);
+      }
+
+      .pageFooter {
+        margin: 15px 0 0;
+        color: #607b94;
+        text-align: center;
+        font-size: 9px;
+        font-weight: 750;
+      }
+
+      @media (max-width: 700px) {
+        .settingsShell {
+          padding-bottom: 20px;
+        }
+
+        .brandHeader {
+          margin-bottom: 8px;
+          padding: 4px 8px;
+          gap: 9px;
+        }
+
+        .brandBadge {
+          width: 49px;
+        }
+
+        .brandTitle {
+          font-size: 23px;
+          letter-spacing: -1px;
+        }
+
+        .brandLabel {
+          margin-top: 4px;
+          font-size: 7px;
+          letter-spacing: 1px;
+        }
+
+        .pageHero {
+          margin-bottom: 10px;
+          padding: 13px 10px 11px;
+        }
+
+        .heroEyebrow {
+          font-size: 7px;
+          letter-spacing: 1.3px;
+        }
+
+        .pageHero h1 {
+          font-size: 20px;
+        }
+
+        .pageHero p {
+          font-size: 9px;
+        }
+
+        .heroRule {
+          margin-top: 8px;
+        }
+
+        .overviewPanel,
+        .settingsPanel {
+          padding: 10px;
+        }
+
+        .panelHeading {
+          margin-bottom: 8px;
+        }
+
+        .panelHeading h2 {
+          font-size: 15px;
+        }
+
+        .sectionEyebrow {
+          font-size: 7px;
+        }
+
+        .livePill {
+          min-height: 21px;
+          font-size: 6px;
+        }
+
+        .overviewGrid {
+          grid-template-columns:
+            repeat(5, 1fr);
+          gap: 4px;
+        }
+
+        .overviewCard {
+          padding: 8px 2px 7px;
+          border-radius: 7px;
+        }
+
+        .overviewCard span {
+          font-size: 5px;
+          letter-spacing: 0.2px;
+        }
+
+        .overviewCard strong {
+          margin-top: 3px;
+          font-size: 13px;
+        }
+
+        .overviewCard .dateValue {
+          font-size: 8px;
+        }
+
+        .formGrid {
+          gap: 8px;
+        }
+
+        .fieldLabel {
+          font-size: 7px;
+        }
+
+        .moneyInput,
+        .dateInput {
+          min-height: 39px;
+        }
+
+        .moneyInput {
+          grid-template-columns: 30px 1fr;
+        }
+
+        .moneyInput input,
+        .dateInput {
+          font-size: 11px;
+        }
+
+        .settingField small {
+          font-size: 7px;
+        }
+
+        .reminderPanel {
+          margin-top: 10px;
+          padding: 9px;
+        }
+
+        .reminderTop {
+          gap: 7px;
+        }
+
+        .reminderIcon {
+          flex-basis: 31px;
+          width: 31px;
+          height: 31px;
+          font-size: 13px;
+        }
+
+        .reminderTitle {
+          font-size: 10px;
+        }
+
+        .reminderDescription {
+          font-size: 7px;
+        }
+
+        .toggleButton {
+          min-width: 78px;
+          min-height: 34px;
+          gap: 5px;
+          padding: 4px 6px;
+          font-size: 7px;
+        }
+
+        .toggleTrack {
+          width: 27px;
+          height: 15px;
+        }
+
+        .toggleKnob {
+          width: 9px;
+          height: 9px;
+        }
+
+        .toggleOn .toggleKnob {
+          transform:
+            translateX(12px);
+        }
+
+        .reminderInfo {
+          margin-top: 8px;
+          padding: 7px;
+          font-size: 7px;
+        }
+
+        .reminderStatus {
+          font-size: 6px;
+        }
+
+        .infoPanel {
+          margin-top: 9px;
+          padding: 8px;
+          font-size: 7px;
+        }
+
+        .saveButton {
+          min-height: 39px;
+          margin-top: 10px;
+          font-size: 8px;
+        }
+
+        .messageBar {
+          padding: 8px 10px;
+          font-size: 9px;
+        }
+
+        .backButton {
+          min-height: 38px;
+          font-size: 9px;
+        }
+      }
+
+      @media (max-width: 440px) {
+        .formGrid {
+          grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+        }
+
+        .overviewGrid {
+          grid-template-columns:
+            repeat(5, minmax(0, 1fr));
+        }
+
+        .overviewCard {
+          min-width: 0;
+        }
+
+        .reminderDescription {
+          line-height: 1.3;
+        }
+      }
+
+      @media (max-width: 370px) {
+        .brandTitle {
+          font-size: 21px;
+        }
+
+        .brandLabel {
+          font-size: 6px;
+        }
+
+        .overviewCard strong {
+          font-size: 11px;
+        }
+
+        .overviewCard .dateValue {
+          font-size: 7px;
+        }
+
+        .toggleButton {
+          min-width: 70px;
+        }
+
+        .reminderIcon {
+          display: none;
+        }
+      }
+    `}</style>
   );
 }
