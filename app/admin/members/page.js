@@ -252,10 +252,10 @@ export default function MembersPage() {
     return (
       <span
         className={`role-badge ${
-          isAdmin ? "role-admin" : ""
+          isAdmin ? "role-admin" : "role-entrant"
         }`}
       >
-        {role || "entrant"}
+        {isAdmin ? "ADMIN" : "ENTRANT"}
       </span>
     );
   }
@@ -351,7 +351,6 @@ export default function MembersPage() {
 
         .predictor-title span {
           color: #ed1c24;
-          text-shadow: 0 0 12px rgba(237,28,36,.32);
         }
 
         .administrator-label {
@@ -407,26 +406,32 @@ export default function MembersPage() {
           border-bottom: none;
         }
 
-        .members-table tbody tr:hover {
-          background: rgba(37,130,255,.08);
-        }
-
         .role-badge {
-          display: inline-block;
-          padding: 3px 8px;
-          border-radius: 999px;
-          font-size: 11px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          min-width: 62px;
+          padding: 5px 7px;
+          box-sizing: border-box;
+          border-radius: 7px;
+          font-size: 10px;
+          line-height: 1;
           font-weight: 900;
-          text-transform: capitalize;
-          background: rgba(169,191,213,.12);
-          color: #d7e3ef;
-          border: 1px solid rgba(169,191,213,.18);
+          letter-spacing: .2px;
+          white-space: nowrap;
         }
 
-        .role-badge.role-admin {
-          background: rgba(0,108,255,.2);
-          color: #5aa7ff;
-          border-color: rgba(0,108,255,.35);
+        .role-admin {
+          background: #0879df;
+          color: #ffffff;
+          border: 1px solid #35a0ff;
+          box-shadow: 0 0 8px rgba(0,124,255,.2);
+        }
+
+        .role-entrant {
+          background: #394b5d;
+          color: #ffffff;
+          border: 1px solid #536b82;
         }
 
         .paid-circle {
@@ -443,8 +448,8 @@ export default function MembersPage() {
 
         .edit-small {
           width: auto !important;
-          min-width: 62px;
-          padding: 7px 11px !important;
+          min-width: 58px;
+          padding: 7px 10px !important;
           margin: 0 !important;
           font-size: 12px !important;
           border-radius: 8px !important;
@@ -519,56 +524,94 @@ export default function MembersPage() {
             position: sticky;
             top: 0;
             z-index: 25;
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns:
+              minmax(0, 1fr)
+              66px
+              43px
+              58px;
+            gap: 6px;
             align-items: center;
-            padding: 9px 11px;
-            background: #0a1727;
+            padding: 10px 10px;
+            background: #081a2b;
+            border-bottom:
+              1px solid rgba(169,191,213,.28);
             color: #a9bfd5;
-            border-bottom: 1px solid rgba(169,191,213,.22);
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 900;
-            letter-spacing: .7px;
+            letter-spacing: .5px;
+          }
+
+          .mobile-header span:nth-child(2),
+          .mobile-header span:nth-child(3),
+          .mobile-header span:nth-child(4) {
+            text-align: center;
           }
 
           .mobile-member-row {
             display: grid;
-            grid-template-columns: minmax(0,1fr) auto;
-            gap: 8px;
+            grid-template-columns:
+              minmax(0, 1fr)
+              66px
+              43px
+              58px;
+            gap: 6px;
             align-items: center;
-            padding: 10px 11px;
-            border-bottom: 1px solid rgba(169,191,213,.13);
+            min-height: 58px;
+            padding: 9px 10px;
+            border-bottom:
+              1px solid rgba(169,191,213,.16);
+            box-sizing: border-box;
           }
 
           .mobile-member-row:last-child {
             border-bottom: none;
           }
 
-          .mobile-team {
-            color: white;
-            font-size: 14px;
-            line-height: 1.15;
-            font-weight: 900;
-            margin-bottom: 4px;
+          .mobile-person {
+            min-width: 0;
+            text-align: left;
           }
 
-          .mobile-player-role {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-bottom: 4px;
+          .mobile-team {
+            color: #ffffff;
+            font-size: 13px;
+            line-height: 1.15;
+            font-weight: 900;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
           }
 
           .mobile-player {
-            color: #a9bfd5;
-            font-size: 11px;
+            margin-top: 3px;
+            color: #c2d1df;
+            font-size: 10px;
+            line-height: 1.1;
             font-weight: 700;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+
+          .mobile-role {
+            display: flex;
+            justify-content: center;
+            align-items: center;
           }
 
           .mobile-paid {
-            font-size: 11px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
             font-weight: 900;
+          }
+
+          .mobile-edit {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
           }
 
           .member-editor {
@@ -692,9 +735,11 @@ export default function MembersPage() {
                       <th>Player</th>
                       <th>Team Name</th>
                       <th>Role</th>
+
                       <th style={{ textAlign: "center" }}>
                         Paid
                       </th>
+
                       <th style={{ textAlign: "center" }}>
                         Edit
                       </th>
@@ -726,11 +771,7 @@ export default function MembersPage() {
                             />
                           </td>
 
-                          <td
-                            style={{
-                              textAlign: "center",
-                            }}
-                          >
+                          <td style={{ textAlign: "center" }}>
                             <span
                               className="paid-circle"
                               style={{
@@ -744,11 +785,7 @@ export default function MembersPage() {
                             </span>
                           </td>
 
-                          <td
-                            style={{
-                              textAlign: "center",
-                            }}
-                          >
+                          <td style={{ textAlign: "center" }}>
                             <button
                               className="edit-small"
                               onClick={() =>
@@ -766,8 +803,11 @@ export default function MembersPage() {
               </div>
 
               <div className="mobile-list">
+
                 <div className="mobile-header">
-                  <span>MEMBER</span>
+                  <span>TEAM / PLAYER</span>
+                  <span>ROLE</span>
+                  <span>PAID</span>
                   <span>EDIT</span>
                 </div>
 
@@ -782,49 +822,48 @@ export default function MembersPage() {
                       className="mobile-member-row"
                       key={member.id}
                     >
-                      <div>
+                      <div className="mobile-person">
                         <div className="mobile-team">
                           {member.team_name ||
                             "No Team Name"}
                         </div>
 
-                        <div className="mobile-player-role">
-                          <span className="mobile-player">
-                            {fullName || "Unnamed"}
-                          </span>
-
-                          <RoleBadge
-                            role={member.role}
-                          />
-                        </div>
-
-                        <div
-                          className="mobile-paid"
-                          style={{
-                            color: member.paid
-                              ? "#55d98a"
-                              : "#ff6268",
-                          }}
-                        >
-                          {member.paid
-                            ? "✓ PAID"
-                            : "✕ UNPAID"}
+                        <div className="mobile-player">
+                          {fullName || "Unnamed"}
                         </div>
                       </div>
 
-                      <button
-                        className="edit-small"
-                        onClick={() =>
-                          openEditor(member)
-                        }
+                      <div className="mobile-role">
+                        <RoleBadge
+                          role={member.role}
+                        />
+                      </div>
+
+                      <div
+                        className="mobile-paid"
+                        style={{
+                          color: member.paid
+                            ? "#42d97b"
+                            : "#ff4f57",
+                        }}
                       >
-                        Edit
-                      </button>
+                        {member.paid ? "✓" : "✕"}
+                      </div>
+
+                      <div className="mobile-edit">
+                        <button
+                          className="edit-small"
+                          onClick={() =>
+                            openEditor(member)
+                          }
+                        >
+                          Edit
+                        </button>
+                      </div>
                     </div>
                   );
                 })}
               </div>
-
             </div>
           )}
         </div>
