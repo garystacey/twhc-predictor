@@ -230,9 +230,11 @@ export default function ManageMatchWeeksPage() {
 
           <section className="pageHero">
             <div className="heroLine" />
+
             <div className="heroEyebrow">
               COMPETITION CONTROL
             </div>
+
             <h1>Manage Match Weeks</h1>
           </section>
 
@@ -315,22 +317,24 @@ export default function ManageMatchWeeksPage() {
             </div>
           </div>
 
-          <select
-            className="weekSelect"
-            value={selectedWeekId}
-            onChange={(e) =>
-              setSelectedWeekId(e.target.value)
-            }
-          >
-            {weeks.map((week) => (
-              <option
-                key={week.id}
-                value={week.id}
-              >
-                Match Week {week.week_no}
-              </option>
-            ))}
-          </select>
+          <div className="weekSelectWrap">
+            <select
+              className="weekSelect"
+              value={selectedWeekId}
+              onChange={(e) =>
+                setSelectedWeekId(e.target.value)
+              }
+            >
+              {weeks.map((week) => (
+                <option
+                  key={week.id}
+                  value={week.id}
+                >
+                  Match Week {week.week_no}
+                </option>
+              ))}
+            </select>
+          </div>
 
           {selectedWeek && (
             <div className="weekSummaryStrip">
@@ -579,7 +583,9 @@ function PageStyles() {
 
       .brandTitle span {
         color: #ed1c24;
-        text-shadow: 0 0 14px rgba(237, 28, 36, 0.46);
+        text-shadow:
+          0 0 14px
+          rgba(237, 28, 36, 0.46);
       }
 
       .brandLabel {
@@ -595,7 +601,9 @@ function PageStyles() {
         overflow: hidden;
         margin-bottom: 12px;
         padding: 18px 18px 16px;
-        border: 1px solid rgba(72, 145, 215, 0.34);
+        border:
+          1px solid
+          rgba(72, 145, 215, 0.34);
         border-radius: 15px;
         text-align: center;
         background:
@@ -615,9 +623,12 @@ function PageStyles() {
             rgba(3, 12, 25, 0.99)
           );
         box-shadow:
-          -7px 0 24px rgba(0, 105, 255, 0.08),
-          7px 0 24px rgba(237, 28, 36, 0.07),
-          0 15px 34px rgba(0, 0, 0, 0.3);
+          -7px 0 24px
+          rgba(0, 105, 255, 0.08),
+          7px 0 24px
+          rgba(237, 28, 36, 0.07),
+          0 15px 34px
+          rgba(0, 0, 0, 0.3);
       }
 
       .heroLine {
@@ -723,7 +734,8 @@ function PageStyles() {
             rgba(3, 14, 28, 0.99)
           );
         box-shadow:
-          0 12px 26px rgba(0, 0, 0, 0.25);
+          0 12px 26px
+          rgba(0, 0, 0, 0.25);
       }
 
       .selectorPanel {
@@ -772,19 +784,97 @@ function PageStyles() {
         letter-spacing: 0.8px;
       }
 
+      /*
+        iPHONE / SAFARI SELECT FIX
+      */
+
+      .weekSelectWrap {
+        position: relative;
+        width: 100%;
+        border-radius: 9px;
+        background: #071a31;
+      }
+
       .weekSelect {
+        display: block;
         width: 100%;
         min-height: 43px;
-        padding: 0 12px;
+        box-sizing: border-box;
+
+        padding: 0 40px 0 12px;
+
         border:
           1px solid
           rgba(74, 151, 224, 0.62);
+
         border-radius: 9px;
+
         outline: none;
-        background: #071a31;
-        color: #ffffff;
+
+        background-color:
+          #071a31 !important;
+
+        background-image: none !important;
+
+        color:
+          #ffffff !important;
+
+        -webkit-text-fill-color:
+          #ffffff !important;
+
+        color-scheme: dark;
+
+        -webkit-appearance: none;
+        appearance: none;
+
         font-size: 13px;
         font-weight: 850;
+      }
+
+      .weekSelectWrap::after {
+        content: "⌄";
+        position: absolute;
+        top: 50%;
+        right: 13px;
+        transform: translateY(-56%);
+        color: #ffffff;
+        font-size: 17px;
+        font-weight: 900;
+        line-height: 1;
+        pointer-events: none;
+      }
+
+      .weekSelect:focus,
+      .weekSelect:active {
+        background-color:
+          #071a31 !important;
+
+        color:
+          #ffffff !important;
+
+        -webkit-text-fill-color:
+          #ffffff !important;
+
+        border-color:
+          #2999ff;
+
+        box-shadow:
+          0 0 0 2px
+          rgba(41, 153, 255, 0.12);
+      }
+
+      .weekSelect option {
+        background:
+          #071a31 !important;
+
+        background-color:
+          #071a31 !important;
+
+        color:
+          #ffffff !important;
+
+        -webkit-text-fill-color:
+          #ffffff !important;
       }
 
       .weekSummaryStrip {
@@ -1075,7 +1165,8 @@ function PageStyles() {
         letter-spacing: 0.7px;
         box-shadow:
           0 3px 0 #06417e,
-          0 6px 14px rgba(0, 76, 160, 0.2);
+          0 6px 14px
+          rgba(0, 76, 160, 0.2);
       }
 
       .saveButton:disabled {
@@ -1170,7 +1261,8 @@ function PageStyles() {
         font-weight: 950;
         box-shadow:
           0 3px 0 #06417e,
-          0 6px 12px rgba(0, 0, 0, 0.16);
+          0 6px 12px
+          rgba(0, 0, 0, 0.16);
       }
 
       .pageFooter {
@@ -1250,7 +1342,13 @@ function PageStyles() {
 
         .weekSelect {
           min-height: 39px;
-          font-size: 11px;
+          font-size: 16px;
+          padding-left: 11px;
+        }
+
+        .weekSelectWrap::after {
+          right: 11px;
+          font-size: 15px;
         }
 
         .weekSummaryStrip {
