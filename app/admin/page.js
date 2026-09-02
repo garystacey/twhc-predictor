@@ -546,62 +546,22 @@ export default function AdminDashboardPage() {
 
   function Header() {
     return (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: "11px",
-          marginBottom: "16px",
-        }}
-      >
+      <div className="adminBrandHeader">
+        <div className="adminBrandGlow adminBrandGlowBlue" />
+        <div className="adminBrandGlow adminBrandGlowRed" />
+
         <img
           src="/TWHC-badge-white.png"
           alt="Telford & Wrekin Hockey Club"
-          style={{
-            display: "block",
-            width: "58px",
-            height: "auto",
-            margin: 0,
-            filter:
-              "drop-shadow(0 4px 8px rgba(0,0,0,0.35))",
-          }}
+          className="adminBrandBadge"
         />
 
-        <div style={{ textAlign: "left" }}>
-          <div
-            style={{
-              fontSize: "27px",
-              lineHeight: 0.95,
-              fontWeight: "900",
-              letterSpacing: "-1.2px",
-              color: "#ffffff",
-              whiteSpace: "nowrap",
-              textShadow:
-                "0 2px 8px rgba(0,0,0,0.35)",
-            }}
-          >
-            THE PREDICTO
-            <span
-              style={{
-                color: "#ed1c24",
-                textShadow:
-                  "0 0 12px rgba(237,28,36,0.32)",
-              }}
-            >
-              R
-            </span>
+        <div className="adminBrandCopy">
+          <div className="adminBrandTitle">
+            THE PREDICTO<span>R</span>
           </div>
 
-          <div
-            style={{
-              marginTop: "5px",
-              fontSize: "11px",
-              fontWeight: "900",
-              letterSpacing: "1.4px",
-              color: "#a9bfd5",
-            }}
-          >
+          <div className="adminBrandLabel">
             ADMINISTRATOR
           </div>
         </div>
@@ -658,19 +618,40 @@ export default function AdminDashboardPage() {
       >
         <Header />
 
-        <div className="adminIntro">
-          <div className="adminTitle">
+        <section className="adminHero">
+          <div className="adminHeroTopLine" />
+
+          <div className="adminHeroEyebrow">
+            THE PREDICTOR CONTROL CENTRE
+          </div>
+
+          <div className="adminHeroTitle">
             Administrator Dashboard
           </div>
 
-          <div className="adminSubtitle">
-            Manage The Predictor competition
+          <div className="adminHeroSubtitle">
+            Manage the competition from one place
+          </div>
+
+          <div className="adminHeroRule">
+            <span className="blueRule" />
+            <span className="centreDot" />
+            <span className="redRule" />
+          </div>
+        </section>
+
+        <div className="adminSectionHeading">
+          <div>
+            <div className="adminSectionEyebrow">
+              COMPETITION CONTROL
+            </div>
+            <h2>Admin Tools</h2>
+          </div>
+
+          <div className="adminSectionPill">
+            LIVE CONTROL
           </div>
         </div>
-
-        {/* =================================================
-            ADMIN TOOLS
-        ================================================= */}
 
         <div className="adminGrid">
           <AdminCard
@@ -679,6 +660,7 @@ export default function AdminDashboardPage() {
             title="Enter Results"
             text="Record the actual H / D / A result for each fixture."
             button="Enter Results"
+            tone="blue"
           />
 
           <AdminCard
@@ -687,6 +669,7 @@ export default function AdminDashboardPage() {
             title="Manage Match Weeks"
             text="Review match dates, opening times and prediction deadlines."
             button="Manage Match Weeks"
+            tone="red"
           />
 
           <AdminCard
@@ -695,6 +678,7 @@ export default function AdminDashboardPage() {
             title="Manage Fixtures"
             text="Review and manage the fixtures included in each Match Week."
             button="Manage Fixtures"
+            tone="blue"
           />
 
           <AdminCard
@@ -703,6 +687,7 @@ export default function AdminDashboardPage() {
             title="Members"
             text="View Predictor members, payment status and account details."
             button="Members"
+            tone="red"
           />
 
           <AdminCard
@@ -711,15 +696,14 @@ export default function AdminDashboardPage() {
             title="Competition Settings"
             text="Manage the entry fee and prize money for The Predictor."
             button="Competition Settings"
+            tone="blue"
           />
         </div>
 
-        {/* =================================================
-            SOCIAL MEDIA POSTERS
-        ================================================= */}
-
         <section className="socialPosterSection">
           <div className="socialTopLine" />
+          <div className="socialSideGlow socialSideGlowBlue" />
+          <div className="socialSideGlow socialSideGlowRed" />
 
           <div className="socialHeader">
             <div className="socialIconBox">
@@ -759,7 +743,6 @@ export default function AdminDashboardPage() {
                 setSelectedWeekId(
                   event.target.value
                 );
-
                 setPosterMessage("");
               }}
             >
@@ -881,27 +864,26 @@ export default function AdminDashboardPage() {
           </div>
         </section>
 
-        <a href="/predictor">
-          <button>
-            Back to Predictor
-          </button>
-        </a>
+        <div className="adminFooterActions">
+          <a
+            href="/predictor"
+            className="adminFooterLink"
+          >
+            <button className="backPredictorButton">
+              ← Back to Predictor
+            </button>
+          </a>
 
-        <button
-          onClick={handleSignOut}
-          disabled={signingOut}
-          style={{
-            marginTop: "10px",
-            background: "#536579",
-            boxShadow:
-              "0 3px 0 #354657, 0 5px 10px rgba(0,0,0,0.16)",
-            opacity: signingOut ? 0.5 : 1,
-          }}
-        >
-          {signingOut
-            ? "Signing Out..."
-            : "Sign Out"}
-        </button>
+          <button
+            onClick={handleSignOut}
+            disabled={signingOut}
+            className="signOutButton"
+          >
+            {signingOut
+              ? "Signing Out..."
+              : "Sign Out"}
+          </button>
+        </div>
 
         <p className="footer">
           Telford & Wrekin Hockey Club
@@ -910,61 +892,478 @@ export default function AdminDashboardPage() {
 
       <style jsx global>{`
         .adminShell {
-          padding-bottom: 35px;
+          padding-bottom: 34px;
         }
 
-        .adminIntro {
-          margin-bottom: 16px;
-          text-align: center;
+        .adminBrandHeader {
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          width: fit-content;
+          max-width: 100%;
+          margin: 0 auto 14px;
+          padding: 7px 14px;
         }
 
-        .adminTitle {
+        .adminBrandGlow {
+          position: absolute;
+          top: 50%;
+          width: 78px;
+          height: 44px;
+          border-radius: 50%;
+          filter: blur(23px);
+          opacity: .33;
+          pointer-events: none;
+        }
+
+        .adminBrandGlowBlue {
+          left: -16px;
+          background: #087eff;
+        }
+
+        .adminBrandGlowRed {
+          right: -20px;
+          background: #ed1c24;
+        }
+
+        .adminBrandBadge {
+          position: relative;
+          z-index: 1;
+          display: block;
+          width: 60px;
+          height: auto;
+          margin: 0;
+          filter:
+            drop-shadow(0 0 10px rgba(0,125,255,.24))
+            drop-shadow(0 4px 8px rgba(0,0,0,.42));
+        }
+
+        .adminBrandCopy {
+          position: relative;
+          z-index: 1;
+          text-align: left;
+        }
+
+        .adminBrandTitle {
           color: #ffffff;
-          font-size: 18px;
-          font-weight: 900;
+          font-size: 28px;
+          line-height: .95;
+          font-weight: 950;
+          letter-spacing: -1.3px;
+          white-space: nowrap;
+          text-shadow:
+            0 2px 8px rgba(0,0,0,.45),
+            0 0 12px rgba(255,255,255,.08);
         }
 
-        .adminSubtitle {
-          margin-top: 4px;
+        .adminBrandTitle span {
+          color: #ed1c24;
+          text-shadow:
+            0 0 14px rgba(237,28,36,.46);
+        }
+
+        .adminBrandLabel {
+          margin-top: 6px;
           color: #a9bfd5;
+          font-size: 10px;
+          font-weight: 950;
+          letter-spacing: 2px;
+        }
+
+        .adminHero {
+          position: relative;
+          overflow: hidden;
+          margin-bottom: 18px;
+          padding: 18px 18px 16px;
+          border: 1px solid rgba(72,145,215,.34);
+          border-radius: 15px;
+          text-align: center;
+          background:
+            radial-gradient(
+              circle at 4% 10%,
+              rgba(0,121,255,.18),
+              transparent 33%
+            ),
+            radial-gradient(
+              circle at 96% 82%,
+              rgba(237,28,36,.15),
+              transparent 34%
+            ),
+            linear-gradient(
+              145deg,
+              rgba(8,30,56,.97),
+              rgba(3,12,25,.99)
+            );
+          box-shadow:
+            -7px 0 24px rgba(0,105,255,.08),
+            7px 0 24px rgba(237,28,36,.07),
+            0 15px 34px rgba(0,0,0,.3),
+            inset 0 1px 0 rgba(255,255,255,.035);
+        }
+
+        .adminHeroTopLine {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 3px;
+          background:
+            linear-gradient(
+              90deg,
+              #087eff 0 42%,
+              #d7e8f8 50%,
+              #ed1c24 58% 100%
+            );
+          box-shadow:
+            0 0 12px rgba(34,137,255,.25);
+        }
+
+        .adminHeroEyebrow,
+        .adminSectionEyebrow {
+          color: #2999ff;
+          font-size: 9px;
+          font-weight: 950;
+          letter-spacing: 1.7px;
+        }
+
+        .adminHeroTitle {
+          margin-top: 4px;
+          color: #ffffff;
+          font-size: 23px;
+          line-height: 1.05;
+          font-weight: 950;
+          letter-spacing: -.55px;
+          text-shadow:
+            0 3px 10px rgba(0,0,0,.34);
+        }
+
+        .adminHeroSubtitle {
+          margin-top: 5px;
+          color: #9eb6cd;
           font-size: 12px;
-          font-weight: 700;
+          font-weight: 750;
+        }
+
+        .adminHeroRule {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 7px;
+          width: min(330px, 80%);
+          margin: 12px auto 0;
+        }
+
+        .adminHeroRule .blueRule,
+        .adminHeroRule .redRule {
+          height: 2px;
+          flex: 1;
+        }
+                .adminHeroRule .blueRule {
+          background:
+            linear-gradient(
+              90deg,
+              transparent,
+              #168cff
+            );
+          box-shadow: 0 0 8px rgba(22,140,255,.5);
+        }
+
+        .adminHeroRule .redRule {
+          background:
+            linear-gradient(
+              90deg,
+              #ed1c24,
+              transparent
+            );
+          box-shadow: 0 0 8px rgba(237,28,36,.45);
+        }
+
+        .centreDot {
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          background: #ffffff;
+          box-shadow: 0 0 8px rgba(255,255,255,.65);
+        }
+
+        .adminSectionHeading {
+          display: flex;
+          align-items: flex-end;
+          justify-content: space-between;
+          gap: 12px;
+          margin: 0 2px 11px;
+        }
+
+        .adminSectionHeading h2 {
+          margin: 2px 0 0;
+          color: #ffffff;
+          font-size: 20px;
+          line-height: 1;
+          font-weight: 950;
+          letter-spacing: -.4px;
+        }
+
+        .adminSectionPill {
+          display: inline-flex;
+          align-items: center;
+          min-height: 25px;
+          padding: 0 9px;
+          border: 1px solid rgba(31,143,255,.5);
+          border-radius: 999px;
+          background: rgba(7,71,130,.22);
+          color: #5db2ff;
+          font-size: 8px;
+          font-weight: 950;
+          letter-spacing: 1px;
+          white-space: nowrap;
         }
 
         .adminGrid {
           display: grid;
           grid-template-columns:
             repeat(auto-fit, minmax(220px, 1fr));
-          gap: 14px;
+          gap: 12px;
           margin-bottom: 24px;
+        }
+
+        .adminToolLink {
+          display: block;
+          min-width: 0;
+          color: inherit;
+          text-decoration: none;
+        }
+
+        .adminToolCard {
+          position: relative;
+          overflow: hidden;
+          height: 100%;
+          min-height: 192px;
+          padding: 17px 16px 15px;
+          border-radius: 14px;
+          background:
+            radial-gradient(
+              circle at 4% 0%,
+              rgba(0,123,255,.11),
+              transparent 36%
+            ),
+            radial-gradient(
+              circle at 100% 100%,
+              rgba(237,28,36,.08),
+              transparent 34%
+            ),
+            linear-gradient(
+              150deg,
+              rgba(8,29,54,.98),
+              rgba(3,13,27,.99)
+            );
+          box-shadow:
+            0 13px 27px rgba(0,0,0,.28),
+            inset 0 1px 0 rgba(255,255,255,.035);
+          transition:
+            transform .18s ease,
+            border-color .18s ease,
+            box-shadow .18s ease;
+        }
+
+        .adminToolCard.blue {
+          border: 1px solid rgba(38,139,239,.48);
+        }
+
+        .adminToolCard.red {
+          border: 1px solid rgba(237,45,53,.42);
+        }
+
+        .adminToolCard:hover {
+          transform: translateY(-2px);
+        }
+
+        .adminToolCard.blue:hover {
+          border-color: rgba(44,157,255,.85);
+          box-shadow:
+            0 0 22px rgba(0,120,255,.11),
+            0 15px 30px rgba(0,0,0,.34);
+        }
+
+        .adminToolCard.red:hover {
+          border-color: rgba(255,55,63,.78);
+          box-shadow:
+            0 0 22px rgba(237,28,36,.1),
+            0 15px 30px rgba(0,0,0,.34);
+        }
+
+        .adminToolAccent {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 2px;
+        }
+
+        .adminToolCard.blue .adminToolAccent {
+          background:
+            linear-gradient(
+              90deg,
+              #087eff,
+              rgba(8,126,255,.12)
+            );
+        }
+
+        .adminToolCard.red .adminToolAccent {
+          background:
+            linear-gradient(
+              90deg,
+              #ed1c24,
+              rgba(237,28,36,.12)
+            );
+        }
+
+        .adminToolTop {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          margin-bottom: 11px;
+        }
+
+        .adminToolIcon {
+          display: grid;
+          place-items: center;
+          width: 42px;
+          height: 42px;
+          border-radius: 11px;
+          color: #ffffff;
+          font-size: 22px;
+          font-weight: 950;
+        }
+
+        .adminToolCard.blue .adminToolIcon {
+          border: 1px solid rgba(42,153,255,.55);
+          background:
+            linear-gradient(
+              145deg,
+              rgba(8,92,174,.72),
+              rgba(4,30,58,.88)
+            );
+          box-shadow:
+            0 0 17px rgba(0,120,255,.11);
+        }
+
+        .adminToolCard.red .adminToolIcon {
+          border: 1px solid rgba(237,48,57,.55);
+          background:
+            linear-gradient(
+              145deg,
+              rgba(150,18,27,.68),
+              rgba(54,8,16,.86)
+            );
+          box-shadow:
+            0 0 17px rgba(237,28,36,.1);
+        }
+
+        .adminToolArrow {
+          color: #6d88a2;
+          font-size: 18px;
+          font-weight: 900;
+          transition:
+            transform .18s ease,
+            color .18s ease;
+        }
+
+        .adminToolCard:hover .adminToolArrow {
+          transform: translateX(3px);
+          color: #ffffff;
+        }
+
+        .adminToolCard h2 {
+          margin: 0 0 6px;
+          color: #ffffff;
+          font-size: 17px;
+          line-height: 1.1;
+          font-weight: 950;
+          letter-spacing: -.25px;
+        }
+
+        .adminToolCard p {
+          min-height: 45px;
+          margin: 0 0 13px;
+          color: #9eb3c7;
+          font-size: 11px;
+          line-height: 1.4;
+          font-weight: 700;
+        }
+
+        .adminToolButton {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          min-height: 39px;
+          margin: 0;
+          border: none;
+          border-radius: 8px;
+          color: #ffffff;
+          font-size: 10px;
+          font-weight: 950;
+          letter-spacing: .3px;
+          text-transform: uppercase;
+        }
+
+        .adminToolCard.blue .adminToolButton {
+          background:
+            linear-gradient(
+              105deg,
+              #087eff,
+              #2868df,
+              #1257b8
+            );
+          box-shadow:
+            0 3px 0 #07458d,
+            0 6px 13px rgba(0,83,180,.18);
+        }
+
+        .adminToolCard.red .adminToolButton {
+          background:
+            linear-gradient(
+              105deg,
+              #b70d17,
+              #ed1c24,
+              #ff3440
+            );
+          box-shadow:
+            0 3px 0 #7d0a11,
+            0 6px 13px rgba(160,10,20,.16);
         }
 
         .socialPosterSection {
           position: relative;
           overflow: hidden;
-          margin: 8px 0 22px;
-          padding: 22px;
-          border: 1px solid rgba(80, 140, 200, 0.42);
+          margin: 8px 0 20px;
+          padding: 21px;
+          border: 1px solid rgba(80,140,200,.44);
           border-radius: 16px;
           background:
             radial-gradient(
-              circle at 10% 5%,
-              rgba(0, 119, 255, 0.13),
-              transparent 27%
+              circle at 8% 4%,
+              rgba(0,119,255,.16),
+              transparent 29%
             ),
             radial-gradient(
-              circle at 92% 25%,
-              rgba(237, 28, 36, 0.11),
-              transparent 28%
+              circle at 94% 28%,
+              rgba(237,28,36,.14),
+              transparent 30%
             ),
             linear-gradient(
               145deg,
-              rgba(8, 31, 59, 0.98),
-              rgba(3, 13, 27, 0.98)
+              rgba(8,31,59,.99),
+              rgba(3,13,27,.99)
             );
           box-shadow:
-            0 18px 42px rgba(0, 0, 0, 0.3),
-            inset 0 1px 0 rgba(255,255,255,0.035);
+            -9px 0 27px rgba(0,116,255,.07),
+            9px 0 27px rgba(237,28,36,.06),
+            0 18px 42px rgba(0,0,0,.31),
+            inset 0 1px 0 rgba(255,255,255,.04);
         }
 
         .socialTopLine {
@@ -978,16 +1377,43 @@ export default function AdminDashboardPage() {
               90deg,
               #087eff,
               #087eff 38%,
-              #ed1c24 68%,
+              #ffffff 50%,
+              #ed1c24 62%,
               #ed1c24
             );
+          box-shadow:
+            0 0 12px rgba(48,145,255,.24);
+        }
+
+        .socialSideGlow {
+          position: absolute;
+          width: 130px;
+          height: 260px;
+          border-radius: 50%;
+          filter: blur(55px);
+          opacity: .12;
+          pointer-events: none;
+        }
+
+        .socialSideGlowBlue {
+          left: -90px;
+          top: 120px;
+          background: #087eff;
+        }
+
+        .socialSideGlowRed {
+          right: -90px;
+          bottom: 90px;
+          background: #ed1c24;
         }
 
         .socialHeader {
+          position: relative;
+          z-index: 1;
           display: flex;
           align-items: center;
           gap: 14px;
-          margin-bottom: 18px;
+          margin-bottom: 17px;
         }
 
         .socialIconBox {
@@ -996,16 +1422,19 @@ export default function AdminDashboardPage() {
           flex: 0 0 54px;
           width: 54px;
           height: 54px;
-          border: 1px solid rgba(59, 150, 240, 0.48);
+          border: 1px solid rgba(59,150,240,.55);
           border-radius: 13px;
           background:
             linear-gradient(
               145deg,
-              rgba(8, 58, 106, 0.8),
-              rgba(5, 24, 47, 0.9)
+              rgba(8,67,123,.85),
+              rgba(5,24,47,.94)
             );
           color: #ffffff;
           font-size: 27px;
+          box-shadow:
+            0 0 18px rgba(0,123,255,.11),
+            inset 0 1px 0 rgba(255,255,255,.06);
         }
 
         .socialEyebrow {
@@ -1021,7 +1450,7 @@ export default function AdminDashboardPage() {
           font-size: 24px;
           line-height: 1;
           font-weight: 950;
-          letter-spacing: -0.5px;
+          letter-spacing: -.5px;
         }
 
         .socialHeader p {
@@ -1033,15 +1462,25 @@ export default function AdminDashboardPage() {
         }
 
         .weekSelectorPanel {
+          position: relative;
+          z-index: 1;
           display: grid;
-          grid-template-columns: 1fr minmax(220px, 330px);
+          grid-template-columns:
+            1fr minmax(220px, 330px);
           align-items: center;
           gap: 18px;
           margin-bottom: 17px;
           padding: 14px;
-          border: 1px solid rgba(62, 130, 196, 0.35);
+          border: 1px solid rgba(62,130,196,.38);
           border-radius: 11px;
-          background: rgba(3, 19, 38, 0.65);
+          background:
+            linear-gradient(
+              135deg,
+              rgba(3,23,45,.8),
+              rgba(2,14,29,.74)
+            );
+          box-shadow:
+            inset 0 1px 0 rgba(255,255,255,.025);
         }
 
         .fieldEyebrow {
@@ -1062,31 +1501,49 @@ export default function AdminDashboardPage() {
           width: 100%;
           min-height: 44px;
           padding: 0 12px;
-          border: 1px solid rgba(73, 149, 222, 0.52);
+          border: 1px solid rgba(73,149,222,.56);
           border-radius: 9px;
           outline: none;
           background: #071a31;
           color: #ffffff;
           font-size: 13px;
           font-weight: 850;
+          box-shadow:
+            inset 0 1px 0 rgba(255,255,255,.025);
+        }
+
+        .weekSelectorPanel select:focus {
+          border-color: #2999ff;
+          box-shadow:
+            0 0 0 2px rgba(41,153,255,.12);
         }
 
         .posterMessage {
+          position: relative;
+          z-index: 1;
           margin-bottom: 14px;
           padding: 11px 13px;
-          border: 1px solid rgba(69, 149, 225, 0.38);
+          border: 1px solid rgba(69,149,225,.42);
           border-radius: 9px;
-          background: rgba(5, 52, 92, 0.42);
-          color: #b9dbf8;
+          background:
+            linear-gradient(
+              90deg,
+              rgba(5,52,92,.48),
+              rgba(7,32,59,.5)
+            );
+          color: #c0e0fa;
           text-align: center;
           font-size: 12px;
           font-weight: 800;
         }
 
         .posterGeneratorGrid {
+          position: relative;
+          z-index: 1;
           display: grid;
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-          gap: 16px;
+          grid-template-columns:
+            repeat(2, minmax(0,1fr));
+          gap: 15px;
         }
 
         .posterGeneratorCard {
@@ -1098,17 +1555,47 @@ export default function AdminDashboardPage() {
           background:
             linear-gradient(
               155deg,
-              rgba(9, 29, 55, 0.98),
-              rgba(2, 13, 27, 0.98)
+              rgba(9,29,55,.99),
+              rgba(2,13,27,.99)
             );
+          box-shadow:
+            0 12px 27px rgba(0,0,0,.25),
+            inset 0 1px 0 rgba(255,255,255,.03);
+        }
+
+        .posterGeneratorCard::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 2px;
         }
 
         .posterGeneratorCard.weekly {
-          border: 1px solid rgba(35, 133, 239, 0.72);
+          border: 1px solid rgba(35,133,239,.74);
+        }
+
+        .posterGeneratorCard.weekly::before {
+          background:
+            linear-gradient(
+              90deg,
+              #087eff,
+              transparent
+            );
         }
 
         .posterGeneratorCard.overall {
-          border: 1px solid rgba(237, 45, 53, 0.68);
+          border: 1px solid rgba(237,45,53,.7);
+        }
+
+        .posterGeneratorCard.overall::before {
+          background:
+            linear-gradient(
+              90deg,
+              transparent,
+              #ed1c24
+            );
         }
 
         .generatorTag {
@@ -1126,18 +1613,21 @@ export default function AdminDashboardPage() {
         .generatorTag.blue {
           border: 1px solid #168cff;
           color: #5ab0ff;
-          background: rgba(5, 73, 136, 0.25);
+          background: rgba(5,73,136,.25);
+          box-shadow: 0 0 12px rgba(0,125,255,.08);
         }
 
         .generatorTag.red {
           border: 1px solid #ed1c24;
-          color: #ff5d64;
-          background: rgba(126, 16, 23, 0.24);
+          color: #ff686f;
+          background: rgba(126,16,23,.24);
+          box-shadow: 0 0 12px rgba(237,28,36,.08);
         }
 
         .generatorIcon {
           margin: 14px 0 7px;
           font-size: 32px;
+          filter: drop-shadow(0 4px 7px rgba(0,0,0,.38));
         }
 
         .posterGeneratorCard h3 {
@@ -1164,13 +1654,21 @@ export default function AdminDashboardPage() {
           color: #ffffff;
           font-size: 11px;
           font-weight: 950;
-          letter-spacing: 0.4px;
+          letter-spacing: .4px;
           cursor: pointer;
+          transition:
+            transform .15s ease,
+            filter .15s ease;
+        }
+
+        .posterButton:not(:disabled):hover {
+          transform: translateY(-1px);
+          filter: brightness(1.08);
         }
 
         .posterButton:disabled {
           cursor: default;
-          opacity: 0.48;
+          opacity: .48;
         }
 
         .weeklyButton {
@@ -1181,6 +1679,9 @@ export default function AdminDashboardPage() {
               #2c65e9,
               #135dc3
             );
+          box-shadow:
+            0 3px 0 #08458b,
+            0 7px 15px rgba(0,94,200,.2);
         }
 
         .overallButton {
@@ -1191,21 +1692,25 @@ export default function AdminDashboardPage() {
               #ed1c24,
               #ff3140
             );
+          box-shadow:
+            0 3px 0 #810b13,
+            0 7px 15px rgba(175,10,20,.18);
         }
 
         .posterPreviewWrap {
           margin-top: 15px;
           padding-top: 15px;
-          border-top: 1px solid rgba(112, 151, 188, 0.2);
+          border-top: 1px solid rgba(112,151,188,.2);
         }
 
         .posterPreview {
           display: block;
           width: 100%;
-          border: 1px solid rgba(117, 161, 202, 0.33);
+          border: 1px solid rgba(117,161,202,.36);
           border-radius: 9px;
           background: #000000;
-          box-shadow: 0 10px 24px rgba(0,0,0,0.27);
+          box-shadow:
+            0 10px 24px rgba(0,0,0,.3);
         }
 
         .downloadPoster {
@@ -1215,24 +1720,32 @@ export default function AdminDashboardPage() {
           width: 100%;
           min-height: 42px;
           margin-top: 9px;
-          border: 1px solid rgba(105, 170, 231, 0.44);
+          border: 1px solid rgba(105,170,231,.48);
           border-radius: 8px;
-          background: rgba(8, 40, 73, 0.8);
+          background:
+            linear-gradient(
+              105deg,
+              rgba(8,53,96,.94),
+              rgba(5,31,58,.94)
+            );
           color: #ffffff;
           font-size: 10px;
           font-weight: 950;
-          letter-spacing: 0.6px;
+          letter-spacing: .6px;
+          text-decoration: none;
         }
 
         .posterTip {
+          position: relative;
+          z-index: 1;
           display: flex;
           align-items: center;
           gap: 10px;
           margin-top: 16px;
           padding: 11px 13px;
-          border: 1px solid rgba(59, 124, 188, 0.33);
+          border: 1px solid rgba(59,124,188,.36);
           border-radius: 9px;
-          background: rgba(2, 16, 32, 0.67);
+          background: rgba(2,16,32,.72);
           color: #8fa8bf;
           font-size: 10px;
           line-height: 1.45;
@@ -1244,7 +1757,170 @@ export default function AdminDashboardPage() {
           font-size: 19px;
         }
 
+        .adminFooterActions {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+          margin-top: 4px;
+        }
+
+        .adminFooterLink {
+          display: block;
+          text-decoration: none;
+        }
+
+        .backPredictorButton,
+        .signOutButton {
+          width: 100%;
+          min-height: 43px;
+          margin: 0;
+          border: none;
+          border-radius: 9px;
+          color: #ffffff;
+          font-size: 11px;
+          font-weight: 900;
+        }
+
+        .backPredictorButton {
+          background:
+            linear-gradient(
+              105deg,
+              #087eff,
+              #155fb8
+            );
+          box-shadow:
+            0 3px 0 #06417e,
+            0 6px 12px rgba(0,0,0,.16);
+        }
+
+        .signOutButton {
+          background:
+            linear-gradient(
+              105deg,
+              #536579,
+              #3e4e60
+            );
+          box-shadow:
+            0 3px 0 #2d3a47,
+            0 6px 12px rgba(0,0,0,.16);
+        }
+
+        .signOutButton:disabled {
+          opacity: .5;
+        }
+
         @media (max-width: 700px) {
+          .adminShell {
+            padding-bottom: 22px;
+          }
+
+          .adminBrandHeader {
+            margin-bottom: 9px;
+            padding: 4px 8px;
+            gap: 9px;
+          }
+
+          .adminBrandBadge {
+            width: 50px;
+          }
+
+          .adminBrandTitle {
+            font-size: 23px;
+            letter-spacing: -1px;
+          }
+
+          .adminBrandLabel {
+            margin-top: 4px;
+            font-size: 8px;
+            letter-spacing: 1.6px;
+          }
+
+          .adminHero {
+            margin-bottom: 14px;
+            padding: 14px 10px 12px;
+          }
+
+          .adminHeroEyebrow {
+            font-size: 7px;
+            letter-spacing: 1.35px;
+          }
+
+          .adminHeroTitle {
+            font-size: 19px;
+          }
+
+          .adminHeroSubtitle {
+            font-size: 10px;
+          }
+
+          .adminHeroRule {
+            margin-top: 9px;
+          }
+
+          .adminSectionHeading {
+            margin-bottom: 8px;
+          }
+
+          .adminSectionHeading h2 {
+            font-size: 17px;
+          }
+
+          .adminSectionEyebrow {
+            font-size: 7px;
+          }
+
+          .adminSectionPill {
+            min-height: 22px;
+            padding: 0 7px;
+            font-size: 7px;
+          }
+
+          .adminGrid {
+            grid-template-columns:
+              repeat(2, minmax(0,1fr));
+            gap: 8px;
+            margin-bottom: 16px;
+          }
+
+          .adminToolCard {
+            min-height: 156px;
+            padding: 12px 10px 11px;
+            border-radius: 11px;
+          }
+
+          .adminToolTop {
+            margin-bottom: 8px;
+          }
+
+          .adminToolIcon {
+            width: 34px;
+            height: 34px;
+            border-radius: 9px;
+            font-size: 18px;
+          }
+
+          .adminToolArrow {
+            font-size: 15px;
+          }
+
+          .adminToolCard h2 {
+            margin-bottom: 4px;
+            font-size: 14px;
+          }
+
+          .adminToolCard p {
+            min-height: 38px;
+            margin-bottom: 9px;
+            font-size: 9px;
+            line-height: 1.35;
+          }
+
+          .adminToolButton {
+            min-height: 34px;
+            padding: 0 5px;
+            font-size: 8px;
+          }
+
           .posterGeneratorGrid {
             grid-template-columns: 1fr;
           }
@@ -1258,15 +1934,100 @@ export default function AdminDashboardPage() {
             padding: 15px 12px;
           }
 
+          .socialHeader {
+            gap: 10px;
+            margin-bottom: 13px;
+          }
+
           .socialHeader h2 {
-            font-size: 21px;
+            font-size: 20px;
+          }
+
+          .socialHeader p {
+            font-size: 10px;
           }
 
           .socialIconBox {
-            flex-basis: 44px;
-            width: 44px;
-            height: 44px;
-            font-size: 22px;
+            flex-basis: 43px;
+            width: 43px;
+            height: 43px;
+            font-size: 21px;
+          }
+
+          .weekSelectorPanel {
+            padding: 11px;
+          }
+
+          .fieldLabel {
+            font-size: 13px;
+          }
+
+          .weekSelectorPanel select {
+            min-height: 40px;
+            font-size: 12px;
+          }
+
+          .posterGeneratorCard {
+            padding: 14px 12px;
+          }
+
+          .generatorIcon {
+            margin: 10px 0 5px;
+            font-size: 28px;
+          }
+
+          .posterGeneratorCard h3 {
+            font-size: 18px;
+          }
+
+          .posterGeneratorCard p {
+            min-height: 0;
+            margin: 5px 0 11px;
+            font-size: 10px;
+          }
+
+          .posterButton {
+            min-height: 41px;
+            font-size: 9px;
+          }
+
+          .posterTip {
+            margin-top: 12px;
+            padding: 9px 10px;
+            font-size: 9px;
+          }
+
+          .adminFooterActions {
+            gap: 8px;
+          }
+
+          .backPredictorButton,
+          .signOutButton {
+            min-height: 39px;
+            font-size: 9px;
+          }
+        }
+
+        @media (max-width: 390px) {
+          .adminGrid {
+            gap: 7px;
+          }
+
+          .adminToolCard {
+            min-height: 151px;
+            padding: 11px 9px 10px;
+          }
+
+          .adminToolCard h2 {
+            font-size: 13px;
+          }
+
+          .adminToolCard p {
+            font-size: 8.5px;
+          }
+
+          .adminToolButton {
+            font-size: 7.5px;
           }
         }
       `}</style>
@@ -1284,34 +2045,33 @@ function AdminCard({
   title,
   text,
   button,
+  tone = "blue",
 }) {
   return (
     <a
       href={href}
-      style={{ display: "block" }}
+      className="adminToolLink"
     >
-      <div
-        className="card"
-        style={{
-          height: "100%",
-          marginBottom: 0,
-          padding: "19px 16px",
-        }}
-      >
-        <div
-          style={{
-            fontSize: "28px",
-            marginBottom: "7px",
-          }}
-        >
-          {icon}
+      <div className={`adminToolCard ${tone}`}>
+        <div className="adminToolAccent" />
+
+        <div className="adminToolTop">
+          <div className="adminToolIcon">
+            {icon}
+          </div>
+
+          <div className="adminToolArrow">
+            ›
+          </div>
         </div>
 
         <h2>{title}</h2>
 
         <p>{text}</p>
 
-        <button>{button}</button>
+        <div className="adminToolButton">
+          {button}
+        </div>
       </div>
     </a>
   );
@@ -1998,7 +2758,6 @@ async function drawWeeklyPoster(
     leaders.length > 1;
 
   /* MATCH WEEK */
-
   fillRoundedRect(
     ctx,
     335,
