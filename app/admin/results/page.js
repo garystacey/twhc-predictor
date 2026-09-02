@@ -377,9 +377,7 @@ export default function AdminPage() {
 
           <h1>Enter Results</h1>
 
-          <p>
-            Record each fixture as Home, Draw or Away
-          </p>
+          <p>Record each fixture as Home, Draw or Away</p>
 
           <div className="heroRule">
             <span className="blueRule" />
@@ -453,9 +451,7 @@ export default function AdminPage() {
                 RECORD RESULTS
               </div>
 
-              <h2>
-                Match Week {selectedWeek?.week_no}
-              </h2>
+              <h2>Match Week {selectedWeek?.week_no}</h2>
 
               {selectedWeek?.match_date && (
                 <div className="weekDate">
@@ -498,9 +494,7 @@ export default function AdminPage() {
             <div className="emptyCard">
               <div className="emptyIcon">🏑</div>
               <h3>No Fixtures Found</h3>
-              <p>
-                There are no fixtures for this Match Week.
-              </p>
+              <p>There are no fixtures for this Match Week.</p>
             </div>
           ) : (
             <div className="fixturesList">
@@ -1273,9 +1267,11 @@ function PageStyles() {
         display: flex;
         align-items: center;
         gap: 6px;
+        min-width: 0;
         color: #7892aa;
         font-size: 8px;
         font-weight: 800;
+        white-space: nowrap;
       }
 
       .recordedResult {
@@ -1290,6 +1286,7 @@ function PageStyles() {
       .awaitingDot {
         width: 6px;
         height: 6px;
+        flex: 0 0 6px;
         border-radius: 50%;
       }
 
@@ -1305,6 +1302,7 @@ function PageStyles() {
 
       .adminActions {
         display: flex;
+        flex-shrink: 0;
         justify-content: flex-end;
         gap: 6px;
       }
@@ -1576,7 +1574,10 @@ function PageStyles() {
         }
 
         .fixtureName {
-          grid-template-columns: minmax(0, 1fr) 16px minmax(0, 1fr);
+          grid-template-columns:
+            minmax(0, 1fr)
+            16px
+            minmax(0, 1fr);
           gap: 3px;
           font-size: 10px;
         }
@@ -1597,18 +1598,25 @@ function PageStyles() {
         }
 
         .fixtureBottom {
-          align-items: flex-start;
-          margin-top: 7px;
-          padding-top: 7px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 6px;
+          margin-top: 6px;
+          padding-top: 6px;
         }
 
         .recordedResult,
         .awaitingResult,
         .cancelledText {
+          min-width: 0;
           font-size: 7px;
+          white-space: nowrap;
         }
 
         .adminActions {
+          margin-top: 0;
+          flex-shrink: 0;
           gap: 4px;
         }
 
@@ -1636,11 +1644,31 @@ function PageStyles() {
 
       @media (max-width: 440px) {
         .fixtureBottom {
-          display: block;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 5px;
+          margin-top: 5px;
+          padding-top: 5px;
         }
 
         .adminActions {
-          margin-top: 7px;
+          margin-top: 0;
+          flex-shrink: 0;
+        }
+
+        .actionButton {
+          min-height: 26px;
+          padding: 0 7px;
+          font-size: 7px;
+        }
+
+        .recordedResult,
+        .awaitingResult,
+        .cancelledText {
+          min-width: 0;
+          font-size: 7px;
+          white-space: nowrap;
         }
 
         .fixtureMain {
@@ -1676,6 +1704,17 @@ function PageStyles() {
 
         .fixtureName {
           font-size: 9px;
+        }
+
+        .actionButton {
+          padding: 0 5px;
+          font-size: 6px;
+        }
+
+        .recordedResult,
+        .awaitingResult,
+        .cancelledText {
+          font-size: 6px;
         }
       }
     `}</style>
