@@ -242,7 +242,6 @@ export default function MembersPage() {
 
   function formatJoinedDate(value) {
     if (!value) return "—";
-
     return new Date(value).toLocaleDateString("en-GB");
   }
 
@@ -270,8 +269,7 @@ export default function MembersPage() {
 
         <div>
           <div className="predictor-title">
-            THE PREDICTO
-            <span>R</span>
+            THE PREDICTO<span>R</span>
           </div>
 
           <div className="administrator-label">
@@ -285,10 +283,7 @@ export default function MembersPage() {
   if (loading) {
     return (
       <main>
-        <div
-          className="container"
-          style={{ maxWidth: "960px" }}
-        >
+        <div className="container" style={{ maxWidth: "960px" }}>
           <Header />
 
           <div className="card">
@@ -302,10 +297,7 @@ export default function MembersPage() {
   if (!authorised) {
     return (
       <main>
-        <div
-          className="container"
-          style={{ maxWidth: "960px" }}
-        >
+        <div className="container" style={{ maxWidth: "960px" }}>
           <Header />
 
           <div className="card">
@@ -336,7 +328,9 @@ export default function MembersPage() {
           width: 58px;
           height: auto;
           display: block;
-          filter: drop-shadow(0 4px 8px rgba(0,0,0,.35));
+          filter:
+            drop-shadow(0 0 8px rgba(0,120,255,.28))
+            drop-shadow(0 4px 8px rgba(0,0,0,.4));
         }
 
         .predictor-title {
@@ -344,31 +338,156 @@ export default function MembersPage() {
           line-height: .95;
           font-weight: 900;
           letter-spacing: -1.2px;
-          color: white;
+          color: #ffffff;
           white-space: nowrap;
-          text-shadow: 0 2px 8px rgba(0,0,0,.35);
+          text-shadow:
+            0 2px 8px rgba(0,0,0,.45),
+            0 0 12px rgba(255,255,255,.08);
         }
 
         .predictor-title span {
           color: #ed1c24;
+          text-shadow: 0 0 12px rgba(237,28,36,.42);
         }
 
         .administrator-label {
           margin-top: 5px;
           font-size: 11px;
           font-weight: 900;
-          letter-spacing: 1.4px;
+          letter-spacing: 1.8px;
           color: #a9bfd5;
           text-align: left;
         }
 
+        .members-card {
+          position: relative;
+          overflow: hidden;
+          padding: 16px !important;
+          border:
+            1px solid rgba(80,150,230,.28) !important;
+          background:
+            linear-gradient(
+              145deg,
+              rgba(8,26,45,.98),
+              rgba(3,13,26,.98)
+            ) !important;
+          box-shadow:
+            -4px 0 15px rgba(0,105,255,.12),
+            4px 0 15px rgba(237,28,36,.10),
+            0 14px 35px rgba(0,0,0,.32) !important;
+        }
+
+        .members-card::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 50%;
+          height: 3px;
+          background:
+            linear-gradient(
+              90deg,
+              #006cff,
+              #39a7ff,
+              transparent
+            );
+        }
+
+        .members-card::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          right: 0;
+          left: 50%;
+          height: 3px;
+          background:
+            linear-gradient(
+              270deg,
+              #ed1c24,
+              #ff3b45,
+              transparent
+            );
+        }
+
+        .members-heading {
+          font-size: 24px;
+          font-weight: 900;
+          letter-spacing: -.6px;
+          color: #ffffff;
+          margin-bottom: 2px;
+          text-shadow: 0 2px 8px rgba(0,0,0,.3);
+        }
+
+        .members-count {
+          font-size: 12px;
+          font-weight: 800;
+          color: #84a6c6;
+        }
+
+        .members-search {
+          width: 240px;
+          max-width: 100%;
+          box-sizing: border-box;
+          padding: 11px 13px;
+          border-radius: 10px;
+          border: 1px solid rgba(64,151,255,.48);
+          background:
+            linear-gradient(
+              145deg,
+              #081a2b,
+              #071523
+            );
+          color: #ffffff;
+          font-size: 14px;
+          box-shadow:
+            inset 0 0 14px rgba(0,0,0,.18),
+            0 0 10px rgba(0,108,255,.07);
+        }
+
+        .members-search::placeholder {
+          color: #7f9ab4;
+        }
+
+        .members-search:focus {
+          outline: none;
+          border-color: #2690ff;
+          box-shadow:
+            0 0 0 2px rgba(38,144,255,.15),
+            0 0 14px rgba(38,144,255,.16);
+        }
+
         .members-scroll {
           width: 100%;
-          max-height: 64vh;
+          max-height: 55vh;
           overflow-y: auto;
-          border: 1px solid rgba(169,191,213,.18);
+          overflow-x: hidden;
+          border: 1px solid rgba(74,141,212,.28);
           border-radius: 12px;
-          background: rgba(3,12,25,.45);
+          background:
+            linear-gradient(
+              180deg,
+              #071624 0%,
+              #06121f 100%
+            );
+          box-shadow:
+            inset 0 0 18px rgba(0,0,0,.32);
+        }
+
+        .members-scroll::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        .members-scroll::-webkit-scrollbar-track {
+          background: #05111d;
+        }
+
+        .members-scroll::-webkit-scrollbar-thumb {
+          background:
+            linear-gradient(
+              #1d8cff,
+              #ed1c24
+            );
+          border-radius: 10px;
         }
 
         .desktop-table {
@@ -386,24 +505,39 @@ export default function MembersPage() {
           top: 0;
           z-index: 20;
           padding: 13px 12px;
-          background: #0a1727;
-          color: #a9bfd5;
+          background:
+            linear-gradient(
+              180deg,
+              #0c2238,
+              #091a2b
+            );
+          color: #9db9d4;
           font-size: 11px;
           font-weight: 900;
-          letter-spacing: .7px;
+          letter-spacing: .8px;
           text-transform: uppercase;
-          border-bottom: 1px solid rgba(169,191,213,.22);
+          border-bottom: 1px solid rgba(74,141,212,.32);
+          box-shadow: 0 3px 10px rgba(0,0,0,.28);
         }
 
         .members-table td {
           padding: 13px 12px;
-          border-bottom: 1px solid rgba(169,191,213,.12);
+          border-bottom:
+            1px solid rgba(95,137,176,.12);
           color: white;
           vertical-align: middle;
         }
 
-        .members-table tr:last-child td {
-          border-bottom: none;
+        .members-table tbody tr:nth-child(odd) {
+          background: rgba(16,43,68,.34);
+        }
+
+        .members-table tbody tr:nth-child(even) {
+          background: rgba(5,21,36,.58);
+        }
+
+        .members-table tbody tr:hover {
+          background: rgba(0,110,255,.12);
         }
 
         .role-badge {
@@ -414,30 +548,44 @@ export default function MembersPage() {
           padding: 5px 7px;
           box-sizing: border-box;
           border-radius: 7px;
-          font-size: 10px;
+          font-size: 9px;
           line-height: 1;
           font-weight: 900;
-          letter-spacing: .2px;
+          letter-spacing: .25px;
           white-space: nowrap;
         }
 
         .role-admin {
-          background: #0879df;
+          background:
+            linear-gradient(
+              180deg,
+              #168eff,
+              #0866c3
+            );
           color: #ffffff;
-          border: 1px solid #35a0ff;
-          box-shadow: 0 0 8px rgba(0,124,255,.2);
+          border: 1px solid #4fb0ff;
+          box-shadow:
+            0 0 9px rgba(0,126,255,.28),
+            inset 0 1px 0 rgba(255,255,255,.22);
+          text-shadow: 0 1px 2px rgba(0,0,0,.45);
         }
 
         .role-entrant {
-          background: #394b5d;
+          background:
+            linear-gradient(
+              180deg,
+              #40566b,
+              #2d3d4d
+            );
           color: #ffffff;
-          border: 1px solid #536b82;
+          border: 1px solid #5e778f;
+          text-shadow: 0 1px 2px rgba(0,0,0,.4);
         }
 
         .paid-circle {
           display: inline-flex;
-          width: 26px;
-          height: 26px;
+          width: 27px;
+          height: 27px;
           border-radius: 50%;
           align-items: center;
           justify-content: center;
@@ -446,28 +594,82 @@ export default function MembersPage() {
           color: white;
         }
 
+        .paid-yes {
+          background:
+            linear-gradient(
+              180deg,
+              #26c66b,
+              #138346
+            );
+          box-shadow: 0 0 10px rgba(38,198,107,.27);
+        }
+
+        .paid-no {
+          background:
+            linear-gradient(
+              180deg,
+              #ff424b,
+              #c91822
+            );
+          box-shadow: 0 0 10px rgba(237,28,36,.25);
+        }
+
         .edit-small {
           width: auto !important;
           min-width: 58px;
           padding: 7px 10px !important;
           margin: 0 !important;
           font-size: 12px !important;
+          font-weight: 900 !important;
           border-radius: 8px !important;
+          border: 1px solid #35a5ff !important;
+          background:
+            linear-gradient(
+              180deg,
+              #1597ff,
+              #0871cd
+            ) !important;
+          color: white !important;
+          box-shadow:
+            0 3px 0 #04518f,
+            0 0 8px rgba(0,130,255,.22) !important;
+        }
+
+        .edit-small:active {
+          transform: translateY(2px);
+          box-shadow:
+            0 1px 0 #04518f !important;
         }
 
         .mobile-list {
           display: none;
         }
 
+        .back-admin-button {
+          margin-top: 13px !important;
+          background:
+            linear-gradient(
+              110deg,
+              #076ccd,
+              #123c78 55%,
+              #9a1822
+            ) !important;
+          border: 1px solid rgba(64,156,255,.5) !important;
+          box-shadow:
+            0 3px 0 #032e58,
+            0 0 11px rgba(0,108,255,.14) !important;
+        }
+
         .member-overlay {
           position: fixed;
           inset: 0;
           z-index: 10000;
-          background: rgba(0,0,0,.72);
+          background: rgba(0,0,0,.76);
           display: flex;
           align-items: center;
           justify-content: center;
           padding: 18px;
+          backdrop-filter: blur(3px);
         }
 
         .member-editor {
@@ -478,12 +680,17 @@ export default function MembersPage() {
           box-sizing: border-box;
           padding: 20px;
           border-radius: 18px;
-          background: #071422;
-          border: 1px solid rgba(44,137,255,.7);
+          background:
+            linear-gradient(
+              145deg,
+              #0a2035,
+              #061320
+            );
+          border: 1px solid rgba(44,137,255,.75);
           box-shadow:
-            0 0 30px rgba(0,108,255,.22),
-            0 0 24px rgba(237,28,36,.15),
-            0 18px 50px rgba(0,0,0,.55);
+            -6px 0 24px rgba(0,108,255,.17),
+            6px 0 24px rgba(237,28,36,.12),
+            0 18px 50px rgba(0,0,0,.62);
         }
 
         .member-editor label {
@@ -500,8 +707,8 @@ export default function MembersPage() {
           margin-top: 6px;
           padding: 11px;
           border-radius: 9px;
-          border: 1px solid rgba(169,191,213,.32);
-          background: #0d1d2e;
+          border: 1px solid rgba(82,146,207,.42);
+          background: #071725;
           color: white;
           font-size: 16px;
         }
@@ -515,9 +722,20 @@ export default function MembersPage() {
             display: block;
           }
 
+          .members-card {
+            padding: 13px !important;
+          }
+
+          .members-heading {
+            font-size: 21px;
+          }
+
+          .members-search {
+            width: 100%;
+          }
+
           .members-scroll {
-            max-height: 62vh;
-            overflow-x: hidden;
+            max-height: 45vh;
           }
 
           .mobile-header {
@@ -527,19 +745,25 @@ export default function MembersPage() {
             display: grid;
             grid-template-columns:
               minmax(0, 1fr)
-              66px
-              43px
+              64px
+              40px
               58px;
-            gap: 6px;
+            gap: 5px;
             align-items: center;
-            padding: 10px 10px;
-            background: #081a2b;
+            padding: 10px 9px;
+            background:
+              linear-gradient(
+                180deg,
+                #0d2740,
+                #081a2b
+              );
             border-bottom:
-              1px solid rgba(169,191,213,.28);
-            color: #a9bfd5;
-            font-size: 9px;
+              1px solid rgba(75,153,227,.36);
+            box-shadow: 0 3px 10px rgba(0,0,0,.3);
+            color: #a9c5df;
+            font-size: 8px;
             font-weight: 900;
-            letter-spacing: .5px;
+            letter-spacing: .55px;
           }
 
           .mobile-header span:nth-child(2),
@@ -552,20 +776,34 @@ export default function MembersPage() {
             display: grid;
             grid-template-columns:
               minmax(0, 1fr)
-              66px
-              43px
+              64px
+              40px
               58px;
-            gap: 6px;
+            gap: 5px;
             align-items: center;
-            min-height: 58px;
-            padding: 9px 10px;
+            min-height: 59px;
+            padding: 9px;
             border-bottom:
-              1px solid rgba(169,191,213,.16);
+              1px solid rgba(95,143,188,.15);
             box-sizing: border-box;
           }
 
-          .mobile-member-row:last-child {
-            border-bottom: none;
+          .mobile-member-row:nth-child(even) {
+            background:
+              linear-gradient(
+                90deg,
+                rgba(0,95,190,.075),
+                rgba(255,255,255,.015)
+              );
+          }
+
+          .mobile-member-row:nth-child(odd) {
+            background:
+              linear-gradient(
+                90deg,
+                rgba(255,255,255,.018),
+                rgba(175,18,31,.055)
+              );
           }
 
           .mobile-person {
@@ -581,14 +819,15 @@ export default function MembersPage() {
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            text-shadow: 0 1px 3px rgba(0,0,0,.6);
           }
 
           .mobile-player {
-            margin-top: 3px;
-            color: #c2d1df;
+            margin-top: 4px;
+            color: #8fa9c1;
             font-size: 10px;
             line-height: 1.1;
-            font-weight: 700;
+            font-weight: 800;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -604,8 +843,6 @@ export default function MembersPage() {
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 20px;
-            font-weight: 900;
           }
 
           .mobile-edit {
@@ -615,7 +852,7 @@ export default function MembersPage() {
           }
 
           .member-editor {
-            max-height: 88vh;
+            max-height: 86vh;
             padding: 17px;
           }
         }
@@ -630,7 +867,7 @@ export default function MembersPage() {
         <div
           style={{
             textAlign: "center",
-            marginBottom: "16px",
+            marginBottom: "14px",
           }}
         >
           <div
@@ -663,7 +900,7 @@ export default function MembersPage() {
             className="card"
             style={{
               padding: "12px 15px",
-              marginBottom: "14px",
+              marginBottom: "12px",
             }}
           >
             <p style={{ margin: 0 }}>
@@ -672,10 +909,7 @@ export default function MembersPage() {
           </div>
         )}
 
-        <div
-          className="card"
-          style={{ padding: "16px" }}
-        >
+        <div className="card members-card">
           <div
             style={{
               display: "flex",
@@ -687,39 +921,23 @@ export default function MembersPage() {
             }}
           >
             <div style={{ textAlign: "left" }}>
-              <h2 style={{ marginBottom: "3px" }}>
+              <div className="members-heading">
                 Predictor Members
-              </h2>
+              </div>
 
-              <div
-                style={{
-                  fontSize: "12px",
-                  color: "#a9bfd5",
-                }}
-              >
+              <div className="members-count">
                 {filteredMembers.length} shown
               </div>
             </div>
 
             <input
+              className="members-search"
               type="search"
               placeholder="Search members..."
               value={search}
               onChange={(e) =>
                 setSearch(e.target.value)
               }
-              style={{
-                width: "240px",
-                maxWidth: "100%",
-                boxSizing: "border-box",
-                padding: "10px 12px",
-                borderRadius: "9px",
-                border:
-                  "1px solid rgba(169,191,213,.28)",
-                background: "#0d1d2e",
-                color: "#fff",
-                fontSize: "14px",
-              }}
             />
           </div>
 
@@ -773,13 +991,11 @@ export default function MembersPage() {
 
                           <td style={{ textAlign: "center" }}>
                             <span
-                              className="paid-circle"
-                              style={{
-                                background:
-                                  member.paid
-                                    ? "#1f9d55"
-                                    : "#e31b23",
-                              }}
+                              className={`paid-circle ${
+                                member.paid
+                                  ? "paid-yes"
+                                  : "paid-no"
+                              }`}
                             >
                               {member.paid ? "✓" : "✕"}
                             </span>
@@ -803,7 +1019,6 @@ export default function MembersPage() {
               </div>
 
               <div className="mobile-list">
-
                 <div className="mobile-header">
                   <span>TEAM / PLAYER</span>
                   <span>ROLE</span>
@@ -839,15 +1054,16 @@ export default function MembersPage() {
                         />
                       </div>
 
-                      <div
-                        className="mobile-paid"
-                        style={{
-                          color: member.paid
-                            ? "#42d97b"
-                            : "#ff4f57",
-                        }}
-                      >
-                        {member.paid ? "✓" : "✕"}
+                      <div className="mobile-paid">
+                        <span
+                          className={`paid-circle ${
+                            member.paid
+                              ? "paid-yes"
+                              : "paid-no"
+                          }`}
+                        >
+                          {member.paid ? "✓" : "✕"}
+                        </span>
                       </div>
 
                       <div className="mobile-edit">
@@ -869,7 +1085,9 @@ export default function MembersPage() {
         </div>
 
         <a href="/admin">
-          <button>Back to Admin</button>
+          <button className="back-admin-button">
+            ← Back to Admin
+          </button>
         </a>
 
         <p className="footer">
