@@ -42,11 +42,14 @@ export default function CompetitionSettingsPage() {
         .eq("id", user.id)
         .single();
 
-      if (profileError || !profile || profile.role !== "admin") {
+      if (
+        profileError ||
+        !profile ||
+        profile.role !== "admin"
+      ) {
         setMessage(
           "You do not have permission to access this page."
         );
-
         setLoading(false);
         return;
       }
@@ -108,9 +111,7 @@ export default function CompetitionSettingsPage() {
     if (!settingsId) return;
 
     if (!entryFee || Number(entryFee) < 0) {
-      setMessage(
-        "Please enter a valid entry fee."
-      );
+      setMessage("Please enter a valid entry fee.");
       return;
     }
 
@@ -154,8 +155,7 @@ export default function CompetitionSettingsPage() {
         prediction_reminders_enabled:
           predictionRemindersEnabled,
 
-        updated_at:
-          new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       })
       .eq("id", settingsId);
 
@@ -163,15 +163,11 @@ export default function CompetitionSettingsPage() {
       setMessage(
         `Unable to save settings: ${error.message}`
       );
-
       setSaving(false);
       return;
     }
 
-    setMessage(
-      "Competition settings saved."
-    );
-
+    setMessage("Competition settings saved.");
     setSaving(false);
   }
 
@@ -191,7 +187,6 @@ export default function CompetitionSettingsPage() {
       .update({
         prediction_reminders_enabled:
           newValue,
-
         updated_at:
           new Date().toISOString(),
       })
@@ -205,7 +200,6 @@ export default function CompetitionSettingsPage() {
       setMessage(
         `Unable to change reminder emails: ${error.message}`
       );
-
       setSavingReminder(false);
       return;
     }
@@ -218,7 +212,6 @@ export default function CompetitionSettingsPage() {
       setMessage(
         "The reminder setting could not be confirmed. Please try again."
       );
-
       setSavingReminder(false);
       return;
     }
@@ -259,12 +252,11 @@ export default function CompetitionSettingsPage() {
   }
 
   function formatDatePreview(value) {
-    if (!value) {
-      return "TBC";
-    }
+    if (!value) return "TBC";
 
-    const date =
-      new Date(`${value}T12:00:00`);
+    const date = new Date(
+      `${value}T12:00:00`
+    );
 
     if (Number.isNaN(date.getTime())) {
       return "TBC";
@@ -282,22 +274,22 @@ export default function CompetitionSettingsPage() {
 
   function Header() {
     return (
-      <div className="brandHeader">
-        <div className="brandGlow brandGlowBlue" />
-        <div className="brandGlow brandGlowRed" />
+      <div className="settingsBrand">
+        <div className="brandBlueGlow" />
+        <div className="brandRedGlow" />
 
         <img
           src="/TWHC-badge-white.png"
           alt="Telford & Wrekin Hockey Club"
-          className="brandBadge"
+          className="settingsBadge"
         />
 
-        <div className="brandCopy">
-          <div className="brandTitle">
+        <div className="settingsBrandText">
+          <div className="predictorWord">
             THE PREDICTO<span>R</span>
           </div>
 
-          <div className="brandLabel">
+          <div className="adminWord">
             ADMIN — COMPETITION SETTINGS
           </div>
         </div>
@@ -308,16 +300,16 @@ export default function CompetitionSettingsPage() {
   if (loading) {
     return (
       <main>
-        <div className="container settingsShell">
+        <div className="container settingsPage">
           <Header />
 
-          <div className="loadingCard">
-            <div className="loadingPulse" />
-            <p>Loading settings...</p>
+          <div className="loadingPanel">
+            <div className="loadingDot" />
+            Loading settings...
           </div>
         </div>
 
-        <PageStyles />
+        <Styles />
       </main>
     );
   }
@@ -325,75 +317,69 @@ export default function CompetitionSettingsPage() {
   if (!authorised) {
     return (
       <main>
-        <div className="container settingsShell">
+        <div className="container settingsPage">
           <Header />
 
-          <section className="pageHero">
-            <div className="heroLine" />
-
-            <div className="heroEyebrow">
-              COMPETITION CONTROL
-            </div>
-
-            <h1>Competition Settings</h1>
-          </section>
-
-          <div className="accessCard">
+          <div className="accessPanel">
             <h2>Access Denied</h2>
             <p>{message}</p>
           </div>
 
           <a
             href="/admin"
-            className="backLink"
+            className="navLink"
           >
-            <button className="backButton">
+            <button className="backAdmin">
               ← Back to Admin
             </button>
           </a>
         </div>
 
-        <PageStyles />
+        <Styles />
       </main>
     );
   }
 
   return (
     <main>
-      <div className="container settingsShell">
+      <div className="container settingsPage">
         <Header />
 
-        <section className="pageHero">
-          <div className="heroLine" />
+        {/* HERO */}
 
-          <div className="heroEyebrow">
+        <section className="settingsHero">
+          <div className="heroTopBeam" />
+
+          <div className="heroLabel">
             THE PREDICTOR CONTROL CENTRE
           </div>
 
           <h1>Competition Settings</h1>
 
           <p>
-            Entry fee, prize money, payments & reminders
+            Entry fee, prizes, payments & reminders
           </p>
 
-          <div className="heroRule">
-            <span className="blueRule" />
-            <span className="centreDot" />
-            <span className="redRule" />
+          <div className="heroDivider">
+            <span />
+            <i />
+            <strong />
           </div>
         </section>
 
+        {/* MESSAGE */}
+
         {message && (
           <div
-            className={`messageBar ${
+            className={`settingsMessage ${
               message
                 .toLowerCase()
                 .includes("saved") ||
               message
                 .toLowerCase()
                 .includes("switched")
-                ? "success"
-                : "warning"
+                ? "good"
+                : "warn"
             }`}
           >
             <span>
@@ -404,61 +390,56 @@ export default function CompetitionSettingsPage() {
                 .toLowerCase()
                 .includes("switched")
                 ? "✓"
-                : "ⓘ"}
+                : "!"}
             </span>
 
             {message}
           </div>
         )}
 
-        <section className="overviewPanel">
-          <div className="panelHeading">
+        {/* OVERVIEW */}
+
+        <section className="overviewSection">
+          <div className="sectionHeader">
             <div>
-              <div className="sectionEyebrow">
+              <div className="sectionLabel">
                 CURRENT SETTINGS
               </div>
 
-              <h2>
-                Competition Overview
-              </h2>
+              <h2>Competition Overview</h2>
             </div>
 
-            <div className="livePill">
+            <div className="liveBadge">
+              <i />
               LIVE
             </div>
           </div>
 
-          <div className="overviewGrid">
-            <div className="overviewCard entry">
-              <span>ENTRY</span>
-
+          <div className="overviewCards">
+            <div className="miniCard entryCard">
+              <span>ENTRY FEE</span>
               <strong>
                 {formatPreview(entryFee)}
               </strong>
             </div>
 
-            <div className="overviewCard gold">
+            <div className="miniCard goldCard">
               <span>1ST PRIZE</span>
-
               <strong>
                 {formatPreview(firstPrize)}
               </strong>
             </div>
 
-            <div className="overviewCard silver">
+            <div className="miniCard silverCard">
               <span>2ND PRIZE</span>
-
               <strong>
                 {formatPreview(secondPrize)}
               </strong>
             </div>
 
-            <div className="overviewCard deadline">
-              <span>
-                PAYMENT DEADLINE
-              </span>
-
-              <strong className="dateValue">
+            <div className="miniCard deadlineCard">
+              <span>PAYMENT DEADLINE</span>
+              <strong className="smallValue">
                 {formatDatePreview(
                   paymentDeadline
                 )}
@@ -466,15 +447,13 @@ export default function CompetitionSettingsPage() {
             </div>
 
             <div
-              className={`overviewCard reminder ${
+              className={`miniCard reminderCard ${
                 predictionRemindersEnabled
-                  ? "reminderOn"
-                  : "reminderOff"
+                  ? "on"
+                  : "off"
               }`}
             >
-              <span>
-                EMAIL REMINDERS
-              </span>
+              <span>EMAIL REMINDERS</span>
 
               <strong>
                 {predictionRemindersEnabled
@@ -485,10 +464,12 @@ export default function CompetitionSettingsPage() {
           </div>
         </section>
 
-        <section className="settingsPanel">
-          <div className="panelHeading">
+        {/* MAIN SETTINGS */}
+
+        <section className="mainSettings">
+          <div className="sectionHeader">
             <div>
-              <div className="sectionEyebrow">
+              <div className="sectionLabel">
                 COMPETITION SETTINGS
               </div>
 
@@ -498,14 +479,18 @@ export default function CompetitionSettingsPage() {
             </div>
           </div>
 
-          <div className="formGrid">
-            <label className="settingField">
-              <span className="fieldLabel">
-                ENTRY FEE (£)
+          <div className="settingsGrid">
+            {/* ENTRY */}
+
+            <label className="fieldBlock blueField">
+              <span className="fieldTitle">
+                ENTRY FEE
               </span>
 
-              <div className="moneyInput">
-                <span>£</span>
+              <div className="fieldControl">
+                <div className="prefix">
+                  £
+                </div>
 
                 <input
                   type="number"
@@ -521,13 +506,17 @@ export default function CompetitionSettingsPage() {
               </div>
             </label>
 
-            <label className="settingField">
-              <span className="fieldLabel goldText">
-                1ST PRIZE (£)
+            {/* FIRST */}
+
+            <label className="fieldBlock goldField">
+              <span className="fieldTitle">
+                1ST PRIZE
               </span>
 
-              <div className="moneyInput goldInput">
-                <span>£</span>
+              <div className="fieldControl">
+                <div className="prefix">
+                  £
+                </div>
 
                 <input
                   type="number"
@@ -544,13 +533,17 @@ export default function CompetitionSettingsPage() {
               </div>
             </label>
 
-            <label className="settingField">
-              <span className="fieldLabel silverText">
-                2ND PRIZE (£)
+            {/* SECOND */}
+
+            <label className="fieldBlock silverField">
+              <span className="fieldTitle">
+                2ND PRIZE
               </span>
 
-              <div className="moneyInput silverInput">
-                <span>£</span>
+              <div className="fieldControl">
+                <div className="prefix">
+                  £
+                </div>
 
                 <input
                   type="number"
@@ -567,14 +560,19 @@ export default function CompetitionSettingsPage() {
               </div>
             </label>
 
-            <label className="settingField paymentDateField">
-              <span className="fieldLabel redText">
+            {/* DATE */}
+
+            <label className="fieldBlock redField">
+              <span className="fieldTitle">
                 PAYMENT CLOSING DATE
               </span>
 
-              <div className="dateInputWrap">
+              <div className="dateControl">
+                <span className="calendarIcon">
+                  ◫
+                </span>
+
                 <input
-                  className="dateInput"
                   type="date"
                   value={paymentDeadline}
                   onChange={(e) =>
@@ -592,29 +590,30 @@ export default function CompetitionSettingsPage() {
             </label>
           </div>
 
-          <div
-            className={`reminderPanel ${
+          {/* REMINDER */}
+
+          <section
+            className={`emailReminder ${
               predictionRemindersEnabled
-                ? "enabled"
-                : "disabled"
+                ? "emailOn"
+                : "emailOff"
             }`}
           >
-            <div className="reminderTop">
-              <div className="reminderIcon">
+            <div className="emailHeader">
+              <div className="mailIcon">
                 ✉
               </div>
 
-              <div className="reminderCopy">
-                <div className="reminderTitle">
+              <div className="emailText">
+                <strong>
                   Prediction Reminder Emails
-                </div>
+                </strong>
 
-                <div className="reminderDescription">
-                  Automatically remind entrants
-                  who have not completed all their
-                  predictions before the Match Week
-                  deadline.
-                </div>
+                <span>
+                  Remind entrants who have not
+                  completed their predictions
+                  before the deadline.
+                </span>
               </div>
 
               <button
@@ -623,19 +622,19 @@ export default function CompetitionSettingsPage() {
                 onClick={
                   togglePredictionReminders
                 }
-                className={`toggleButton ${
+                className={`switchButton ${
                   predictionRemindersEnabled
-                    ? "toggleOn"
-                    : "toggleOff"
+                    ? "switchOn"
+                    : "switchOff"
                 }`}
               >
-                <span className="toggleTrack">
-                  <span className="toggleKnob" />
+                <span className="switchTrack">
+                  <i />
                 </span>
 
                 <strong>
                   {savingReminder
-                    ? "SAVING"
+                    ? "..."
                     : predictionRemindersEnabled
                     ? "ON"
                     : "OFF"}
@@ -643,36 +642,35 @@ export default function CompetitionSettingsPage() {
               </button>
             </div>
 
-            <div className="reminderInfo">
-              <span className="infoDot" />
+            <div className="emailNote">
+              <span className="blueBullet" />
 
-              <span>
-                The reminder checks only the
-                specific Match Week approaching
-                its deadline. Later open weeks are
-                ignored.
-              </span>
+              <p>
+                Checks only the specific Match
+                Week approaching its deadline.
+                Later open Match Weeks are ignored.
+              </p>
             </div>
 
             <div
-              className={`reminderStatus ${
+              className={`emailStatus ${
                 predictionRemindersEnabled
-                  ? "statusOn"
-                  : "statusOff"
+                  ? "statusEnabled"
+                  : "statusDisabled"
               }`}
             >
-              <span
-                className="statusLight"
-              />
+              <span />
 
               {predictionRemindersEnabled
                 ? "AUTOMATIC REMINDERS ENABLED"
                 : "AUTOMATIC REMINDERS DISABLED"}
             </div>
-          </div>
+          </section>
 
-          <div className="infoPanel">
-            <div className="infoIcon">
+          {/* INFO */}
+
+          <div className="helpBox">
+            <div className="helpIcon">
               i
             </div>
 
@@ -681,56 +679,60 @@ export default function CompetitionSettingsPage() {
               and the Rules page will display{" "}
               <strong>TBC</strong>.
               <br />
-
               Leave the payment closing date
-              blank if you do not want to show
-              a payment deadline.
+              blank if you do not want a
+              payment deadline.
               <br />
-
-              The reminder email switch saves
+              The reminder switch saves
               immediately when changed.
             </div>
           </div>
 
           <button
+            className="saveSettingsButton"
             onClick={saveSettings}
             disabled={saving}
-            className="saveButton"
           >
-            {saving
-              ? "SAVING SETTINGS..."
-              : "SAVE COMPETITION SETTINGS"}
+            <span>
+              {saving
+                ? "SAVING SETTINGS..."
+                : "SAVE COMPETITION SETTINGS"}
+            </span>
           </button>
         </section>
 
         <a
           href="/admin"
-          className="backLink"
+          className="navLink"
         >
-          <button className="backButton">
+          <button className="backAdmin">
             ← Back to Admin
           </button>
         </a>
 
-        <p className="pageFooter">
+        <p className="settingsFooter">
           Telford & Wrekin Hockey Club
         </p>
       </div>
 
-      <PageStyles />
+      <Styles />
     </main>
   );
 }
 
-function PageStyles() {
+function Styles() {
   return (
     <style jsx global>{`
-      .settingsShell {
+      .settingsPage {
         max-width: 820px !important;
         padding-bottom: 28px;
       }
 
-      .brandHeader {
+      /* =====================================
+         BRAND
+      ===================================== */
+
+      .settingsBrand {
         position: relative;
         display: flex;
         align-items: center;
@@ -742,118 +744,113 @@ function PageStyles() {
         padding: 7px 14px;
       }
 
-      .brandGlow {
+      .brandBlueGlow,
+      .brandRedGlow {
         position: absolute;
+        width: 95px;
+        height: 50px;
         top: 50%;
-        width: 80px;
-        height: 44px;
+        transform: translateY(-50%);
         border-radius: 50%;
-        filter: blur(23px);
-        opacity: 0.34;
+        filter: blur(28px);
+        opacity: 0.32;
         pointer-events: none;
       }
 
-      .brandGlowBlue {
+      .brandBlueGlow {
         left: -18px;
         background: #087eff;
       }
 
-      .brandGlowRed {
+      .brandRedGlow {
         right: -20px;
         background: #ed1c24;
       }
 
-      .brandBadge {
+      .settingsBadge {
         position: relative;
-        z-index: 1;
-        display: block;
+        z-index: 2;
         width: 60px;
         height: auto;
+        display: block;
         margin: 0;
         filter:
           drop-shadow(
-            0 0 10px
-            rgba(0, 125, 255, 0.24)
+            0 0 9px
+            rgba(0, 126, 255, 0.2)
           )
           drop-shadow(
-            0 4px 8px
-            rgba(0, 0, 0, 0.42)
+            0 5px 8px
+            rgba(0, 0, 0, 0.4)
           );
       }
 
-      .brandCopy {
+      .settingsBrandText {
         position: relative;
-        z-index: 1;
+        z-index: 2;
         text-align: left;
       }
 
-      .brandTitle {
-        color: #ffffff;
+      .predictorWord {
+        color: #fff;
         font-size: 28px;
         line-height: 0.95;
         font-weight: 950;
         letter-spacing: -1.3px;
         white-space: nowrap;
-        text-shadow:
-          0 2px 8px
-          rgba(0, 0, 0, 0.45),
-          0 0 12px
-          rgba(255, 255, 255, 0.08);
       }
 
-      .brandTitle span {
+      .predictorWord span {
         color: #ed1c24;
         text-shadow:
           0 0 14px
-          rgba(237, 28, 36, 0.46);
+          rgba(237, 28, 36, 0.5);
       }
 
-      .brandLabel {
+      .adminWord {
         margin-top: 6px;
-        color: #a9bfd5;
-        font-size: 10px;
-        font-weight: 950;
-        letter-spacing: 1.5px;
+        color: #9db4ca;
+        font-size: 9px;
+        font-weight: 900;
+        letter-spacing: 1.6px;
       }
 
-      .pageHero {
+      /* =====================================
+         HERO
+      ===================================== */
+
+      .settingsHero {
         position: relative;
         overflow: hidden;
-        margin-bottom: 12px;
-        padding: 18px 18px 16px;
+        padding: 18px 16px 15px;
+        margin-bottom: 13px;
+        border-radius: 16px;
         border:
           1px solid
-          rgba(72, 145, 215, 0.34);
-        border-radius: 15px;
+          rgba(69, 143, 213, 0.38);
         text-align: center;
         background:
           radial-gradient(
-            circle at 4% 10%,
-            rgba(0, 121, 255, 0.18),
-            transparent 33%
+            circle at 0 0,
+            rgba(0, 119, 255, 0.17),
+            transparent 42%
           ),
           radial-gradient(
-            circle at 96% 82%,
-            rgba(237, 28, 36, 0.15),
-            transparent 34%
+            circle at 100% 100%,
+            rgba(237, 28, 36, 0.13),
+            transparent 42%
           ),
           linear-gradient(
             145deg,
-            rgba(8, 30, 56, 0.97),
-            rgba(3, 12, 25, 0.99)
+            #071e38,
+            #030e1c
           );
         box-shadow:
-          -7px 0 24px
-          rgba(0, 105, 255, 0.08),
-          7px 0 24px
-          rgba(237, 28, 36, 0.07),
-          0 15px 34px
-          rgba(0, 0, 0, 0.3),
-          inset 0 1px 0
-          rgba(255, 255, 255, 0.035);
+          0 14px 32px
+          rgba(0, 0, 0, 0.29);
       }
 
-      .heroLine {
+      .heroTopBeam {
         position: absolute;
         top: 0;
         left: 0;
@@ -862,52 +859,49 @@ function PageStyles() {
         background:
           linear-gradient(
             90deg,
-            #087eff 0 42%,
-            #d7e8f8 50%,
-            #ed1c24 58% 100%
+            #0788ff 0%,
+            #0788ff 42%,
+            #ffffff 50%,
+            #ed1c24 58%,
+            #ed1c24 100%
           );
       }
 
-      .heroEyebrow,
-      .sectionEyebrow {
-        color: #2999ff;
-        font-size: 9px;
+      .heroLabel,
+      .sectionLabel {
+        color: #2f9cff;
+        font-size: 8px;
         font-weight: 950;
-        letter-spacing: 1.7px;
+        letter-spacing: 2px;
       }
 
-      .pageHero h1 {
-        margin: 4px 0 0;
-        color: #ffffff;
+      .settingsHero h1 {
+        margin: 5px 0 0;
+        color: #fff;
         font-size: 25px;
         line-height: 1.05;
         font-weight: 950;
-        letter-spacing: -0.6px;
       }
 
-      .pageHero p {
+      .settingsHero p {
         margin: 6px 0 0;
-        color: #9eb6cd;
-        font-size: 12px;
+        color: #96acc1;
+        font-size: 11px;
         font-weight: 750;
       }
 
-      .heroRule {
-        display: flex;
+      .heroDivider {
+        display: grid;
+        grid-template-columns:
+          1fr 7px 1fr;
         align-items: center;
-        justify-content: center;
-        gap: 7px;
-        width: min(330px, 80%);
+        gap: 9px;
+        max-width: 330px;
         margin: 12px auto 0;
       }
 
-      .blueRule,
-      .redRule {
-        flex: 1;
+      .heroDivider span {
         height: 2px;
-      }
-
-      .blueRule {
         background:
           linear-gradient(
             90deg,
@@ -916,7 +910,8 @@ function PageStyles() {
           );
       }
 
-      .redRule {
+      .heroDivider strong {
+        height: 2px;
         background:
           linear-gradient(
             90deg,
@@ -925,504 +920,518 @@ function PageStyles() {
           );
       }
 
-      .centreDot {
-        width: 5px;
-        height: 5px;
+      .heroDivider i {
+        width: 7px;
+        height: 7px;
         border-radius: 50%;
-        background: #ffffff;
+        background: #fff;
         box-shadow:
           0 0 8px
-          rgba(255, 255, 255, 0.65);
+          rgba(255, 255, 255, 0.7);
       }
 
-      .overviewPanel,
-      .settingsPanel {
+      /* =====================================
+         PANELS
+      ===================================== */
+
+      .overviewSection,
+      .mainSettings {
         position: relative;
-        margin-bottom: 12px;
-        padding: 14px;
-        border-radius: 13px;
+        padding: 15px;
+        margin-bottom: 13px;
+        border-radius: 15px;
+        border:
+          1px solid
+          rgba(56, 137, 214, 0.4);
         background:
           radial-gradient(
             circle at 0 0,
-            rgba(0, 119, 255, 0.1),
-            transparent 35%
-          ),
-          radial-gradient(
-            circle at 100% 100%,
-            rgba(237, 28, 36, 0.06),
-            transparent 30%
+            rgba(0, 123, 255, 0.09),
+            transparent 38%
           ),
           linear-gradient(
             145deg,
-            rgba(7, 28, 53, 0.98),
-            rgba(3, 14, 28, 0.99)
+            rgba(7, 29, 53, 0.99),
+            rgba(3, 14, 27, 0.99)
           );
         box-shadow:
-          0 12px 26px
-          rgba(0, 0, 0, 0.25),
-          inset 0 1px 0
-          rgba(255, 255, 255, 0.03);
+          0 12px 28px
+          rgba(0, 0, 0, 0.25);
       }
 
-      .overviewPanel {
-        border:
-          1px solid
-          rgba(46, 133, 218, 0.48);
-      }
-
-      .settingsPanel {
-        border:
-          1px solid
-          rgba(67, 130, 190, 0.38);
-      }
-
-      .panelHeading {
+      .sectionHeader {
         display: flex;
-        align-items: flex-end;
         justify-content: space-between;
-        gap: 12px;
-        margin-bottom: 11px;
+        align-items: flex-end;
+        gap: 10px;
+        margin-bottom: 12px;
       }
 
-      .panelHeading h2 {
-        margin: 2px 0 0;
-        color: #ffffff;
-        font-size: 18px;
+      .sectionHeader h2 {
+        margin: 3px 0 0;
+        color: #fff;
+        font-size: 19px;
         font-weight: 950;
       }
 
-      .livePill {
-        display: inline-flex;
+      .liveBadge {
+        display: flex;
         align-items: center;
-        justify-content: center;
-        min-height: 24px;
-        padding: 0 9px;
+        gap: 6px;
+        height: 28px;
+        padding: 0 11px;
         border:
           1px solid
-          rgba(38, 145, 247, 0.5);
+          rgba(37, 148, 249, 0.5);
         border-radius: 999px;
         background:
-          rgba(5, 71, 130, 0.24);
-        color: #55aeff;
+          rgba(4, 72, 132, 0.25);
+        color: #60b6ff;
         font-size: 8px;
         font-weight: 950;
         letter-spacing: 0.8px;
       }
 
-      .overviewGrid {
-        display: grid;
-        grid-template-columns:
-          repeat(5, 1fr);
-        gap: 7px;
+      .liveBadge i {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: #168cff;
+        box-shadow:
+          0 0 8px #168cff;
       }
 
-      .overviewCard {
+      /* =====================================
+         OVERVIEW
+      ===================================== */
+
+      .overviewCards {
+        display: grid;
+        grid-template-columns:
+          repeat(5, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .miniCard {
         min-width: 0;
-        padding: 11px 5px 10px;
-        border-radius: 9px;
+        min-height: 73px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 8px 5px;
+        border-radius: 10px;
         text-align: center;
       }
 
-      .overviewCard span {
-        display: block;
-        font-size: 7px;
+      .miniCard > span {
+        font-size: 6px;
         font-weight: 950;
-        letter-spacing: 0.55px;
+        letter-spacing: 0.45px;
       }
 
-      .overviewCard strong {
-        display: block;
-        margin-top: 4px;
-        color: #ffffff;
-        font-size: 18px;
-        line-height: 1.1;
+      .miniCard > strong {
+        margin-top: 5px;
+        color: #fff;
+        font-size: 17px;
+        line-height: 1;
         font-weight: 950;
       }
 
-      .overviewCard .dateValue {
-        font-size: 12px;
+      .miniCard .smallValue {
+        font-size: 10px;
+        line-height: 1.15;
       }
 
-      .overviewCard.entry {
+      .entryCard {
         border:
           1px solid
-          rgba(41, 151, 255, 0.45);
+          rgba(26, 150, 255, 0.52);
         background:
           linear-gradient(
             145deg,
-            rgba(7, 79, 145, 0.68),
-            rgba(4, 43, 81, 0.76)
+            rgba(8, 87, 158, 0.65),
+            rgba(5, 44, 82, 0.82)
           );
-        color: #9cd2ff;
+        color: #9dd5ff;
       }
 
-      .overviewCard.gold {
+      .goldCard {
         border:
           1px solid
-          rgba(238, 182, 25, 0.56);
+          rgba(235, 181, 36, 0.55);
         background:
           linear-gradient(
             145deg,
-            rgba(151, 102, 6, 0.7),
-            rgba(88, 61, 7, 0.82)
+            rgba(148, 100, 6, 0.7),
+            rgba(77, 53, 4, 0.85)
           );
-        color: #ffe28a;
+        color: #ffe181;
       }
 
-      .overviewCard.silver {
+      .silverCard {
         border:
           1px solid
-          rgba(164, 182, 200, 0.44);
+          rgba(166, 185, 203, 0.48);
         background:
           linear-gradient(
             145deg,
-            rgba(84, 102, 120, 0.68),
-            rgba(50, 64, 78, 0.82)
+            rgba(81, 101, 119, 0.7),
+            rgba(45, 58, 72, 0.85)
           );
-        color: #d8e2eb;
+        color: #d9e4ec;
       }
 
-      .overviewCard.deadline {
+      .deadlineCard {
         border:
           1px solid
-          rgba(237, 49, 58, 0.48);
+          rgba(237, 40, 51, 0.52);
         background:
           linear-gradient(
             145deg,
-            rgba(145, 15, 24, 0.7),
-            rgba(86, 10, 17, 0.82)
+            rgba(137, 18, 27, 0.72),
+            rgba(77, 8, 14, 0.85)
           );
         color: #ff9ca1;
       }
 
-      .overviewCard.reminderOn {
+      .reminderCard.on {
         border:
           1px solid
-          rgba(53, 207, 121, 0.48);
+          rgba(51, 210, 122, 0.52);
         background:
           linear-gradient(
             145deg,
-            rgba(15, 116, 61, 0.72),
-            rgba(10, 74, 41, 0.84)
+            rgba(16, 121, 63, 0.75),
+            rgba(8, 67, 36, 0.88)
           );
-        color: #9ae6bb;
+        color: #9ce9bc;
       }
 
-      .overviewCard.reminderOff {
+      .reminderCard.off {
         border:
           1px solid
-          rgba(137, 153, 168, 0.36);
+          rgba(137, 153, 168, 0.4);
         background:
           linear-gradient(
             145deg,
-            rgba(73, 86, 100, 0.68),
-            rgba(43, 53, 64, 0.82)
+            rgba(71, 84, 97, 0.72),
+            rgba(38, 47, 56, 0.88)
           );
-        color: #c2ced8;
+        color: #cad4dc;
       }
 
-      .formGrid {
+      /* =====================================
+         FORM
+      ===================================== */
+
+      .settingsGrid {
         display: grid;
         grid-template-columns:
           repeat(2, minmax(0, 1fr));
         gap: 11px;
       }
 
-      .settingField {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-        box-sizing: border-box;
-      }
-
-      .paymentDateField {
-        overflow: hidden;
-      }
-
-      .fieldLabel {
+      .fieldBlock {
         display: block;
-        margin: 0 0 5px 2px;
-        color: #5fb6ff;
+        min-width: 0;
+      }
+
+      .fieldTitle {
+        display: block;
+        margin: 0 0 6px 3px;
         font-size: 8px;
         font-weight: 950;
-        letter-spacing: 0.8px;
+        letter-spacing: 1.2px;
       }
 
-      .goldText {
-        color: #f5ca50;
+      .blueField .fieldTitle {
+        color: #58b1ff;
       }
 
-      .silverText {
-        color: #c7d3de;
+      .goldField .fieldTitle {
+        color: #f4ca51;
       }
 
-      .redText {
-        color: #ff6b72;
+      .silverField .fieldTitle {
+        color: #cbd6df;
       }
 
-      .moneyInput {
+      .redField .fieldTitle {
+        color: #ff6f76;
+      }
+
+      .fieldControl,
+      .dateControl {
         display: grid;
-        grid-template-columns: 34px 1fr;
-        min-height: 43px;
+        grid-template-columns:
+          42px minmax(0, 1fr);
         overflow: hidden;
+        min-height: 48px;
+        border-radius: 10px;
+        background: #041426;
+      }
+
+      .fieldControl {
         border:
           1px solid
-          rgba(71, 146, 216, 0.48);
-        border-radius: 8px;
-        background:
-          rgba(3, 17, 33, 0.92);
+          rgba(78, 148, 214, 0.52);
       }
 
-      .moneyInput > span {
+      .goldField .fieldControl {
+        border-color:
+          rgba(229, 180, 48, 0.52);
+      }
+
+      .silverField .fieldControl {
+        border-color:
+          rgba(174, 191, 207, 0.48);
+      }
+
+      .prefix,
+      .calendarIcon {
         display: grid;
         place-items: center;
         border-right:
           1px solid
-          rgba(71, 146, 216, 0.28);
-        background:
-          rgba(5, 59, 108, 0.38);
-        color: #6cbdff;
+          rgba(104, 155, 201, 0.27);
+        font-size: 18px;
         font-weight: 950;
       }
 
-      .goldInput {
-        border-color:
-          rgba(221, 171, 40, 0.45);
-      }
-
-      .goldInput > span {
-        border-right-color:
-          rgba(221, 171, 40, 0.28);
+      .blueField .prefix {
+        color: #6cc1ff;
         background:
-          rgba(113, 77, 6, 0.36);
-        color: #ffd966;
+          rgba(5, 73, 131, 0.38);
       }
 
-      .silverInput {
-        border-color:
-          rgba(157, 178, 197, 0.4);
-      }
-
-      .silverInput > span {
-        border-right-color:
-          rgba(157, 178, 197, 0.24);
+      .goldField .prefix {
+        color: #ffd85c;
         background:
-          rgba(72, 84, 96, 0.4);
-        color: #d4dee7;
+          rgba(104, 75, 5, 0.43);
       }
 
-      .moneyInput input,
-      .dateInput {
-        display: block;
+      .silverField .prefix {
+        color: #d8e1e9;
+        background:
+          rgba(72, 85, 99, 0.45);
+      }
+
+      .fieldControl input,
+      .dateControl input {
         width: 100%;
-        max-width: 100%;
         min-width: 0;
+        min-height: 46px;
         box-sizing: border-box;
-        border: none;
-        outline: none;
-        background:
-          rgba(3, 17, 33, 0.92);
-        color: #ffffff;
+        border: 0;
+        outline: 0;
+        padding: 0 12px;
+        background: transparent;
+        color: #fff;
         font-size: 13px;
         font-weight: 850;
-        font-family: inherit;
       }
 
-      .moneyInput input {
-        padding: 0 10px;
+      .fieldControl input::placeholder {
+        color: #8795a4;
+        opacity: 1;
       }
 
-      .dateInputWrap {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-        box-sizing: border-box;
-        overflow: hidden;
+      .dateControl {
         border:
           1px solid
-          rgba(237, 49, 58, 0.4);
-        border-radius: 8px;
+          rgba(237, 48, 57, 0.52);
+      }
+
+      .calendarIcon {
+        color: #ff6b73;
         background:
-          rgba(3, 17, 33, 0.92);
+          rgba(114, 13, 21, 0.35);
       }
 
-      .dateInput {
-        min-height: 41px;
-        padding: 0 10px;
+      .dateControl input {
+        color-scheme: dark;
+        appearance: none;
+        -webkit-appearance: none;
       }
 
-      .dateInput::-webkit-date-and-time-value {
-        min-width: 0;
-        text-align: center;
+      .dateControl input::-webkit-date-and-time-value {
+        text-align: left;
       }
 
-      .moneyInput:focus-within,
-      .dateInputWrap:focus-within {
-        border-color: #2999ff;
-        box-shadow:
-          0 0 0 2px
-          rgba(41, 153, 255, 0.1);
+      .dateControl input::-webkit-calendar-picker-indicator {
+        opacity: 0.75;
+        filter: invert(1);
       }
 
-      .settingField small {
+      .fieldBlock small {
         display: block;
-        margin-top: 5px;
-        color: #748da5;
-        font-size: 8px;
+        margin: 5px 3px 0;
+        color: #728ba3;
+        font-size: 7px;
         font-weight: 700;
         line-height: 1.35;
       }
 
-      .reminderPanel {
-        margin-top: 13px;
-        padding: 12px;
-        border-radius: 10px;
-        transition: 0.2s ease;
+      /* =====================================
+         REMINDER
+      ===================================== */
+
+      .emailReminder {
+        margin-top: 14px;
+        padding: 13px;
+        border-radius: 12px;
       }
 
-      .reminderPanel.enabled {
+      .emailOn {
         border:
           1px solid
-          rgba(53, 207, 121, 0.4);
+          rgba(47, 207, 119, 0.48);
         background:
           radial-gradient(
             circle at 100% 0,
-            rgba(53, 207, 121, 0.11),
-            transparent 32%
+            rgba(32, 203, 113, 0.14),
+            transparent 38%
           ),
-          rgba(6, 32, 28, 0.66);
+          rgba(4, 35, 29, 0.73);
       }
 
-      .reminderPanel.disabled {
+      .emailOff {
         border:
           1px solid
-          rgba(115, 139, 161, 0.28);
+          rgba(103, 129, 153, 0.32);
         background:
-          rgba(11, 28, 45, 0.72);
+          rgba(8, 26, 43, 0.74);
       }
 
-      .reminderTop {
-        display: flex;
+      .emailHeader {
+        display: grid;
+        grid-template-columns:
+          40px minmax(0, 1fr) auto;
         align-items: center;
         gap: 10px;
       }
 
-      .reminderIcon {
+      .mailIcon {
+        width: 40px;
+        height: 40px;
         display: grid;
         place-items: center;
-        flex: 0 0 36px;
-        width: 36px;
-        height: 36px;
+        border-radius: 10px;
         border:
           1px solid
-          rgba(70, 145, 214, 0.4);
-        border-radius: 9px;
+          rgba(52, 147, 232, 0.46);
         background:
-          rgba(7, 63, 113, 0.35);
-        color: #6abbff;
-        font-size: 16px;
-        font-weight: 900;
+          rgba(5, 70, 126, 0.36);
+        color: #79c4ff;
+        font-size: 18px;
       }
 
-      .reminderCopy {
-        flex: 1;
+      .emailText {
         min-width: 0;
       }
 
-      .reminderTitle {
-        color: #ffffff;
+      .emailText > strong {
+        display: block;
+        color: #fff;
         font-size: 12px;
         font-weight: 950;
       }
 
-      .reminderDescription {
-        margin-top: 3px;
-        color: #829ab0;
+      .emailText > span {
+        display: block;
+        margin-top: 4px;
+        color: #819ab1;
         font-size: 8px;
         font-weight: 700;
         line-height: 1.4;
       }
 
-      .toggleButton {
+      .switchButton {
+        width: 92px;
+        min-height: 40px;
         display: flex;
         align-items: center;
+        justify-content: center;
         gap: 7px;
-        width: auto;
-        min-width: 91px;
-        min-height: 38px;
         margin: 0;
         padding: 5px 8px;
-        border: none;
-        border-radius: 9px;
-        color: #ffffff;
+        border: 0;
+        border-radius: 10px;
+        color: #fff;
         font-size: 8px;
         font-weight: 950;
         cursor: pointer;
       }
 
-      .toggleOn {
+      .switchOn {
         background:
           linear-gradient(
             145deg,
-            #198c50,
-            #11653a
+            #1c9a58,
+            #10693b
           );
         box-shadow:
-          0 3px 0 #0a4829;
+          0 3px 0 #084825;
       }
 
-      .toggleOff {
+      .switchOff {
         background:
           linear-gradient(
             145deg,
-            #627587,
-            #435568
+            #607486,
+            #415365
           );
         box-shadow:
-          0 3px 0 #2c3c4d;
+          0 3px 0 #293948;
       }
 
-      .toggleTrack {
+      .switchTrack {
         position: relative;
         display: block;
-        width: 31px;
-        height: 17px;
-        border-radius: 999px;
+        width: 32px;
+        height: 18px;
+        border-radius: 99px;
         background:
-          rgba(1, 12, 22, 0.48);
+          rgba(0, 12, 21, 0.5);
       }
 
-      .toggleKnob {
+      .switchTrack i {
         position: absolute;
         top: 3px;
         left: 3px;
-        width: 11px;
-        height: 11px;
+        width: 12px;
+        height: 12px;
         border-radius: 50%;
-        background: #ffffff;
-        transition: 0.2s ease;
+        background: #fff;
+        transition:
+          transform 0.2s ease;
       }
 
-      .toggleOn .toggleKnob {
-        transform: translateX(14px);
+      .switchOn .switchTrack i {
+        transform:
+          translateX(14px);
       }
 
-      .reminderInfo {
+      .emailNote {
         display: flex;
+        gap: 8px;
         align-items: flex-start;
-        gap: 7px;
-        margin-top: 10px;
-        padding: 8px 9px;
-        border-radius: 7px;
+        margin-top: 11px;
+        padding: 9px 10px;
+        border-radius: 8px;
         background:
-          rgba(2, 14, 27, 0.5);
-        color: #7992aa;
+          rgba(1, 14, 27, 0.54);
+      }
+
+      .emailNote p {
+        margin: 0;
+        color: #8298ad;
         font-size: 8px;
         font-weight: 700;
         line-height: 1.4;
       }
 
-      .infoDot {
+      .blueBullet {
         flex: 0 0 6px;
         width: 6px;
         height: 6px;
@@ -1430,482 +1439,483 @@ function PageStyles() {
         border-radius: 50%;
         background: #168cff;
         box-shadow:
-          0 0 7px
-          rgba(22, 140, 255, 0.6);
+          0 0 8px #168cff;
       }
 
-      .reminderStatus {
+      .emailStatus {
         display: flex;
         align-items: center;
-        gap: 6px;
-        margin-top: 8px;
+        gap: 7px;
+        margin-top: 9px;
         font-size: 7px;
         font-weight: 950;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.8px;
       }
 
-      .statusOn {
-        color: #78dda5;
-      }
-
-      .statusOff {
-        color: #8196aa;
-      }
-
-      .statusLight {
-        width: 6px;
-        height: 6px;
+      .emailStatus > span {
+        width: 7px;
+        height: 7px;
         border-radius: 50%;
         background: currentColor;
         box-shadow:
-          0 0 7px currentColor;
+          0 0 8px currentColor;
       }
 
-      .infoPanel {
+      .statusEnabled {
+        color: #6fe09f;
+      }
+
+      .statusDisabled {
+        color: #8094a7;
+      }
+
+      /* =====================================
+         HELP
+      ===================================== */
+
+      .helpBox {
         display: flex;
         align-items: flex-start;
-        gap: 9px;
+        gap: 10px;
         margin-top: 12px;
-        padding: 10px;
+        padding: 11px;
         border:
           1px solid
-          rgba(81, 137, 188, 0.25);
-        border-radius: 8px;
+          rgba(69, 135, 197, 0.28);
+        border-radius: 10px;
         background:
-          rgba(5, 24, 43, 0.62);
-        color: #7d96ad;
+          rgba(4, 22, 40, 0.66);
+        color: #849bb0;
         font-size: 8px;
         font-weight: 700;
-        line-height: 1.45;
+        line-height: 1.5;
       }
 
-      .infoIcon {
+      .helpBox strong {
+        color: #fff;
+      }
+
+      .helpIcon {
+        flex: 0 0 24px;
+        width: 24px;
+        height: 24px;
         display: grid;
         place-items: center;
-        flex: 0 0 22px;
-        width: 22px;
-        height: 22px;
         border-radius: 50%;
         background:
-          rgba(13, 99, 178, 0.38);
-        color: #67b8ff;
-        font-size: 11px;
+          rgba(9, 91, 164, 0.52);
+        color: #6dbdff;
+        font-size: 12px;
         font-weight: 950;
       }
 
-      .infoPanel strong {
-        color: #ffffff;
-      }
+      /* =====================================
+         BUTTONS
+      ===================================== */
 
-      .saveButton {
+      .saveSettingsButton,
+      .backAdmin {
         width: 100%;
-        min-height: 43px;
-        margin: 13px 0 0;
-        border: none;
-        border-radius: 9px;
-        background:
-          linear-gradient(
-            105deg,
-            #087eff,
-            #155fb8
-          );
-        color: #ffffff;
-        font-size: 9px;
+        border: 0;
+        color: #fff;
         font-weight: 950;
-        letter-spacing: 0.4px;
-        box-shadow:
-          0 3px 0 #06417e,
-          0 6px 14px
-          rgba(0, 76, 160, 0.2);
         cursor: pointer;
       }
 
-      .saveButton:disabled {
-        opacity: 0.5;
-        cursor: default;
-      }
-
-      .messageBar {
-        display: flex;
-        align-items: center;
-        gap: 9px;
-        margin-bottom: 12px;
-        padding: 10px 12px;
-        border-radius: 9px;
-        font-size: 11px;
-        font-weight: 850;
-      }
-
-      .messageBar.success {
-        border:
-          1px solid
-          rgba(50, 194, 115, 0.48);
-        background:
-          rgba(19, 104, 59, 0.2);
-        color: #8ee5b5;
-      }
-
-      .messageBar.warning {
-        border:
-          1px solid
-          rgba(240, 165, 40, 0.45);
-        background:
-          rgba(117, 74, 10, 0.2);
-        color: #ffd181;
-      }
-
-      .loadingCard,
-      .accessCard {
-        margin: 12px 0;
-        padding: 20px;
-        border:
-          1px solid
-          rgba(57, 137, 214, 0.42);
-        border-radius: 13px;
+      .saveSettingsButton {
+        position: relative;
+        min-height: 48px;
+        overflow: hidden;
+        margin: 14px 0 0;
+        border-radius: 10px;
         background:
           linear-gradient(
-            145deg,
-            rgba(7, 29, 55, 0.97),
-            rgba(3, 14, 28, 0.99)
+            100deg,
+            #0787ff,
+            #1975dc
           );
-        color: #ffffff;
-        text-align: center;
-      }
-
-      .loadingCard p,
-      .accessCard p {
-        margin: 6px 0 0;
-        color: #9eb4c9;
-        font-size: 11px;
-      }
-
-      .accessCard h2 {
-        margin: 0;
-      }
-
-      .loadingPulse {
-        width: 12px;
-        height: 12px;
-        margin: 0 auto 8px;
-        border-radius: 50%;
-        background: #168cff;
+        font-size: 9px;
+        letter-spacing: 1.4px;
         box-shadow:
-          0 0 14px
-          rgba(22, 140, 255, 0.75);
-        animation:
-          settingsPulse
-          1.2s infinite ease-in-out;
+          0 4px 0 #0751a0,
+          0 9px 20px
+          rgba(0, 101, 214, 0.22);
       }
 
-      @keyframes settingsPulse {
-        0%,
-        100% {
-          opacity: 0.35;
-          transform: scale(0.8);
-        }
-
-        50% {
-          opacity: 1;
-          transform: scale(1);
-        }
+      .saveSettingsButton::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(
+            110deg,
+            transparent 25%,
+            rgba(255, 255, 255, 0.15)
+              50%,
+            transparent 75%
+          );
+        transform:
+          translateX(-100%);
       }
 
-      .backLink {
+      .saveSettingsButton span {
+        position: relative;
+        z-index: 2;
+      }
+
+      .saveSettingsButton:disabled {
+        opacity: 0.5;
+      }
+
+      .navLink {
         display: block;
-        margin-top: 14px;
+        margin-top: 15px;
         text-decoration: none;
       }
 
-      .backButton {
-        width: 100%;
-        min-height: 42px;
+      .backAdmin {
+        min-height: 43px;
         margin: 0;
-        border: none;
-        border-radius: 9px;
+        border-radius: 10px;
         background:
           linear-gradient(
-            105deg,
-            #087eff,
-            #155fb8
+            100deg,
+            #0a7ee8,
+            #1769be
           );
-        color: #ffffff;
         font-size: 10px;
-        font-weight: 950;
         box-shadow:
-          0 3px 0 #06417e,
-          0 6px 12px
-          rgba(0, 0, 0, 0.16);
+          0 3px 0 #07509a;
       }
 
-      .pageFooter {
-        margin: 15px 0 0;
-        color: #607b94;
+      .settingsFooter {
+        margin: 17px 0 0;
+        color: #5f7790;
         text-align: center;
         font-size: 9px;
         font-weight: 750;
       }
 
+      .settingsMessage {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+        padding: 9px 11px;
+        border-radius: 9px;
+        font-size: 10px;
+        font-weight: 850;
+      }
+
+      .settingsMessage.good {
+        border:
+          1px solid
+          rgba(44, 198, 110, 0.45);
+        background:
+          rgba(15, 102, 55, 0.22);
+        color: #8be1b1;
+      }
+
+      .settingsMessage.warn {
+        border:
+          1px solid
+          rgba(238, 167, 47, 0.45);
+        background:
+          rgba(114, 70, 8, 0.22);
+        color: #ffd17d;
+      }
+
+      /* =====================================
+         LOADING / ACCESS
+      ===================================== */
+
+      .loadingPanel,
+      .accessPanel {
+        margin-top: 14px;
+        padding: 22px;
+        border:
+          1px solid
+          rgba(54, 139, 218, 0.4);
+        border-radius: 14px;
+        background:
+          #061a30;
+        color: #fff;
+        text-align: center;
+      }
+
+      .loadingDot {
+        width: 10px;
+        height: 10px;
+        margin: 0 auto 9px;
+        border-radius: 50%;
+        background: #168cff;
+        box-shadow:
+          0 0 12px #168cff;
+      }
+
+      .accessPanel h2 {
+        margin: 0;
+      }
+
+      .accessPanel p {
+        color: #91a8bc;
+      }
+
+      /* =====================================
+         MOBILE
+      ===================================== */
+
       @media (max-width: 700px) {
-        .settingsShell {
+        .settingsPage {
           padding-bottom: 20px;
         }
 
-        .brandHeader {
-          margin-bottom: 8px;
-          padding: 4px 8px;
+        .settingsBrand {
           gap: 9px;
+          margin-bottom: 9px;
+          padding: 5px 7px;
         }
 
-        .brandBadge {
-          width: 49px;
+        .settingsBadge {
+          width: 48px;
         }
 
-        .brandTitle {
+        .predictorWord {
           font-size: 23px;
           letter-spacing: -1px;
         }
 
-        .brandLabel {
+        .adminWord {
           margin-top: 4px;
           font-size: 7px;
           letter-spacing: 1px;
         }
 
-        .pageHero {
-          margin-bottom: 10px;
-          padding: 13px 10px 11px;
+        .settingsHero {
+          padding: 14px 10px 12px;
         }
 
-        .heroEyebrow {
+        .heroLabel {
           font-size: 7px;
-          letter-spacing: 1.3px;
+          letter-spacing: 1.5px;
         }
 
-        .pageHero h1 {
+        .settingsHero h1 {
           font-size: 20px;
         }
 
-        .pageHero p {
+        .settingsHero p {
           font-size: 9px;
         }
 
-        .heroRule {
-          margin-top: 8px;
+        .overviewSection,
+        .mainSettings {
+          padding: 11px;
         }
 
-        .overviewPanel,
-        .settingsPanel {
-          padding: 10px;
+        .sectionHeader {
+          margin-bottom: 9px;
         }
 
-        .panelHeading {
-          margin-bottom: 8px;
+        .sectionHeader h2 {
+          font-size: 16px;
         }
 
-        .panelHeading h2 {
-          font-size: 15px;
+        .sectionLabel {
+          font-size: 7px;
+          letter-spacing: 1.4px;
         }
 
-        .sectionEyebrow {
+        .liveBadge {
+          height: 24px;
+          padding: 0 8px;
           font-size: 7px;
         }
 
-        .livePill {
-          min-height: 21px;
-          font-size: 6px;
-        }
+        /*
+          Mobile overview:
+          first 4 cards in two columns,
+          reminders full width.
+        */
 
-        .overviewGrid {
-          grid-template-columns:
-            repeat(5, 1fr);
-          gap: 4px;
-        }
-
-        .overviewCard {
-          padding: 8px 2px 7px;
-          border-radius: 7px;
-        }
-
-        .overviewCard span {
-          font-size: 5px;
-          letter-spacing: 0.2px;
-        }
-
-        .overviewCard strong {
-          margin-top: 3px;
-          font-size: 13px;
-        }
-
-        .overviewCard .dateValue {
-          font-size: 8px;
-        }
-
-        .formGrid {
-          width: 100%;
-          max-width: 100%;
+        .overviewCards {
           grid-template-columns:
             repeat(2, minmax(0, 1fr));
-          gap: 8px;
-        }
-
-        .settingField,
-        .moneyInput,
-        .dateInputWrap,
-        .dateInput {
-          max-width: 100%;
-          min-width: 0;
-        }
-
-        .fieldLabel {
-          font-size: 7px;
-        }
-
-        .moneyInput,
-        .dateInputWrap {
-          min-height: 39px;
-        }
-
-        .dateInput {
-          min-height: 37px;
-        }
-
-        .moneyInput {
-          grid-template-columns:
-            30px 1fr;
-        }
-
-        .moneyInput input,
-        .dateInput {
-          font-size: 11px;
-        }
-
-        .settingField small {
-          font-size: 7px;
-        }
-
-        .reminderPanel {
-          margin-top: 10px;
-          padding: 9px;
-        }
-
-        .reminderTop {
           gap: 7px;
         }
 
-        .reminderIcon {
-          flex-basis: 31px;
-          width: 31px;
-          height: 31px;
-          font-size: 13px;
+        .miniCard {
+          min-height: 63px;
+          padding: 8px;
         }
 
-        .reminderTitle {
+        .miniCard > span {
+          font-size: 7px;
+        }
+
+        .miniCard > strong {
+          font-size: 17px;
+        }
+
+        .miniCard .smallValue {
+          font-size: 12px;
+        }
+
+        .reminderCard {
+          grid-column: 1 / -1;
+          min-height: 54px;
+          flex-direction: row;
+          align-items: center;
+          justify-content:
+            space-between;
+          padding: 0 16px;
+        }
+
+        .reminderCard > span {
+          font-size: 8px;
+        }
+
+        .reminderCard > strong {
+          margin: 0;
+        }
+
+        .settingsGrid {
+          grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+          gap: 9px 8px;
+        }
+
+        .fieldTitle {
+          font-size: 7px;
+          letter-spacing: 0.8px;
+        }
+
+        .fieldControl,
+        .dateControl {
+          grid-template-columns:
+            35px minmax(0, 1fr);
+          min-height: 43px;
+        }
+
+        .prefix,
+        .calendarIcon {
+          font-size: 15px;
+        }
+
+        .fieldControl input,
+        .dateControl input {
+          min-height: 41px;
+          padding: 0 8px;
+          font-size: 11px;
+        }
+
+        .fieldBlock small {
+          font-size: 6px;
+        }
+
+        .emailReminder {
+          margin-top: 11px;
+          padding: 10px;
+        }
+
+        .emailHeader {
+          grid-template-columns:
+            34px minmax(0, 1fr) 77px;
+          gap: 7px;
+        }
+
+        .mailIcon {
+          width: 34px;
+          height: 34px;
+          font-size: 15px;
+        }
+
+        .emailText > strong {
           font-size: 10px;
         }
 
-        .reminderDescription {
+        .emailText > span {
           font-size: 7px;
         }
 
-        .toggleButton {
-          min-width: 78px;
-          min-height: 34px;
-          gap: 5px;
+        .switchButton {
+          width: 77px;
+          min-height: 35px;
           padding: 4px 6px;
+          gap: 5px;
           font-size: 7px;
         }
 
-        .toggleTrack {
-          width: 27px;
-          height: 15px;
+        .switchTrack {
+          width: 28px;
+          height: 16px;
         }
 
-        .toggleKnob {
-          width: 9px;
-          height: 9px;
+        .switchTrack i {
+          width: 10px;
+          height: 10px;
         }
 
-        .toggleOn .toggleKnob {
+        .switchOn .switchTrack i {
           transform:
             translateX(12px);
         }
 
-        .reminderInfo {
+        .emailNote {
           margin-top: 8px;
-          padding: 7px;
+          padding: 7px 8px;
+        }
+
+        .emailNote p {
           font-size: 7px;
         }
 
-        .reminderStatus {
+        .emailStatus {
           font-size: 6px;
         }
 
-        .infoPanel {
+        .helpBox {
           margin-top: 9px;
           padding: 8px;
           font-size: 7px;
         }
 
-        .saveButton {
-          min-height: 39px;
-          margin-top: 10px;
+        .saveSettingsButton {
+          min-height: 43px;
+          margin-top: 11px;
           font-size: 8px;
         }
 
-        .messageBar {
-          padding: 8px 10px;
-          font-size: 9px;
-        }
-
-        .backButton {
-          min-height: 38px;
+        .backAdmin {
+          min-height: 40px;
           font-size: 9px;
         }
       }
 
-      @media (max-width: 440px) {
-        .formGrid {
-          grid-template-columns:
-            repeat(2, minmax(0, 1fr));
-        }
-
-        .overviewGrid {
-          grid-template-columns:
-            repeat(5, minmax(0, 1fr));
-        }
-
-        .overviewCard {
-          min-width: 0;
-        }
-
-        .reminderDescription {
-          line-height: 1.3;
-        }
-      }
-
-      @media (max-width: 370px) {
-        .brandTitle {
+      @media (max-width: 390px) {
+        .predictorWord {
           font-size: 21px;
         }
 
-        .brandLabel {
-          font-size: 6px;
+        .settingsBadge {
+          width: 45px;
         }
 
-        .overviewCard strong {
-          font-size: 11px;
+        .settingsGrid {
+          grid-template-columns: 1fr;
         }
 
-        .overviewCard .dateValue {
-          font-size: 7px;
+        .emailHeader {
+          grid-template-columns:
+            minmax(0, 1fr) 75px;
         }
 
-        .toggleButton {
-          min-width: 70px;
-        }
-
-        .reminderIcon {
+        .mailIcon {
           display: none;
+        }
+
+        .emailText > span {
+          line-height: 1.3;
         }
       }
     `}</style>
