@@ -330,9 +330,11 @@ export default function CompetitionSettingsPage() {
 
           <section className="pageHero">
             <div className="heroLine" />
+
             <div className="heroEyebrow">
               COMPETITION CONTROL
             </div>
+
             <h1>Competition Settings</h1>
           </section>
 
@@ -416,7 +418,9 @@ export default function CompetitionSettingsPage() {
                 CURRENT SETTINGS
               </div>
 
-              <h2>Competition Overview</h2>
+              <h2>
+                Competition Overview
+              </h2>
             </div>
 
             <div className="livePill">
@@ -427,6 +431,7 @@ export default function CompetitionSettingsPage() {
           <div className="overviewGrid">
             <div className="overviewCard entry">
               <span>ENTRY</span>
+
               <strong>
                 {formatPreview(entryFee)}
               </strong>
@@ -434,6 +439,7 @@ export default function CompetitionSettingsPage() {
 
             <div className="overviewCard gold">
               <span>1ST PRIZE</span>
+
               <strong>
                 {formatPreview(firstPrize)}
               </strong>
@@ -441,13 +447,17 @@ export default function CompetitionSettingsPage() {
 
             <div className="overviewCard silver">
               <span>2ND PRIZE</span>
+
               <strong>
                 {formatPreview(secondPrize)}
               </strong>
             </div>
 
             <div className="overviewCard deadline">
-              <span>PAYMENT DEADLINE</span>
+              <span>
+                PAYMENT DEADLINE
+              </span>
+
               <strong className="dateValue">
                 {formatDatePreview(
                   paymentDeadline
@@ -462,7 +472,9 @@ export default function CompetitionSettingsPage() {
                   : "reminderOff"
               }`}
             >
-              <span>EMAIL REMINDERS</span>
+              <span>
+                EMAIL REMINDERS
+              </span>
 
               <strong>
                 {predictionRemindersEnabled
@@ -555,21 +567,23 @@ export default function CompetitionSettingsPage() {
               </div>
             </label>
 
-            <label className="settingField">
+            <label className="settingField paymentDateField">
               <span className="fieldLabel redText">
                 PAYMENT CLOSING DATE
               </span>
 
-              <input
-                className="dateInput"
-                type="date"
-                value={paymentDeadline}
-                onChange={(e) =>
-                  setPaymentDeadline(
-                    e.target.value
-                  )
-                }
-              />
+              <div className="dateInputWrap">
+                <input
+                  className="dateInput"
+                  type="date"
+                  value={paymentDeadline}
+                  onChange={(e) =>
+                    setPaymentDeadline(
+                      e.target.value
+                    )
+                  }
+                />
+              </div>
 
               <small>
                 Unpaid entrants will be reminded
@@ -667,10 +681,12 @@ export default function CompetitionSettingsPage() {
               and the Rules page will display{" "}
               <strong>TBC</strong>.
               <br />
+
               Leave the payment closing date
               blank if you do not want to show
               a payment deadline.
               <br />
+
               The reminder email switch saves
               immediately when changed.
             </div>
@@ -1113,7 +1129,14 @@ function PageStyles() {
       }
 
       .settingField {
+        width: 100%;
+        max-width: 100%;
         min-width: 0;
+        box-sizing: border-box;
+      }
+
+      .paymentDateField {
+        overflow: hidden;
       }
 
       .fieldLabel {
@@ -1190,7 +1213,9 @@ function PageStyles() {
 
       .moneyInput input,
       .dateInput {
+        display: block;
         width: 100%;
+        max-width: 100%;
         min-width: 0;
         box-sizing: border-box;
         border: none;
@@ -1200,23 +1225,39 @@ function PageStyles() {
         color: #ffffff;
         font-size: 13px;
         font-weight: 850;
+        font-family: inherit;
       }
 
       .moneyInput input {
         padding: 0 10px;
       }
 
-      .dateInput {
-        min-height: 43px;
-        padding: 0 10px;
+      .dateInputWrap {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+        overflow: hidden;
         border:
           1px solid
           rgba(237, 49, 58, 0.4);
         border-radius: 8px;
+        background:
+          rgba(3, 17, 33, 0.92);
+      }
+
+      .dateInput {
+        min-height: 41px;
+        padding: 0 10px;
+      }
+
+      .dateInput::-webkit-date-and-time-value {
+        min-width: 0;
+        text-align: center;
       }
 
       .moneyInput:focus-within,
-      .dateInput:focus {
+      .dateInputWrap:focus-within {
         border-color: #2999ff;
         box-shadow:
           0 0 0 2px
@@ -1700,7 +1741,19 @@ function PageStyles() {
         }
 
         .formGrid {
+          width: 100%;
+          max-width: 100%;
+          grid-template-columns:
+            repeat(2, minmax(0, 1fr));
           gap: 8px;
+        }
+
+        .settingField,
+        .moneyInput,
+        .dateInputWrap,
+        .dateInput {
+          max-width: 100%;
+          min-width: 0;
         }
 
         .fieldLabel {
@@ -1708,12 +1761,17 @@ function PageStyles() {
         }
 
         .moneyInput,
-        .dateInput {
+        .dateInputWrap {
           min-height: 39px;
         }
 
+        .dateInput {
+          min-height: 37px;
+        }
+
         .moneyInput {
-          grid-template-columns: 30px 1fr;
+          grid-template-columns:
+            30px 1fr;
         }
 
         .moneyInput input,
