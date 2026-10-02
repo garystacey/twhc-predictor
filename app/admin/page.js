@@ -448,7 +448,7 @@ export default function AdminDashboardPage() {
         selectedWeek,
         weeklyRows,
         leaders,
-        weeklyData.outstandingCount
+                weeklyData.outstandingCount
       );
 
       const blob =
@@ -786,7 +786,7 @@ export default function AdminDashboardPage() {
               </h3>
 
               <p>
-                Weekly leader or winner plus the weekly Top 5.
+                All joint weekly winners plus the Top 5, including ties.
               </p>
 
               <button
@@ -826,7 +826,7 @@ export default function AdminDashboardPage() {
               </h3>
 
               <p>
-                Overall Top 10 after the selected Match Week.
+                Overall Top 10 including ties after the selected Match Week.
               </p>
 
               <button
@@ -939,8 +939,7 @@ export default function AdminDashboardPage() {
             drop-shadow(0 0 10px rgba(0,125,255,.24))
             drop-shadow(0 4px 8px rgba(0,0,0,.42));
         }
-
-        .adminBrandCopy {
+                .adminBrandCopy {
           position: relative;
           z-index: 1;
           text-align: left;
@@ -1060,7 +1059,8 @@ export default function AdminDashboardPage() {
           height: 2px;
           flex: 1;
         }
-                .adminHeroRule .blueRule {
+
+        .adminHeroRule .blueRule {
           background:
             linear-gradient(
               90deg,
@@ -1460,8 +1460,7 @@ export default function AdminDashboardPage() {
           line-height: 1.45;
           font-weight: 700;
         }
-
-        .weekSelectorPanel {
+                .weekSelectorPanel {
           position: relative;
           z-index: 1;
           display: grid;
@@ -1985,8 +1984,7 @@ export default function AdminDashboardPage() {
             margin: 5px 0 11px;
             font-size: 10px;
           }
-
-          .posterButton {
+                    .posterButton {
             min-height: 41px;
             font-size: 9px;
           }
@@ -2193,7 +2191,7 @@ function roundedRect(
     x,
     y + height,
     x,
-    y,
+    y + height,
     r
   );
 
@@ -2347,7 +2345,6 @@ function drawLeftText(
     y
   );
 }
-
 function drawPosterBackground(ctx) {
   const gradient =
     ctx.createLinearGradient(
@@ -2730,14 +2727,242 @@ function drawMedal(
 }
 
 /* =====================================================
+   WEEKLY & OVERALL POSTER HELPERS
+===================================================== */
+
+function tiedCutoff(rows, limit) {
+  if (rows.length <= limit) return rows;
+
+  const cutoff = rows[limit - 1].points;
+
+  return rows.filter(
+    (row, index) =>
+      index < limit ||
+      row.points === cutoff
+  );
+}
+
+function posterName(row) {
+  return `${row.firstName} ${row.surname}`.trim();
+}
+
+function drawLeaderPanel(
+  ctx,
+  leaders,
+  top,
+  height,
+  label
+) {
+  const gradient =
+    ctx.createLinearGradient(
+      74,
+      0,
+      1006,
+      0
+    );
+
+  gradient.addColorStop(
+    0,
+    "rgba(99,65,4,0.85)"
+  );
+
+  gradient.addColorStop(
+    0.52,
+    "rgba(25,25,19,0.95)"
+  );
+
+  gradient.addColorStop(
+    1,
+    "rgba(8,16,29,0.96)"
+  );
+
+  fillRoundedRect(
+    ctx,
+    74,
+    top,
+    932,
+    height,
+    20,
+    gradient
+  );
+
+  strokeRoundedRect(
+    ctx,
+    74,
+    top,
+    932,
+    height,
+    20,
+    "#eeb619",
+    3
+  );
+
+  const heading =
+    leaders.length === 1
+      ? label
+      : `${leaders.length} JOINT ${label}S`;
+
+  drawCenteredText(
+    ctx,
+    heading,
+    540,
+    top + 31,
+    860,
+    29,
+    20,
+    "#ffd54a",
+    "Impact"
+  );
+
+  const columns =
+    leaders.length <= 3
+      ? leaders.length
+      : 2;
+
+  const lines =
+    Math.ceil(
+      leaders.length / columns
+    );
+
+  const available =
+    height - 51;
+
+  const lineHeight =
+    available / Math.max(lines, 1);
+
+  const columnWidth =
+    892 / columns;
+
+  leaders.forEach(
+    (leader, i) => {
+      const column =
+        i % columns;
+
+      const line =
+        Math.floor(i / columns);
+
+      const x =
+        94 +
+        columnWidth *
+          (column + 0.5);
+
+      const y =
+        top +
+        51 +
+        line * lineHeight;
+
+      const teamSize =
+        Math.min(
+          30,
+          Math.max(
+            15,
+            lineHeight * 0.32
+          )
+        );
+
+      const playerSize =
+        Math.min(
+          20,
+          Math.max(
+            12,
+            lineHeight * 0.23
+          )
+        );
+
+      drawCenteredText(
+        ctx,
+        leader.teamName.toUpperCase(),
+        x,
+        y + lineHeight * 0.36,
+        columnWidth - 18,
+        teamSize,
+        12,
+        "#ffd144",
+        "Impact"
+      );
+
+      drawCenteredText(
+        ctx,
+        posterName(leader),
+        x,
+        y + lineHeight * 0.68,
+        columnWidth - 18,
+        playerSize,
+        11,
+        "#ffffff",
+        "Arial"
+      );
+    }
+  );
+}
+
+function drawPosterClosing(
+  ctx,
+  top,
+  provisionalCount = 0
+) {
+  if (provisionalCount > 0) {
+    fillRoundedRect(
+      ctx,
+      80,
+      top,
+      920,
+      54,
+      10,
+      "rgba(125,69,3,0.94)"
+    );
+
+    strokeRoundedRect(
+      ctx,
+      80,
+      top,
+      920,
+      54,
+      10,
+      "#eeb619",
+      2
+    );
+
+    drawCenteredText(
+      ctx,
+      `PROVISIONAL - ${provisionalCount} RESULT${provisionalCount === 1 ? "" : "S"} OUTSTANDING`,
+      540,
+      top + 36,
+      850,
+      25,
+      15,
+      "#ffffff",
+      "Impact"
+    );
+  } else {
+    drawCenteredText(
+      ctx,
+      "KEEP UP THE GREAT PREDICTIONS!",
+      540,
+      top + 25,
+      880,
+      32,
+      19,
+      "#ed2732",
+      "Impact"
+    );
+
+    drawCenteredText(
+      ctx,
+      "EVERY POINT COUNTS.",
+      540,
+      top + 54,
+      740,
+      25,
+      17,
+      "#ffffff",
+      "Impact"
+    );
+  }
+}
+
+/* =====================================================
    WEEKLY POSTER
-
-   FINAL:
-   WEEKLY WINNER!
-
-   OUTSTANDING RESULT(S):
-   WEEKLY LEADER!
-   + PROVISIONAL RIDER
 ===================================================== */
 
 async function drawWeeklyPoster(
@@ -2751,20 +2976,16 @@ async function drawWeeklyPoster(
 
   await drawPosterBrand(ctx);
 
-  const isProvisional =
+  const provisional =
     outstandingCount > 0;
 
-  const joint =
-    leaders.length > 1;
-
-  /* MATCH WEEK */
   fillRoundedRect(
     ctx,
     335,
     216,
     410,
-    64,
-    14,
+    60,
+    12,
     "#0759b6"
   );
 
@@ -2773,8 +2994,8 @@ async function drawWeeklyPoster(
     335,
     216,
     410,
-    64,
-    14,
+    60,
+    12,
     "#2c9cff",
     2
   );
@@ -2783,316 +3004,151 @@ async function drawWeeklyPoster(
     ctx,
     `MATCH WEEK ${week.week_no}`,
     540,
-    261,
-    360,
-    37,
-    26,
-    "#ffffff",
-    "Impact"
-  );
-
-  /* WINNER / LEADER HEADING */
-
-  let mainHeading;
-
-  if (isProvisional) {
-    mainHeading =
-      joint
-        ? "JOINT WEEKLY LEADERS!"
-        : "WEEKLY LEADER!";
-  } else {
-    mainHeading =
-      joint
-        ? "JOINT WEEKLY WINNERS!"
-        : "WEEKLY WINNER!";
-  }
-
-  drawCenteredText(
-    ctx,
-    mainHeading,
-    540,
-    362,
-    900,
-    70,
-    46,
-    "#f4f5f6",
-    "Impact"
-  );
-
-  /* HERO */
-
-  const heroGradient =
-    ctx.createLinearGradient(
-      90,
-      0,
-      990,
-      0
-    );
-
-  heroGradient.addColorStop(
-    0,
-    "rgba(91,55,0,0.76)"
-  );
-
-  heroGradient.addColorStop(
-    0.55,
-    "rgba(23,24,18,0.92)"
-  );
-
-  heroGradient.addColorStop(
-    1,
-    "rgba(10,14,21,0.92)"
-  );
-
-  fillRoundedRect(
-    ctx,
-    86,
-    400,
-    908,
-    250,
-    26,
-    heroGradient
-  );
-
-  strokeRoundedRect(
-    ctx,
-    86,
-    400,
-    908,
-    250,
-    26,
-    "#eeb619",
-    3
-  );
-
-  ctx.save();
-
-  ctx.shadowColor =
-    "#ffc320";
-
-  ctx.shadowBlur = 28;
-
-  ctx.font =
-    "116px Arial";
-
-  ctx.textAlign = "center";
-
-  ctx.fillText(
-    isProvisional ? "👑" : "🏆",
-    218,
-    555
-  );
-
-  ctx.restore();
-
-  const leaderText =
-    leaders
-      .slice(0, 2)
-      .map(
-        (leader) =>
-          leader.teamName
-      )
-      .join(" / ");
-
-  drawCenteredText(
-    ctx,
-    leaderText.toUpperCase(),
-    655,
-    485,
-    590,
-    62,
+    258,
+    370,
     36,
-    "#ffd14e",
-    "Impact"
-  );
-
-  const playerText =
-    leaders
-      .slice(0, 2)
-      .map(
-        (leader) =>
-          `${leader.firstName} ${leader.surname}`.trim()
-      )
-      .join(" / ");
-
-  drawCenteredText(
-    ctx,
-    playerText,
-    655,
-    538,
-    560,
-    31,
-    22,
-    "#ffffff",
-    "Arial Black"
-  );
-
-  fillRoundedRect(
-    ctx,
-    476,
-    568,
-    360,
-    60,
-    12,
-    "rgba(2,15,30,0.86)"
-  );
-
-  strokeRoundedRect(
-    ctx,
-    476,
-    568,
-    360,
-    60,
-    12,
-    "#eeb619",
-    2
-  );
-
-  drawCenteredText(
-    ctx,
-    `${rows[0].points} POINT${
-      rows[0].points === 1
-        ? ""
-        : "S"
-    }`,
-    656,
-    612,
-    320,
-    34,
     25,
     "#ffffff",
     "Impact"
   );
 
-  /* TOP FIVE */
+  const heading =
+    leaders.length > 1
+      ? provisional
+        ? "JOINT WEEKLY LEADERS!"
+        : "JOINT WEEKLY WINNERS!"
+      : provisional
+      ? "WEEKLY LEADER!"
+      : "WEEKLY WINNER!";
 
   drawCenteredText(
     ctx,
-    isProvisional
-      ? "CURRENT WEEKLY TOP 5"
-      : "WEEKLY TOP 5",
+    heading,
     540,
-    710,
-    600,
-    45,
-    32,
-    "#f5f6f8",
+    340,
+    950,
+    64,
+    38,
+    "#ffffff",
     "Impact"
   );
 
-  drawLeaderboardTable(
+  const shown =
+    tiedCutoff(rows, 5);
+
+  const columns =
+    leaders.length <= 3
+      ? leaders.length
+      : 2;
+
+  const panelHeight =
+    Math.min(
+      310,
+      Math.max(
+        150,
+        60 +
+          Math.ceil(
+            leaders.length / columns
+          ) * 56
+      )
+    );
+
+  const panelTop = 365;
+
+  drawLeaderPanel(
     ctx,
-    rows.slice(0, 5),
-    {
-      x: 80,
-      y: 745,
-      width: 920,
-      rowHeight: 78,
-      showPlayer: true,
-    }
+    leaders,
+    panelTop,
+    panelHeight,
+    provisional
+      ? "LEADER"
+      : "WINNER"
   );
 
-  /*
-    PROVISIONAL RIDER
-  */
+  const scoreY =
+    panelTop +
+    panelHeight +
+    27;
 
-  if (isProvisional) {
-    const riderY = 1200;
+  drawCenteredText(
+    ctx,
+    `${leaders[0].points} POINT${leaders[0].points === 1 ? "" : "S"} EACH`,
+    540,
+    scoreY,
+    500,
+    29,
+    19,
+    "#ffd144",
+    "Impact"
+  );
 
-    const riderGradient =
-      ctx.createLinearGradient(
-        80,
-        0,
-        1000,
-        0
-      );
+  const headingY =
+    scoreY + 44;
 
-    riderGradient.addColorStop(
-      0,
-      "rgba(151,86,0,0.92)"
+  drawCenteredText(
+    ctx,
+    provisional
+      ? "CURRENT WEEKLY LEADERBOARD"
+      : "WEEKLY LEADERBOARD",
+    540,
+    headingY,
+    820,
+    39,
+    25,
+    "#ffffff",
+    "Impact"
+  );
+
+  const tableY =
+    headingY + 23;
+
+  const tableBottomLimit = 1190;
+
+  const rowHeight =
+    Math.min(
+      70,
+      (
+        tableBottomLimit -
+        tableY -
+        48
+      ) / shown.length
     );
 
-    riderGradient.addColorStop(
-      0.5,
-      "rgba(119,62,0,0.96)"
-    );
-
-    riderGradient.addColorStop(
-      1,
-      "rgba(151,86,0,0.92)"
-    );
-
-    fillRoundedRect(
-      ctx,
-      80,
-      riderY,
-      920,
-      78,
-      15,
-      riderGradient
-    );
-
-    strokeRoundedRect(
-      ctx,
-      80,
-      riderY,
-      920,
-      78,
-      15,
-      "#ffb31c",
-      3
-    );
-
+  if (rowHeight < 24) {
     drawCenteredText(
       ctx,
-      "PROVISIONAL STANDINGS",
+      `${shown.length} PLAYERS TIED AT THE TOP - FULL LIST IN THE APP`,
       540,
-      riderY + 31,
-      800,
-      25,
-      20,
-      "#ffd45a",
-      "Arial Black"
-    );
-
-    drawCenteredText(
-      ctx,
-      `${outstandingCount} RESULT${
-        outstandingCount === 1
-          ? ""
-          : "S"
-      } STILL TO BE SUBMITTED`,
-      540,
-      riderY + 61,
-      800,
-      22,
-      17,
+      tableY + 45,
+      900,
+      28,
+      16,
       "#ffffff",
-      "Arial Black"
+      "Impact"
+    );
+
+    drawPosterClosing(
+      ctx,
+      1220,
+      outstandingCount
     );
   } else {
-    drawCenteredText(
+    drawLeaderboardTable(
       ctx,
-      "GREAT PREDICTIONS THIS WEEK!",
-      540,
-      1225,
-      820,
-      39,
-      28,
-      "#168eff",
-      "Impact"
+      shown,
+      {
+        x: 80,
+        y: tableY,
+        width: 920,
+        rowHeight,
+        compact: true,
+      }
     );
 
-    drawCenteredText(
+    drawPosterClosing(
       ctx,
-      "WELL DONE EVERYONE.",
-      540,
-      1272,
-      780,
-      35,
-      26,
-      "#ffffff",
-      "Impact"
+      1210,
+      outstandingCount
     );
   }
 
@@ -3116,18 +3172,18 @@ async function drawOverallPoster(
     ctx,
     "OVERALL LEADERBOARD",
     540,
-    316,
-    930,
-    68,
-    44,
-    "#f4f5f6",
+    300,
+    940,
+    67,
+    42,
+    "#ffffff",
     "Impact"
   );
 
   fillRoundedRect(
     ctx,
     355,
-    345,
+    320,
     370,
     52,
     11,
@@ -3137,7 +3193,7 @@ async function drawOverallPoster(
   strokeRoundedRect(
     ctx,
     355,
-    345,
+    320,
     370,
     52,
     11,
@@ -3149,156 +3205,104 @@ async function drawOverallPoster(
     ctx,
     `AFTER MATCH WEEK ${week.week_no}`,
     540,
-    382,
-    330,
+    357,
+    340,
     29,
-    22,
+    21,
     "#ffffff",
     "Impact"
   );
 
-  const leader = rows[0];
-
-  const heroGradient =
-    ctx.createLinearGradient(
-      70,
-      0,
-      1010,
-      0
+  const leaders =
+    rows.filter(
+      (row) =>
+        row.points === rows[0].points
     );
 
-  heroGradient.addColorStop(
-    0,
-    "rgba(112,69,0,0.64)"
-  );
+  const shown =
+    tiedCutoff(rows, 10);
 
-  heroGradient.addColorStop(
-    0.52,
-    "rgba(23,24,18,0.86)"
-  );
+  const columns =
+    leaders.length <= 3
+      ? leaders.length
+      : 2;
 
-  heroGradient.addColorStop(
-    1,
-    "rgba(8,16,28,0.90)"
-  );
+  const panelHeight =
+    Math.min(
+      235,
+      Math.max(
+        125,
+        55 +
+          Math.ceil(
+            leaders.length / columns
+          ) * 47
+      )
+    );
 
-  fillRoundedRect(
+  drawLeaderPanel(
     ctx,
-    74,
-    430,
-    932,
-    158,
-    22,
-    heroGradient
+    leaders,
+    397,
+    panelHeight,
+    "LEADER"
   );
 
-  strokeRoundedRect(
+  const tableY =
+    397 +
+    panelHeight +
+    20;
+
+  const rowHeight =
+    Math.min(
+      55,
+      (
+        1185 -
+        tableY -
+        48
+      ) / shown.length
+    );
+
+  if (rowHeight < 23) {
+    drawCenteredText(
+      ctx,
+      `${shown.length} PLAYERS IN THE TOP 10 INCLUDING TIES`,
+      540,
+      tableY + 44,
+      890,
+      30,
+      17,
+      "#ffffff",
+      "Impact"
+    );
+
+    drawCenteredText(
+      ctx,
+      "SEE THE COMPLETE LEADERBOARD IN THE APP",
+      540,
+      tableY + 82,
+      890,
+      25,
+      15,
+      "#ffffff",
+      "Impact"
+    );
+  } else {
+    drawLeaderboardTable(
+      ctx,
+      shown,
+      {
+        x: 70,
+        y: tableY,
+        width: 940,
+        rowHeight,
+        compact: true,
+      }
+    );
+  }
+
+  drawPosterClosing(
     ctx,
-    74,
-    430,
-    932,
-    158,
-    22,
-    "#eeb619",
-    2
-  );
-
-  ctx.font =
-    "74px Arial";
-
-  ctx.textAlign = "center";
-
-  ctx.fillText(
-    "🏆",
-    155,
-    536
-  );
-
-  drawLeftText(
-    ctx,
-    leader.teamName.toUpperCase(),
-    225,
-    493,
-    570,
-    47,
-    29,
-    "#ffd144",
-    "Impact"
-  );
-
-  drawLeftText(
-    ctx,
-    `${leader.firstName} ${leader.surname}`.trim(),
-    225,
-    540,
-    500,
-    27,
-    20,
-    "#ffffff",
-    "Arial Black"
-  );
-
-  drawCenteredText(
-    ctx,
-    String(leader.points),
-    894,
-    507,
-    135,
-    58,
-    40,
-    "#ffd144",
-    "Impact"
-  );
-
-  drawCenteredText(
-    ctx,
-    leader.points === 1
-      ? "POINT"
-      : "POINTS",
-    894,
-    545,
-    140,
-    18,
-    14,
-    "#c8a746",
-    "Arial Black"
-  );
-
-  drawLeaderboardTable(
-    ctx,
-    rows.slice(0, 10),
-    {
-      x: 70,
-      y: 630,
-      width: 940,
-      rowHeight: 56,
-      showPlayer: true,
-      compact: true,
-    }
-  );
-
-  drawCenteredText(
-    ctx,
-    "KEEP UP THE GREAT PREDICTIONS!",
-    540,
-    1230,
-    870,
-    37,
-    27,
-    "#ed2732",
-    "Impact"
-  );
-
-  drawCenteredText(
-    ctx,
-    "EVERY POINT COUNTS.",
-    540,
-    1272,
-    720,
-    33,
-    25,
-    "#ffffff",
-    "Impact"
+    1210
   );
 
   drawPosterFooter(ctx);
@@ -3321,17 +3325,20 @@ function drawLeaderboardTable(
     compact = false,
   } = options;
 
-  const tableHeight =
-    rows.length * rowHeight + 48;
+  const headerHeight = 42;
+
+  const height =
+    headerHeight +
+    rows.length * rowHeight;
 
   fillRoundedRect(
     ctx,
     x,
     y,
     width,
-    tableHeight,
-    16,
-    "rgba(2,14,29,0.88)"
+    height,
+    14,
+    "rgba(2,14,29,0.91)"
   );
 
   strokeRoundedRect(
@@ -3339,31 +3346,26 @@ function drawLeaderboardTable(
     x,
     y,
     width,
-    tableHeight,
-    16,
-    "rgba(80,145,207,0.58)",
+    height,
+    14,
+    "rgba(80,145,207,0.65)",
     2
   );
 
-  ctx.fillStyle =
-    "rgba(10,45,79,0.86)";
-
-  roundedRect(
+  fillRoundedRect(
     ctx,
     x,
     y,
     width,
-    48,
-    16
+    headerHeight,
+    12,
+    "#0b3155"
   );
 
-  ctx.fill();
-
-  ctx.fillStyle =
-    "#88a6c2";
+  ctx.fillStyle = "#a5c1db";
 
   ctx.font =
-    "900 15px Arial Black, Arial, sans-serif";
+    "900 15px Arial, sans-serif";
 
   ctx.textBaseline = "middle";
 
@@ -3371,107 +3373,104 @@ function drawLeaderboardTable(
 
   ctx.fillText(
     "POS",
-    x + 55,
-    y + 24
+    x + 49,
+    y + 21
   );
 
   ctx.textAlign = "left";
 
   ctx.fillText(
     "TEAM",
-    x + 108,
-    y + 24
+    x + 104,
+    y + 21
   );
 
   ctx.fillText(
     "PLAYER",
-    x +
-      width -
-      (compact ? 355 : 390),
-    y + 24
+    x + width * 0.62,
+    y + 21
   );
 
   ctx.textAlign = "right";
 
   ctx.fillText(
-    "POINTS",
-    x + width - 28,
-    y + 24
+    "PTS",
+    x + width - 23,
+    y + 21
   );
 
   rows.forEach(
-    (row, index) => {
-      const top =
+    (row, i) => {
+      const cy =
         y +
-        48 +
-        index * rowHeight;
+        headerHeight +
+        i * rowHeight +
+        rowHeight / 2;
 
-      if (index % 2 === 0) {
+      const top =
+        cy - rowHeight / 2;
+
+      if (
+        i % 2 === 0 ||
+        row.position === 1
+      ) {
         ctx.fillStyle =
-          "rgba(255,255,255,0.025)";
+          row.position === 1
+            ? "rgba(255,187,0,0.09)"
+            : "rgba(255,255,255,0.025)";
 
         ctx.fillRect(
-          x + 1,
+          x + 2,
           top,
-          width - 2,
+          width - 4,
           rowHeight
         );
       }
 
-      if (row.position === 1) {
-        ctx.fillStyle =
-          "rgba(255,187,0,0.08)";
-
-        ctx.fillRect(
-          x + 1,
-          top,
-          width - 2,
-          rowHeight
+      const radius =
+        Math.max(
+          10,
+          Math.min(
+            18,
+            rowHeight * 0.33
+          )
         );
-      }
-
-      ctx.strokeStyle =
-        "rgba(105,145,181,0.19)";
-
-      ctx.lineWidth = 1;
-
-      ctx.beginPath();
-
-      ctx.moveTo(
-        x + 12,
-        top + rowHeight
-      );
-
-      ctx.lineTo(
-        x + width - 12,
-        top + rowHeight
-      );
-
-      ctx.stroke();
 
       drawMedal(
         ctx,
         row.position,
-        x + 55,
-        top + rowHeight / 2,
-        compact ? 18 : 22
+        x + 49,
+        cy,
+        radius
       );
 
+      const teamX =
+        x + 104;
+
+      const teamMax =
+        width * 0.62 - 114;
+
       const teamSize =
-        fitFont(
-          ctx,
-          row.teamName.toUpperCase(),
-          compact ? 335 : 350,
-          compact ? 25 : 28,
-          17,
-          "Impact"
+        Math.max(
+          11,
+          Math.min(
+            24,
+            rowHeight * 0.45
+          )
         );
 
       ctx.textAlign = "left";
       ctx.textBaseline = "middle";
 
       ctx.font =
-        `900 ${teamSize}px Impact, Arial Black, Arial`;
+        `900 ${fitFont(
+          ctx,
+          row.teamName.toUpperCase(),
+          teamMax,
+          teamSize,
+          10,
+          "Impact"
+        )}px Impact, Arial, sans-serif`;
 
       ctx.fillStyle =
         row.position === 1
@@ -3480,43 +3479,50 @@ function drawLeaderboardTable(
 
       ctx.fillText(
         row.teamName.toUpperCase(),
-        x + 108,
-        top + rowHeight / 2
+        teamX,
+        cy,
+        teamMax
       );
 
-      const player =
-        `${row.firstName} ${row.surname}`.trim();
+      const playerX =
+        x + width * 0.62;
 
-      const playerSize =
-        fitFont(
-          ctx,
-          player,
-          compact ? 245 : 280,
-          compact ? 18 : 20,
-          13,
-          "Arial"
-        );
+      const playerMax =
+        width * 0.28;
 
       ctx.font =
-        `700 ${playerSize}px Arial, sans-serif`;
+        `700 ${fitFont(
+          ctx,
+          posterName(row),
+          playerMax,
+          Math.min(
+            18,
+            rowHeight * 0.36
+          ),
+          10,
+          "Arial"
+        )}px Arial, sans-serif`;
 
       ctx.fillStyle =
         "#b5c5d4";
 
       ctx.fillText(
-        player,
-        x +
-          width -
-          (compact ? 355 : 390),
-        top + rowHeight / 2
+        posterName(row),
+        playerX,
+        cy,
+        playerMax
       );
 
       ctx.textAlign = "right";
 
       ctx.font =
-        `900 ${
-          compact ? 29 : 34
-        }px Impact, Arial Black, Arial`;
+        `900 ${Math.max(
+          13,
+          Math.min(
+            28,
+            rowHeight * 0.54
+          )
+        )}px Impact, Arial, sans-serif`;
 
       ctx.fillStyle =
         row.position === 1
@@ -3525,13 +3531,14 @@ function drawLeaderboardTable(
 
       ctx.fillText(
         String(row.points),
-        x + width - 28,
-        top + rowHeight / 2
+        x + width - 24,
+        cy
       );
     }
   );
 
-  ctx.textBaseline = "alphabetic";
+  ctx.textBaseline =
+    "alphabetic";
 }
 
 /* =====================================================
@@ -3541,7 +3548,8 @@ function drawLeaderboardTable(
 function drawPosterFooter(ctx) {
   ctx.save();
 
-  ctx.textAlign = "center";
+  ctx.textAlign =
+    "center";
 
   ctx.fillStyle =
     "rgba(255,255,255,0.62)";
@@ -3557,3 +3565,5 @@ function drawPosterFooter(ctx) {
 
   ctx.restore();
 }
+
+        
