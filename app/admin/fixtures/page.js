@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../../lib/supabase";
 
@@ -10,6 +10,7 @@ export default function ManageFixturesPage() {
   const [authorised, setAuthorised] = useState(false);
   const [loading, setLoading] = useState(true);
   const [savingId, setSavingId] = useState(null);
+  const savingRef = useRef(new Set());
   const [message, setMessage] = useState("");
 
   const [weeks, setWeeks] = useState([]);
@@ -64,33 +65,52 @@ export default function ManageFixturesPage() {
     loadPage();
   }, [router]);
 
+
   useEffect(() => {
     if (!authorised || !selectedWeekId) return;
 
+    let cancelled = false;
+
     async function loadFixtures() {
       setLoading(true);
+      setFixtures([]);
       setMessage("");
 
-      const { data, error } = await supabase
-        .from("fixtures")
-        .select(
-          "id, match_week_id, home_team, away_team, fixture_order, scheduled_date, status"
-        )
-        .eq("match_week_id", Number(selectedWeekId))
-        .order("fixture_order", { ascending: true });
+      try {
+        const { data, error } = await supabase
+          .from("fixtures")
+          .select(
+            "id, match_week_id, home_team, away_team, fixture_order, scheduled_date, status"
+          )
+          .eq("match_week_id", Number(selectedWeekId))
+          .order("fixture_order", { ascending: true });
 
-      if (error) {
-        setMessage(error.message);
-        setLoading(false);
-        return;
+        if (cancelled) return;
+
+        if (error) {
+          setMessage(error.message);
+          return;
+        }
+
+        setFixtures(data || []);
+      } catch (error) {
+        if (!cancelled) {
+          setMessage(error?.message || "Unable to load fixtures.");
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
-
-      setFixtures(data || []);
-      setLoading(false);
     }
 
     loadFixtures();
+
+    return () => {
+      cancelled = true;
+    };
   }, [selectedWeekId, authorised]);
+
 
   function updateFixtureField(fixtureId, field, value) {
     setFixtures((current) =>
@@ -102,7 +122,10 @@ export default function ManageFixturesPage() {
     );
   }
 
+
   async function saveFixture(fixture) {
+    if (savingRef.current.has(fixture.id)) return;
+
     if (
       !fixture.home_team ||
       !fixture.away_team ||
@@ -114,29 +137,36 @@ export default function ManageFixturesPage() {
       return;
     }
 
+    savingRef.current.add(fixture.id);
     setSavingId(fixture.id);
     setMessage("");
 
-    const { error } = await supabase
-      .from("fixtures")
-      .update({
-        home_team: fixture.home_team.trim(),
-        away_team: fixture.away_team.trim(),
-        fixture_order: Number(fixture.fixture_order),
-        scheduled_date: fixture.scheduled_date,
-        status: fixture.status,
-      })
-      .eq("id", fixture.id);
+    try {
+      const { error } = await supabase
+        .from("fixtures")
+        .update({
+          home_team: fixture.home_team.trim(),
+          away_team: fixture.away_team.trim(),
+          fixture_order: Number(fixture.fixture_order),
+          scheduled_date: fixture.scheduled_date,
+          status: fixture.status,
+        })
+        .eq("id", fixture.id);
 
-    if (error) {
-      setMessage(error.message);
+      if (error) {
+        setMessage(error.message);
+        return;
+      }
+
+      setMessage(`Fixture ${fixture.fixture_order} saved.`);
+    } catch (error) {
+      setMessage(error?.message || "Unable to save fixture.");
+    } finally {
+      savingRef.current.delete(fixture.id);
       setSavingId(null);
-      return;
     }
-
-    setMessage(`Fixture ${fixture.fixture_order} saved.`);
-    setSavingId(null);
   }
+
 
   function BrandHeader() {
     return (
