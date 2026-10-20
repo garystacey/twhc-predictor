@@ -142,6 +142,17 @@ if (
       return;
     }
 
+    const duplicateOrder = fixtures.some(
+      (other) =>
+        other.id !== fixture.id &&
+        Number(other.fixture_order) === Number(fixture.fixture_order)
+    );
+
+    if (duplicateOrder) {
+      setMessage("Another fixture already has this order number.");
+      return;
+    }
+
     savingRef.current.add(fixture.id);
     setSavingId(fixture.id);
     setMessage("");
