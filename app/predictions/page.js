@@ -16,7 +16,9 @@ export default function PredictionsPage() {
   const [clearingAll, setClearingAll] = useState(false);
   const [savingFixtures, setSavingFixtures] = useState({});
 const savingFixturesRef = useRef(new Set());
+const clearingAllRef = useRef(false);
 
+  
   useEffect(() => {
     async function loadPredictionsPage() {
       const {
@@ -124,7 +126,13 @@ const savingFixturesRef = useRef(new Set());
 
 
   async function chooseResult(fixtureId, result, isOpen) {
-    if (!isOpen || savingFixturesRef.current.has(fixtureId)) return;
+
+if (
+  !isOpen ||
+clearingAllRef.current ||
+  savingFixturesRef.current.has(fixtureId)
+) return;
+
 
     savingFixturesRef.current.add(fixtureId);
     setSavingFixtures((current) => ({
@@ -196,8 +204,13 @@ const savingFixturesRef = useRef(new Set());
   }
 
 
+
   async function clearAllPredictions(weekFixtures, weekNo, isOpen) {
-    if (!isOpen) return;
+    if (
+      !isOpen ||
+clearingAllRef.current ||
+      savingFixturesRef.current.size > 0
+    ) return;
 
     const confirmed = window.confirm(
       `Clear all predictions for Match Week ${weekNo}?\n\nThis will remove all of your selections for this Match Week.`
@@ -205,51 +218,70 @@ const savingFixturesRef = useRef(new Set());
 
     if (!confirmed) return;
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    // Lock immediately after confirmation.
+    // Also recheck for any save that started meanwhile.
+    if (savingFixturesRef.current.size > 0) return;
 
-    if (!user) {
-      router.push("/login");
-      return;
-    }
 
-    const fixtureIds = weekFixtures
-      .filter((fixture) => fixture.status !== "cancelled")
-      .map((fixture) => fixture.id);
+clearingAllRef.current = true;
+setClearingAll(true);
+setMessage("");
 
-    if (fixtureIds.length === 0) {
-      setMessage("There are no predictions to clear.");
-      return;
-    }
 
-    setClearingAll(true);
-    setMessage("");
+    try {
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
 
-    const { error } = await supabase
-      .from("predictions")
-      .delete()
-      .eq("user_id", user.id)
-      .in("fixture_id", fixtureIds);
+      if (authError) {
+        setMessage(authError.message);
+        return;
+      }
 
-    if (error) {
-      setMessage(error.message);
-      setClearingAll(false);
-      return;
-    }
+      if (!user) {
+        router.push("/login");
+        return;
+      }
 
-    setChoices((current) => {
-      const updatedChoices = { ...current };
+      const fixtureIds = weekFixtures
+        .filter((fixture) => fixture.status !== "cancelled")
+        .map((fixture) => fixture.id);
 
-      fixtureIds.forEach((fixtureId) => {
-        delete updatedChoices[fixtureId];
+      if (fixtureIds.length === 0) {
+        setMessage("There are no predictions to clear.");
+        return;
+      }
+
+      const { error } = await supabase
+        .from("predictions")
+        .delete()
+        .eq("user_id", user.id)
+        .in("fixture_id", fixtureIds);
+
+      if (error) {
+        setMessage(error.message);
+        return;
+      }
+
+      setChoices((current) => {
+        const updatedChoices = { ...current };
+
+        fixtureIds.forEach((fixtureId) => {
+          delete updatedChoices[fixtureId];
+        });
+
+        return updatedChoices;
       });
 
-      return updatedChoices;
-    });
-
-    setMessage(`All predictions cleared for Match Week ${weekNo}.`);
-    setClearingAll(false);
+      setMessage(`All predictions cleared for Match Week ${weekNo}.`);
+    } catch (error) {
+      setMessage(error?.message || "Unable to clear predictions.");
+    } finally {
+      // Always unlock, including after errors.
+clearingAllRef.current = false;
+setClearingAll(false);
+    }
   }
 
   function formatDate(dateString) {
@@ -578,7 +610,13 @@ disabled={!isOpen || Boolean(savingFixtures[fixture.id])}
                           isOpen
                         )
                       }
-                      disabled={clearingAll || !hasAnyPredictions}
+
+disabled={
+  clearingAll ||
+  savingFixturesRef.current.size > 0 ||
+  !hasAnyPredictions
+}
+
                     >
                       {clearingAll
                         ? "CLEARING..."
