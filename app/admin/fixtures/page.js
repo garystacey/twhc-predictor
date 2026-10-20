@@ -126,13 +126,15 @@ export default function ManageFixturesPage() {
   async function saveFixture(fixture) {
     if (savingRef.current.has(fixture.id)) return;
 
-    if (
-      !fixture.home_team ||
-      !fixture.away_team ||
-      !fixture.fixture_order ||
-      !fixture.scheduled_date ||
-      !fixture.status
-    ) {
+
+if (
+  !fixture.home_team?.trim() ||
+  !fixture.away_team?.trim() ||
+  !fixture.fixture_order ||
+  !fixture.scheduled_date ||
+  !fixture.status
+) {
+
       setMessage("Please complete all fixture fields before saving.");
       return;
     }
