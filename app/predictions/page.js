@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabase";
 
@@ -14,6 +14,8 @@ export default function PredictionsPage() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
   const [clearingAll, setClearingAll] = useState(false);
+  const [savingFixtures, setSavingFixtures] = useState({});
+const savingFixturesRef = useRef(new Set());
 
   useEffect(() => {
     async function loadPredictionsPage() {
@@ -120,8 +122,15 @@ export default function PredictionsPage() {
     loadPredictionsPage();
   }, [router]);
 
+
   async function chooseResult(fixtureId, result, isOpen) {
-    if (!isOpen) return;
+    if (!isOpen || savingFixturesRef.current.has(fixtureId)) return;
+
+    savingFixturesRef.current.add(fixtureId);
+    setSavingFixtures((current) => ({
+      ...current,
+      [fixtureId]: true,
+    }));
 
     const resultMap = {
       H: "home",
@@ -129,45 +138,63 @@ export default function PredictionsPage() {
       A: "away",
     };
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    try {
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
 
-    if (!user) {
-      router.push("/login");
-      return;
-    }
-
-    const { error } = await supabase.from("predictions").upsert(
-      {
-        user_id: user.id,
-        fixture_id: fixtureId,
-        prediction: resultMap[result],
-        updated_at: new Date().toISOString(),
-      },
-      {
-        onConflict: "user_id,fixture_id",
+      if (authError) {
+        setMessage(authError.message);
+        return;
       }
-    );
 
-    if (error) {
-      setMessage(error.message);
-      return;
-    }
+      if (!user) {
+        router.push("/login");
+        return;
+      }
 
-    setChoices((current) => ({
-      ...current,
-      [fixtureId]: result,
-    }));
-
-    setMessage("Prediction saved");
-
-    window.setTimeout(() => {
-      setMessage((current) =>
-        current === "Prediction saved" ? "" : current
+      const { error } = await supabase.from("predictions").upsert(
+        {
+          user_id: user.id,
+          fixture_id: fixtureId,
+          prediction: resultMap[result],
+          updated_at: new Date().toISOString(),
+        },
+        {
+          onConflict: "user_id,fixture_id",
+        }
       );
-    }, 1200);
+
+      if (error) {
+        setMessage(error.message);
+        return;
+      }
+
+      setChoices((current) => ({
+        ...current,
+        [fixtureId]: result,
+      }));
+
+      setMessage("Prediction saved");
+
+      window.setTimeout(() => {
+        setMessage((current) =>
+          current === "Prediction saved" ? "" : current
+        );
+      }, 1200);
+    } catch (error) {
+      setMessage(error?.message || "Unable to save prediction.");
+    } finally {
+      savingFixturesRef.current.delete(fixtureId);
+
+      setSavingFixtures((current) => ({
+        ...current,
+        [fixtureId]: false,
+      }));
+    }
   }
+
 
   async function clearAllPredictions(weekFixtures, weekNo, isOpen) {
     if (!isOpen) return;
@@ -507,10 +534,10 @@ export default function PredictionsPage() {
                                     ? "Draw"
                                     : "Away win"
                                 }
-                                onClick={() =>
-                                  chooseResult(fixture.id, result, isOpen)
-                                }
-                                disabled={!isOpen}
+onClick={() =>
+  chooseResult(fixture.id, result, isOpen)
+}
+disabled={!isOpen || Boolean(savingFixtures[fixture.id])}
                                 className={`choiceButton ${
                                   isSelected ? "selected" : ""
                                 } ${!isOpen ? "locked" : ""}`}
