@@ -51,14 +51,34 @@ const clearingAllRef = useRef(false);
         return;
       }
 
-      const { data: fixtureData, error: fixtureError } = await supabase
-        .from("fixtures")
-        .select(
-          "id, match_week_id, fixture_order, home_team, away_team, scheduled_date, status, result"
-        )
-        .in("match_week_id", weekIds)
-        .order("match_week_id", { ascending: true })
-        .order("fixture_order", { ascending: true });
+
+      // Load all fixtures in batches to avoid Supabase's 1,000-row limit.
+      let fixtureData = [];
+      let fixtureError = null;
+      const fixtureBatchSize = 500;
+
+      for (let offset = 0; ; offset += fixtureBatchSize) {
+        const { data, error } = await supabase
+          .from("fixtures")
+          .select(
+            "id, match_week_id, fixture_order, home_team, away_team, scheduled_date, status, result"
+          )
+          .in("match_week_id", weekIds)
+          .order("match_week_id", { ascending: true })
+          .order("fixture_order", { ascending: true })
+          .order("id", { ascending: true })
+          .range(offset, offset + fixtureBatchSize - 1);
+
+        if (error) {
+          fixtureError = error;
+          break;
+        }
+
+        fixtureData.push(...(data || []));
+
+        if (!data || data.length < fixtureBatchSize) break;
+      }
+
 
       if (fixtureError) {
         setMessage(fixtureError.message);
@@ -71,11 +91,31 @@ const clearingAllRef = useRef(false);
       let savedChoices = {};
 
       if (fixtureIds.length > 0) {
-        const { data: predictionData, error: predictionError } = await supabase
-          .from("predictions")
-          .select("fixture_id, prediction")
-          .eq("user_id", user.id)
-          .in("fixture_id", fixtureIds);
+
+        // Load all saved predictions in batches.
+        let predictionData = [];
+        let predictionError = null;
+        const predictionBatchSize = 500;
+
+        for (let offset = 0; ; offset += predictionBatchSize) {
+          const { data, error } = await supabase
+            .from("predictions")
+            .select("fixture_id, prediction")
+            .eq("user_id", user.id)
+            .in("fixture_id", fixtureIds)
+            .order("fixture_id", { ascending: true })
+            .range(offset, offset + predictionBatchSize - 1);
+
+          if (error) {
+            predictionError = error;
+            break;
+          }
+
+          predictionData.push(...(data || []));
+
+          if (!data || data.length < predictionBatchSize) break;
+        }
+
 
         if (predictionError) {
           setMessage(predictionError.message);
