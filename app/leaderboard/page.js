@@ -32,15 +32,39 @@ export default function LeaderboardPage() {
         return;
       }
 
-      const { data: predictions, error: predictionError } = await supabase
-        .from("predictions")
-        .select("user_id, prediction, fixture_id");
 
-      if (predictionError) {
-        setMessage(predictionError.message);
-        setLoading(false);
-        return;
+      // Retrieve ALL predictions in batches to avoid
+      // Supabase's default 1,000-row response limit.
+      const predictions = [];
+      const batchSize = 500;
+      let predictionOffset = 0;
+
+      while (true) {
+        const { data: batch, error: predictionError } = await supabase
+          .from("predictions")
+          .select("user_id, prediction, fixture_id")
+          .order("fixture_id", { ascending: true })
+          .order("user_id", { ascending: true })
+          .range(
+            predictionOffset,
+            predictionOffset + batchSize - 1
+          );
+
+        if (predictionError) {
+          setMessage(predictionError.message);
+          setLoading(false);
+          return;
+        }
+
+        predictions.push(...(batch || []));
+
+        if (!batch || batch.length < batchSize) {
+          break;
+        }
+
+        predictionOffset += batchSize;
       }
+
 
       const { data: fixtures, error: fixtureError } = await supabase
         .from("fixtures")
