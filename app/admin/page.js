@@ -182,19 +182,31 @@ export default function AdminDashboardPage() {
     let predictions = [];
 
     if (fixtureIds.length > 0) {
-      const {
-        data,
-        error,
-      } = await supabase
-        .from("predictions")
-        .select("user_id, prediction, fixture_id")
-        .in("fixture_id", fixtureIds);
+      const pageSize = 500;
+      let from = 0;
 
-      if (error) {
-        throw new Error(error.message);
+      while (true) {
+        const { data, error } = await supabase
+          .from("predictions")
+          .select("user_id, prediction, fixture_id")
+          .in("fixture_id", fixtureIds)
+          .order("fixture_id", { ascending: true })
+          .order("user_id", { ascending: true })
+          .range(from, from + pageSize - 1);
+
+        if (error) {
+          throw new Error(error.message);
+        }
+
+        const batch = data || [];
+        predictions.push(...batch);
+
+        if (batch.length < pageSize) {
+          break;
+        }
+
+        from += pageSize;
       }
-
-      predictions = data || [];
     }
 
     const resultByFixture = {};
@@ -326,21 +338,31 @@ export default function AdminDashboardPage() {
     let predictions = [];
 
     if (fixtureIds.length > 0) {
-      const {
-        data,
-        error,
-      } = await supabase
-        .from("predictions")
-        .select(
-          "user_id, prediction, fixture_id"
-        )
-        .in("fixture_id", fixtureIds);
+      const pageSize = 500;
+      let from = 0;
 
-      if (error) {
-        throw new Error(error.message);
+      while (true) {
+        const { data, error } = await supabase
+          .from("predictions")
+          .select("user_id, prediction, fixture_id")
+          .in("fixture_id", fixtureIds)
+          .order("fixture_id", { ascending: true })
+          .order("user_id", { ascending: true })
+          .range(from, from + pageSize - 1);
+
+        if (error) {
+          throw new Error(error.message);
+        }
+
+        const batch = data || [];
+        predictions.push(...batch);
+
+        if (batch.length < pageSize) {
+          break;
+        }
+
+        from += pageSize;
       }
-
-      predictions = data || [];
     }
 
     const resultByFixture = {};
