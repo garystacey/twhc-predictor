@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../../lib/supabase";
 
@@ -11,9 +11,10 @@ export default function AdminPage() {
   const [selectedWeekId, setSelectedWeekId] = useState("");
   const [fixtures, setFixtures] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [savingId, setSavingId] = useState(null);
-  const [message, setMessage] = useState("");
-  const [authorised, setAuthorised] = useState(false);
+const [savingId, setSavingId] = useState(null);
+const savingRef = useRef(new Set());
+const [message, setMessage] = useState("");
+const [authorised, setAuthorised] = useState(false);
 
   useEffect(() => {
     async function loadAdmin() {
@@ -93,7 +94,11 @@ export default function AdminPage() {
     loadFixtures();
   }, [selectedWeekId, authorised]);
 
+
   async function saveResult(fixtureId, result) {
+    if (savingRef.current.has(fixtureId)) return;
+
+    savingRef.current.add(fixtureId);
     setSavingId(fixtureId);
     setMessage("");
 
@@ -103,153 +108,191 @@ export default function AdminPage() {
       A: "away",
     };
 
-    const { error } = await supabase
-      .from("fixtures")
-      .update({
-        result: resultMap[result],
-        result_recorded_at: new Date().toISOString(),
-        status: "completed",
-      })
-      .eq("id", fixtureId);
+    try {
+      const { error } = await supabase
+        .from("fixtures")
+        .update({
+          result: resultMap[result],
+          result_recorded_at: new Date().toISOString(),
+          status: "completed",
+        })
+        .eq("id", fixtureId);
 
-    if (error) {
-      setMessage(error.message);
+      if (error) {
+        setMessage(error.message);
+        return;
+      }
+
+      setFixtures((current) =>
+        current.map((fixture) =>
+          fixture.id === fixtureId
+            ? {
+                ...fixture,
+                result: resultMap[result],
+                status: "completed",
+              }
+            : fixture
+        )
+      );
+
+      setMessage("Result saved.");
+    } catch (error) {
+      setMessage(error?.message || "Unable to save result.");
+    } finally {
+      savingRef.current.delete(fixtureId);
       setSavingId(null);
-      return;
     }
-
-    setFixtures((current) =>
-      current.map((fixture) =>
-        fixture.id === fixtureId
-          ? {
-              ...fixture,
-              result: resultMap[result],
-              status: "completed",
-            }
-          : fixture
-      )
-    );
-
-    setMessage("Result saved.");
-    setSavingId(null);
   }
 
+
+
   async function clearResult(fixtureId) {
+    if (savingRef.current.has(fixtureId)) return;
+
+    savingRef.current.add(fixtureId);
     setSavingId(fixtureId);
     setMessage("");
 
-    const { error } = await supabase
-      .from("fixtures")
-      .update({
-        result: null,
-        result_recorded_at: null,
-        status: "scheduled",
-      })
-      .eq("id", fixtureId);
+    try {
+      const { error } = await supabase
+        .from("fixtures")
+        .update({
+          result: null,
+          result_recorded_at: null,
+          status: "scheduled",
+        })
+        .eq("id", fixtureId);
 
-    if (error) {
-      setMessage(error.message);
+      if (error) {
+        setMessage(error.message);
+        return;
+      }
+
+      setFixtures((current) =>
+        current.map((fixture) =>
+          fixture.id === fixtureId
+            ? {
+                ...fixture,
+                result: null,
+                status: "scheduled",
+              }
+            : fixture
+        )
+      );
+
+      setMessage("Result cleared.");
+    } catch (error) {
+      setMessage(error?.message || "Unable to clear result.");
+    } finally {
+      savingRef.current.delete(fixtureId);
       setSavingId(null);
-      return;
     }
-
-    setFixtures((current) =>
-      current.map((fixture) =>
-        fixture.id === fixtureId
-          ? {
-              ...fixture,
-              result: null,
-              status: "scheduled",
-            }
-          : fixture
-      )
-    );
-
-    setMessage("Result cleared.");
-    setSavingId(null);
   }
 
+
+
   async function cancelFixture(fixtureId) {
+    if (savingRef.current.has(fixtureId)) return;
+
     const confirmed = window.confirm(
       "Mark this fixture as cancelled?\n\nNo points will be awarded for this fixture."
     );
 
     if (!confirmed) return;
+    if (savingRef.current.has(fixtureId)) return;
 
+    savingRef.current.add(fixtureId);
     setSavingId(fixtureId);
     setMessage("");
 
-    const { error } = await supabase
-      .from("fixtures")
-      .update({
-        result: null,
-        result_recorded_at: null,
-        status: "cancelled",
-      })
-      .eq("id", fixtureId);
+    try {
+      const { error } = await supabase
+        .from("fixtures")
+        .update({
+          result: null,
+          result_recorded_at: null,
+          status: "cancelled",
+        })
+        .eq("id", fixtureId);
 
-    if (error) {
-      setMessage(error.message);
+      if (error) {
+        setMessage(error.message);
+        return;
+      }
+
+      setFixtures((current) =>
+        current.map((fixture) =>
+          fixture.id === fixtureId
+            ? {
+                ...fixture,
+                result: null,
+                status: "cancelled",
+              }
+            : fixture
+        )
+      );
+
+      setMessage("Fixture marked as cancelled.");
+    } catch (error) {
+      setMessage(error?.message || "Unable to cancel fixture.");
+    } finally {
+      savingRef.current.delete(fixtureId);
       setSavingId(null);
-      return;
     }
-
-    setFixtures((current) =>
-      current.map((fixture) =>
-        fixture.id === fixtureId
-          ? {
-              ...fixture,
-              result: null,
-              status: "cancelled",
-            }
-          : fixture
-      )
-    );
-
-    setMessage("Fixture marked as cancelled.");
-    setSavingId(null);
   }
 
+
+
   async function restoreFixture(fixtureId) {
+    if (savingRef.current.has(fixtureId)) return;
+
     const confirmed = window.confirm(
       "Restore this fixture to the active fixture list?"
     );
 
     if (!confirmed) return;
+    if (savingRef.current.has(fixtureId)) return;
 
+    savingRef.current.add(fixtureId);
     setSavingId(fixtureId);
     setMessage("");
 
-    const { error } = await supabase
-      .from("fixtures")
-      .update({
-        result: null,
-        result_recorded_at: null,
-        status: "scheduled",
-      })
-      .eq("id", fixtureId);
+    try {
+      const { error } = await supabase
+        .from("fixtures")
+        .update({
+          result: null,
+          result_recorded_at: null,
+          status: "scheduled",
+        })
+        .eq("id", fixtureId);
 
-    if (error) {
-      setMessage(error.message);
+      if (error) {
+        setMessage(error.message);
+        return;
+      }
+
+      setFixtures((current) =>
+        current.map((fixture) =>
+          fixture.id === fixtureId
+            ? {
+                ...fixture,
+                result: null,
+                status: "scheduled",
+              }
+            : fixture
+        )
+      );
+
+      setMessage("Fixture restored.");
+    } catch (error) {
+      setMessage(error?.message || "Unable to restore fixture.");
+    } finally {
+      savingRef.current.delete(fixtureId);
       setSavingId(null);
-      return;
     }
-
-    setFixtures((current) =>
-      current.map((fixture) =>
-        fixture.id === fixtureId
-          ? {
-              ...fixture,
-              result: null,
-              status: "scheduled",
-            }
-          : fixture
-      )
-    );
-
-    setMessage("Fixture restored.");
-    setSavingId(null);
   }
+
 
   function displayResult(result) {
     if (result === "home") return "H";
