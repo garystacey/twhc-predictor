@@ -755,6 +755,10 @@ function PageStyles() {
         font-size: 13px;
         font-weight: 850;
       }
+      .weekSelect option {
+  background-color: #071a31;
+  color: #ffffff;
+}
 
       .weekSelect:focus {
         border-color: #2999ff;
