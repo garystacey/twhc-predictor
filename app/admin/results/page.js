@@ -66,33 +66,52 @@ const [authorised, setAuthorised] = useState(false);
     loadAdmin();
   }, [router]);
 
+
   useEffect(() => {
     if (!authorised || !selectedWeekId) return;
 
-    async function loadFixtures() {
-      setLoading(true);
-      setMessage("");
+    let cancelled = false;
 
-      const { data, error } = await supabase
-        .from("fixtures")
-        .select(
-          "id, fixture_order, home_team, away_team, scheduled_date, result, status"
-        )
-        .eq("match_week_id", selectedWeekId)
-        .order("fixture_order", { ascending: true });
+async function loadFixtures() {
+  setLoading(true);
+  setFixtures([]);
+  setMessage("");
 
-      if (error) {
-        setMessage(error.message);
-        setLoading(false);
-        return;
+      try {
+        const { data, error } = await supabase
+          .from("fixtures")
+          .select(
+            "id, fixture_order, home_team, away_team, scheduled_date, result, status"
+          )
+          .eq("match_week_id", selectedWeekId)
+          .order("fixture_order", { ascending: true });
+
+        if (cancelled) return;
+
+        if (error) {
+          setMessage(error.message);
+          return;
+        }
+
+        setFixtures(data || []);
+      } catch (error) {
+        if (!cancelled) {
+          setMessage(error?.message || "Unable to load fixtures.");
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
-
-      setFixtures(data || []);
-      setLoading(false);
     }
 
     loadFixtures();
+
+    return () => {
+      cancelled = true;
+    };
   }, [selectedWeekId, authorised]);
+
 
 
   async function saveResult(fixtureId, result) {
