@@ -143,33 +143,57 @@ export default function WeeklyLeaderboardsPage() {
             fixture.id
         );
 
+
       let predictionData = [];
 
+      // Load every prediction for this match week,
+      // avoiding Supabase's default 1,000-row limit.
       if (fixtureIds.length > 0) {
-        const {
-          data,
-          error: predictionError,
-        } = await supabase
-          .from("predictions")
-          .select(
-            "user_id, prediction, fixture_id"
-          )
-          .in(
-            "fixture_id",
-            fixtureIds
-          );
+        const batchSize = 500;
+        let predictionOffset = 0;
 
-        if (predictionError) {
-          setMessage(
-            predictionError.message
-          );
-          setLoading(false);
-          return;
+        while (true) {
+          const {
+            data: batch,
+            error: predictionError,
+          } = await supabase
+            .from("predictions")
+            .select(
+              "user_id, prediction, fixture_id"
+            )
+            .in(
+              "fixture_id",
+              fixtureIds
+            )
+            .order("fixture_id", {
+              ascending: true,
+            })
+            .order("user_id", {
+              ascending: true,
+            })
+            .range(
+              predictionOffset,
+              predictionOffset + batchSize - 1
+            );
+
+          if (predictionError) {
+            setMessage(
+              predictionError.message
+            );
+            setLoading(false);
+            return;
+          }
+
+          predictionData.push(...(batch || []));
+
+          if (!batch || batch.length < batchSize) {
+            break;
+          }
+
+          predictionOffset += batchSize;
         }
-
-        predictionData =
-          data || [];
       }
+
 
       const resultByFixture = {};
       const statusByFixture = {};
